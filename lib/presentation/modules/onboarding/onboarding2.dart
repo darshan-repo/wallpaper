@@ -7,6 +7,8 @@ import 'package:wallpaper/presentation/resources/color_manager.dart';
 import 'package:wallpaper/presentation/resources/string_manager.dart';
 import 'package:wallpaper/presentation/resources/theme_manager.dart';
 
+import '../../resources/asset_manager.dart';
+
 class OnBoarding2Screen extends StatelessWidget {
   const OnBoarding2Screen({super.key});
 
@@ -20,6 +22,10 @@ class OnBoarding2Screen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Image.asset(
+              ImageAssetManager.onBoarding2,
+              scale: 0.0001.sh,
+            ),
             Text(
               AppString.onBoarding2Title,
               textAlign: TextAlign.center,

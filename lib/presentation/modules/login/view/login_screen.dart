@@ -4,6 +4,7 @@ import 'package:wallpaper/presentation/common/appbar.dart';
 import 'package:wallpaper/presentation/common/buttons.dart';
 import 'package:wallpaper/presentation/common/common_spaces.dart';
 import 'package:wallpaper/presentation/common/textformfield.dart';
+import 'package:wallpaper/presentation/modules/bottom_navigaton_bar/view/bottom_navigation_bar.dart';
 import 'package:wallpaper/presentation/modules/otp/view/email_varification.dart';
 import 'package:wallpaper/presentation/modules/register/view/registration_screen.dart';
 import 'package:wallpaper/presentation/resources/asset_manager.dart';
@@ -31,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         backgroundColor: ColorManager.primaryColor,
-        appBar: appbar(),
+        appBar: appbar(context),
         body: Padding(
           padding: padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),
           child: NotificationListener<OverscrollIndicatorNotification>(
@@ -96,7 +97,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     verticalSpace(0.05.sh),
                     materialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const BottomNavigationBarScreen(),
+                          ),
+                        );
+                      },
                       buttonColor: const Color.fromRGBO(136, 126, 249, 1),
                       buttonText: AppString.login,
                     ),
@@ -108,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: myTheme.textTheme.labelSmall,
                       ),
                     ),
-                    verticalSpace(0.05.sh),
+                    verticalSpace(0.025.sh),
                     materialButton(
                       onPressed: () {},
                       buttonColor: const Color.fromRGBO(59, 130, 246, 1),
@@ -123,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       assetName: ImageAssetManager.google,
                       buttonText: AppString.signInWithGoogle,
                     ),
-                    verticalSpace(0.03.sh),
+                    verticalSpace(0.035.sh),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

@@ -8,7 +8,6 @@ import 'package:wallpaper/presentation/modules/otp/view/pinput_widget.dart';
 import 'package:wallpaper/presentation/modules/otp/view/set_password.dart';
 import 'package:wallpaper/presentation/resources/asset_manager.dart';
 import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/font_manager.dart';
 import 'package:wallpaper/presentation/resources/string_manager.dart';
 import 'package:wallpaper/presentation/resources/theme_manager.dart';
 
@@ -35,7 +34,7 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
       },
       child: Scaffold(
         backgroundColor: ColorManager.primaryColor,
-        appBar: appbar(),
+        appBar: appbar(context),
         body: Padding(
           padding: padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),
           child: NotificationListener<OverscrollIndicatorNotification>(
@@ -67,14 +66,8 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                         GestureDetector(
                           onTap: () {},
                           child: Text(
-                            AppString.resendCode,
-                            style: TextStyle(
-                              color: const Color.fromRGBO(136, 126, 249, 1),
-                              fontSize: FontSize.s16,
-                              fontFamily: FontFamily.roboto,
-                              fontWeight: FontWeightManager.regular,
-                              fontStyle: FontStyle.normal,
-                            ),
+                            AppString.changeEmailAddress,
+                            style: myTheme.textTheme.displaySmall,
                           ),
                         ),
                       ],
@@ -84,9 +77,9 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                         ? Align(
                             alignment: Alignment.center,
                             child: SvgPicture.asset(
-                              ImageSVGManager.verification,
-                              height: 0.25.sh,
-                              width: 0.25.sw,
+                              ImageSVGManager.otpVerification,
+                              height: 0.3.sh,
+                              width: 0.3.sw,
                             ),
                           )
                         : const SizedBox(),
@@ -108,13 +101,7 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                         ),
                         Text(
                           '00:36',
-                          style: TextStyle(
-                            color: const Color.fromRGBO(136, 126, 249, 1),
-                            fontSize: FontSize.s16,
-                            fontFamily: FontFamily.roboto,
-                            fontWeight: FontWeightManager.regular,
-                            fontStyle: FontStyle.normal,
-                          ),
+                          style: myTheme.textTheme.displaySmall,
                         ),
                       ],
                     ),
@@ -124,13 +111,9 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                       children: [
                         materialButton(
                           onPressed: () {},
-                          minWidth: 70,
+                          minWidth: 0.43.sw,
                           buttonColor: ColorManager.transparentColor,
-                          child: Icon(
-                            Icons.arrow_back_ios_rounded,
-                            size: 0.035.sh,
-                            color: const Color.fromRGBO(160, 152, 250, 1),
-                          ),
+                          buttonText: AppString.resend,
                         ),
                         materialButton(
                           onPressed: () {
@@ -141,12 +124,9 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                               ),
                             );
                           },
-                          minWidth: 70,
+                          minWidth: 0.43.sw,
                           buttonColor: const Color.fromRGBO(160, 152, 250, 1),
-                          child: Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: 0.035.sh,
-                          ),
+                          buttonText: AppString.confirm,
                         ),
                       ],
                     ),

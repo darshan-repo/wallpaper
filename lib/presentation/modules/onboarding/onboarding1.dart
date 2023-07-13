@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wallpaper/presentation/common/buttons.dart';
 import 'package:wallpaper/presentation/common/common_spaces.dart';
 import 'package:wallpaper/presentation/modules/onboarding/onboarding2.dart';
+import 'package:wallpaper/presentation/resources/asset_manager.dart';
 import 'package:wallpaper/presentation/resources/color_manager.dart';
 import 'package:wallpaper/presentation/resources/string_manager.dart';
 import 'package:wallpaper/presentation/resources/theme_manager.dart';
@@ -20,6 +21,10 @@ class OnBoarding1Screen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Image.asset(
+              ImageAssetManager.onBoarding1,
+              scale: 0.0001.sh,
+            ),
             Text(
               AppString.onBoarding1Title,
               textAlign: TextAlign.center,

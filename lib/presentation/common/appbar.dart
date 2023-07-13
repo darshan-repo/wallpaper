@@ -3,7 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wallpaper/presentation/common/common_spaces.dart';
 import 'package:wallpaper/presentation/resources/color_manager.dart';
 
-PreferredSizeWidget appbar({
+PreferredSizeWidget appbar(
+  BuildContext context, {
   void Function()? onTap,
 }) {
   return AppBar(
@@ -16,7 +17,9 @@ PreferredSizeWidget appbar({
         borderRadius: BorderRadius.circular(10),
       ),
       child: GestureDetector(
-        onTap: onTap,
+        onTap: () {
+          Navigator.pop(context);
+        },
         child: const Icon(
           Icons.arrow_back_ios_rounded,
           color: ColorManager.white,

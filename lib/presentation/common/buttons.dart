@@ -29,11 +29,16 @@ Widget materialButton(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (assetName != null)
-              Image.asset(
-                assetName,
-                color: imageColor ?? ColorManager.white,
-                scale: 0.025.sh,
-              ),
+              imageColor == null
+                  ? Image.asset(
+                      assetName,
+                      scale: 0.025.sh,
+                    )
+                  : Image.asset(
+                      assetName,
+                      color: imageColor,
+                      scale: 0.025.sh,
+                    ),
             if (assetName != null) horizontalSpace(0.05.sw),
             Text(buttonText, style: myTheme.textTheme.titleMedium)
           ],

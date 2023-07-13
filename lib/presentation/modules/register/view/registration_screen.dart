@@ -31,7 +31,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         backgroundColor: ColorManager.primaryColor,
-        appBar: appbar(),
+        appBar: appbar(context),
         body: Padding(
           padding: padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),
           child: NotificationListener<OverscrollIndicatorNotification>(
@@ -110,7 +110,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         style: myTheme.textTheme.labelSmall,
                       ),
                     ),
-                    verticalSpace(0.04.sh),
+                    verticalSpace(0.025.sh),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -131,7 +131,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                       ],
                     ),
-                    verticalSpace(0.03.sh),
+                    verticalSpace(0.035.sh),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

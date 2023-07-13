@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallpaper/presentation/common/appbar.dart';
 import 'package:wallpaper/presentation/common/buttons.dart';
 import 'package:wallpaper/presentation/common/common_spaces.dart';
 import 'package:wallpaper/presentation/common/textformfield.dart';
+import 'package:wallpaper/presentation/modules/otp/view/change_password.dart';
+import 'package:wallpaper/presentation/resources/asset_manager.dart';
 import 'package:wallpaper/presentation/resources/color_manager.dart';
+import 'package:wallpaper/presentation/resources/string_manager.dart';
 import 'package:wallpaper/presentation/resources/theme_manager.dart';
 
 class SetPasswordScreen extends StatefulWidget {
@@ -33,7 +37,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
       },
       child: Scaffold(
         backgroundColor: ColorManager.primaryColor,
-        appBar: appbar(),
+        appBar: appbar(context),
         body: Padding(
           padding: padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),
           child: NotificationListener<OverscrollIndicatorNotification>(
@@ -48,19 +52,27 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Set New Password',
+                      AppString.setNewPassword,
                       style: myTheme.textTheme.titleLarge,
                     ),
                     verticalSpace(0.01.sh),
                     Text(
-                      'Your new password must be unique from those\npreviously used.',
+                      AppString.setNewPasswordDesc,
                       style: myTheme.textTheme.labelSmall,
                     ),
                     verticalSpace(0.05.sh),
+                    Align(
+                      alignment: Alignment.center,
+                      child: SvgPicture.asset(
+                        ImageSVGManager.resetPassword,
+                        height: 0.3.sh,
+                        width: 0.3.sw,
+                      ),
+                    ),
                     verticalSpace(0.02.sh),
                     textFormField(
                       controller: txtPasswordController,
-                      hintText: 'password',
+                      hintText: AppString.password,
                       obscureText: isPasswordVisible,
                       keyboardType: TextInputType.visiblePassword,
                       suffixIcon: isPasswordVisible
@@ -75,7 +87,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                     verticalSpace(0.02.sh),
                     textFormField(
                       controller: txtPasswordController,
-                      hintText: 'confirm password',
+                      hintText: AppString.confirmPassword,
                       obscureText: isConfirmPasswordVisible,
                       keyboardType: TextInputType.visiblePassword,
                       suffixIcon: isConfirmPasswordVisible
@@ -89,9 +101,16 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                     ),
                     verticalSpace(0.1.sh),
                     materialButton(
-                      onPressed: () {},
-                      buttonColor: const Color.fromRGBO(160, 152, 250, 1),
-                      buttonText: 'Reset Password',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ChangePasswordScreen(),
+                          ),
+                        );
+                      },
+                      buttonColor: const Color(0xFFA098FA),
+                      buttonText: AppString.reserPassword,
                     ),
                   ],
                 ),

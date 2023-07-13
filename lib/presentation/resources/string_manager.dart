@@ -32,9 +32,9 @@ class AppString {
   static const String gettingStarted = 'Getting Started';
   static const String createAnAccountToContinue =
       'Create an account to continue!';
-  static const String username = 'username';
-  static const String email = 'email';
-  static const String password = 'password';
+  static const String username = 'Username';
+  static const String email = 'Email';
+  static const String password = 'Password';
   static const String confirmPassword = 'Confirm Password';
   static const String register = 'Register';
   static const String facebook = 'Facebook';
@@ -45,12 +45,25 @@ class AppString {
   //* Email Varification Screen
   static const String forgotPassword = 'Forgot Password';
   static const String forgotPasswordDesc =
-      'Enter your email for the varification process, we will send 4 digit code to your email.';
+      'Dont\'t worry it occurs. Please enter the email address linked with your account';
 
   //* OTP Verification Screen
   static const String otpVerification = 'OTP Verification';
   static const String otpVerificationDesc =
       'Enter the varification code we just sent to';
-  static const String resendCode = 'Resend Code?';
+  static const String changeEmailAddress = 'Change email address?';
   static const String resendCodeAfter = 'Resend code after  ';
+  static const String resend = 'Resend';
+  static const String confirm = 'Confirm';
+
+  //* Set New Password Screen
+  static const String setNewPassword = 'Set New Password';
+  static const String setNewPasswordDesc =
+      'Your new password must be unique from those previously used.';
+  static const String reserPassword = 'Reset Password';
+
+  //* Change Password Screen
+  static const String passwordChanged = 'Password Changed!';
+  static const String passwordChangedDesc =
+      'Your password has been changed successfully.';
 }
