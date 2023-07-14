@@ -150,6 +150,7 @@ class _EmailVarificationScreenState extends State<EmailVarificationScreen> {
 
 Widget alertDialog(
   BuildContext context, {
+    String buttonText = '',
   required void Function()? onPressed,
 }) {
   return AlertDialog(

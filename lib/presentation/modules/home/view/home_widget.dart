@@ -22,7 +22,7 @@ Widget dropDownButton({
       onChanged: onChanged,
       buttonStyleData: ButtonStyleData(
         height: 0.05.sh,
-        width: 0.4.sw,
+        width: 0.35.sw,
         overlayColor: MaterialStateProperty.all(ColorManager.primaryColor),
         decoration: const BoxDecoration(
           color: ColorManager.primaryColor,

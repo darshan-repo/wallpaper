@@ -30,82 +30,82 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),
       child: Column(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'Featured.',
-                  style: myTheme.textTheme.titleLarge,
-                ),
-              ),
-              const Icon(
-                Icons.arrow_back,
-                color: ColorManager.white,
-              ),
-              horizontalSpace(0.02.sw),
-              const Icon(
-                Icons.arrow_forward,
-                color: ColorManager.white,
-              ),
-            ],
-          ),
-          verticalSpace(0.03.sh),
-          Container(
-            height: 0.2.sh,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-              image: const DecorationImage(
-                image: AssetImage(ImageJPGManager.seaSky),
-                fit: BoxFit.fill,
-              ),
-            ),
-          ),
-          verticalSpace(0.009.sh),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                height: 0.1.sh,
-                width: 0.29.sw,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                  image: const DecorationImage(
-                    image: AssetImage(ImageJPGManager.bananas),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
-              Container(
-                height: 0.1.sh,
-                width: 0.29.sw,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                  image: const DecorationImage(
-                    image: AssetImage(ImageJPGManager.yellowPinkColor),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
-              Container(
-                height: 0.1.sh,
-                width: 0.29.sw,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFffb38e),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  '+4',
-                  style: myTheme.textTheme.titleLarge,
-                ),
-              ),
-            ],
-          ),
-          verticalSpace(0.03.sh),
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: Text(
+          //         'Featured.',
+          //         style: myTheme.textTheme.titleLarge,
+          //       ),
+          //     ),
+          //     const Icon(
+          //       Icons.arrow_back,
+          //       color: Colors.white60,
+          //     ),
+          //     horizontalSpace(0.02.sw),
+          //     const Icon(
+          //       Icons.arrow_forward,
+          //       color: ColorManager.white,
+          //     ),
+          //   ],
+          // ),
+          // verticalSpace(0.03.sh),
+          // Container(
+          //   height: 0.2.sh,
+          //   width: double.infinity,
+          //   decoration: BoxDecoration(
+          //     color: Colors.white,
+          //     borderRadius: BorderRadius.circular(15),
+          //     image: const DecorationImage(
+          //       image: AssetImage(ImageJPGManager.seaSky),
+          //       fit: BoxFit.fill,
+          //     ),
+          //   ),
+          // ),
+          // verticalSpace(0.009.sh),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     Container(
+          //       height: 0.1.sh,
+          //       width: 0.29.sw,
+          //       decoration: BoxDecoration(
+          //         color: Colors.white,
+          //         borderRadius: BorderRadius.circular(15),
+          //         image: const DecorationImage(
+          //           image: AssetImage(ImageJPGManager.bananas),
+          //           fit: BoxFit.fill,
+          //         ),
+          //       ),
+          //     ),
+          //     Container(
+          //       height: 0.1.sh,
+          //       width: 0.29.sw,
+          //       decoration: BoxDecoration(
+          //         color: Colors.white,
+          //         borderRadius: BorderRadius.circular(15),
+          //         image: const DecorationImage(
+          //           image: AssetImage(ImageJPGManager.yellowPinkColor),
+          //           fit: BoxFit.fill,
+          //         ),
+          //       ),
+          //     ),
+          //     Container(
+          //       height: 0.1.sh,
+          //       width: 0.29.sw,
+          //       decoration: BoxDecoration(
+          //         color: const Color(0xFFffb38e),
+          //         borderRadius: BorderRadius.circular(15),
+          //       ),
+          //       alignment: Alignment.center,
+          //       child: Text(
+          //         '+4',
+          //         style: myTheme.textTheme.titleLarge,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // verticalSpace(0.03.sh),
           Row(
             children: [
               dropDownButton(

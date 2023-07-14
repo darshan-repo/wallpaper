@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:wallpaper/presentation/resources/color_manager.dart';
 import 'package:wallpaper/presentation/resources/theme_manager.dart';
 
-Widget textFormField(
-    {TextEditingController? controller,
-    String hintText = '',
-    IconData? suffixIcon,
-    TextInputType keyboardType = TextInputType.text,
-    bool obscureText = false,
-    void Function()? suffixOnPressed,
-    void Function()? onTap}) {
+Widget textFormField({
+  TextEditingController? controller,
+  String hintText = '',
+  IconData? suffixIcon,
+  TextInputType keyboardType = TextInputType.text,
+  bool obscureText = false,
+  void Function()? suffixOnPressed,
+  int maxLines = 1,
+  void Function()? onTap,
+}) {
   return TextFormField(
     onTap: onTap,
+    maxLines: maxLines,
     controller: controller,
     obscureText: obscureText,
     keyboardType: keyboardType,
