@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wallpaper/presentation/common/common_spaces.dart';
+import 'package:wallpaper/presentation/resources/color_manager.dart';
 
 import '../../../resources/asset_manager.dart';
 
@@ -33,6 +36,33 @@ class _PhotosSearchScreenState extends State<PhotosSearchScreen> {
               image: const DecorationImage(
                 fit: BoxFit.fill,
                 image: AssetImage(ImageJPGManager.yellowPinkColor),
+              ),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.black.withOpacity(0.05),
+              ),
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: padding(
+                    paddingType: PaddingType.LTRB,
+                    right: 0.01.sw,
+                    bottom: 0.005.sh),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Icon(
+                      Icons.file_download_outlined,
+                      color: ColorManager.white,
+                    ),
+                    verticalSpace(0.01.sh),
+                    const Icon(
+                      Icons.favorite_rounded,
+                      color: ColorManager.red,
+                    ),
+                  ],
+                ),
               ),
             ),
           );

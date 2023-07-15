@@ -113,6 +113,7 @@ class _SearchScreenState extends State<SearchScreen>
           verticalSpace(0.02.sh),
           Expanded(
             child: TabBarView(
+              physics: const NeverScrollableScrollPhysics(),
               controller: tabController,
               children: const [
                 PhotosSearchScreen(),

@@ -14,6 +14,8 @@ import 'package:wallpaper/presentation/modules/settings/view/settings.dart';
 import 'package:wallpaper/presentation/resources/asset_manager.dart';
 import 'package:wallpaper/presentation/resources/color_manager.dart';
 
+import '../../notification/view/notification_screen.dart';
+
 class BottomNavigationBarScreen extends StatefulWidget {
   const BottomNavigationBarScreen({Key? key}) : super(key: key);
 
@@ -243,7 +245,17 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
             Padding(
               padding: padding(
                   paddingType: PaddingType.right, paddingValue: 0.035.sw),
-              child: const Icon(Icons.notification_important_outlined),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationScreen(),
+                    ),
+                  );
+                },
+                child: const Icon(Icons.notification_important_outlined),
+              ),
             )
           ],
         ),

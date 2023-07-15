@@ -19,6 +19,14 @@ class ImageAssetManager {
   static const download = "$imagePath/download.png";
   static const logout = "$imagePath/logout.png";
   static const done = "$imagePath/done.png";
+  static const delete = "$imagePath/delete.png";
+  static const share = "$imagePath/share.png";
+  static const noNotificationFound = "$imagePath/no_notification_found.png";
+  static const theme = "$imagePath/theme.png";
+  static const autoUpdate = "$imagePath/auto_update.png";
+  static const star = "$imagePath/star.png";
+  static const notification = "$imagePath/notification.png";
+  static const setWallpaperDone = "$imagePath/set_wallpaper_done.png";
 }
 
 class ImageJPGManager {
@@ -33,6 +41,7 @@ class ImageJPGManager {
   static const colorfulCollection = "$imagePath/colorful_collection.jpg";
   static const natureCollection = "$imagePath/nature_collection.jpg";
   static const author = "$imagePath/author.jpg";
+  static const userImage = "$imagePath/user.jpg";
 }
 
 class ImageSVGManager {

@@ -17,7 +17,7 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
-  bool isShow = true;
+  bool isShow = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,9 +119,19 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                     paddingType: PaddingType.LTRB,
                                     right: 0.01.sw,
                                     bottom: 0.005.sh),
-                                child: const Icon(
-                                  Icons.favorite_rounded,
-                                  color: ColorManager.red,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    const Icon(
+                                      Icons.file_download_outlined,
+                                      color: ColorManager.white,
+                                    ),
+                                    verticalSpace(0.01.sh),
+                                    const Icon(
+                                      Icons.favorite_rounded,
+                                      color: ColorManager.red,
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),

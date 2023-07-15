@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallpaper/presentation/common/appbar.dart';
+import 'package:wallpaper/presentation/common/buttons.dart';
 import 'package:wallpaper/presentation/common/common_spaces.dart';
+import 'package:wallpaper/presentation/modules/downloads/view/download_screen_widget.dart';
 import 'package:wallpaper/presentation/modules/filter/view/filter_screen.dart';
 import 'package:wallpaper/presentation/resources/asset_manager.dart';
 import 'package:wallpaper/presentation/resources/color_manager.dart';
 import 'package:wallpaper/presentation/resources/font_manager.dart';
 import 'package:wallpaper/presentation/resources/theme_manager.dart';
+
+import '../../set_wallpaper/view/set_wallpaper_screen.dart';
 
 class DownloadScreen extends StatefulWidget {
   const DownloadScreen({super.key});
@@ -17,7 +21,8 @@ class DownloadScreen extends StatefulWidget {
 }
 
 class _DownloadScreenState extends State<DownloadScreen> {
-  bool isShow = true;
+  bool isShow = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +65,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                           width: 0.5.sw,
                         ),
                         Text(
-                          'Oops ! No favorites to display',
+                          'Oops ! No downloads to display',
                           style: TextStyle(
                             fontSize: FontSize.s18,
                             fontFamily: FontFamily.roboto,
@@ -69,8 +74,8 @@ class _DownloadScreenState extends State<DownloadScreen> {
                             foreground: Paint()
                               ..shader = const LinearGradient(
                                 colors: <Color>[
-                                  Color(0xffA098FA),
-                                  Color.fromARGB(255, 141, 82, 77),
+                                  Color.fromRGBO(160, 152, 250, 1),
+                                  Color.fromRGBO(175, 117, 112, 1),
                                   Colors.yellow
                                 ],
                               ).createShader(
@@ -98,30 +103,170 @@ class _DownloadScreenState extends State<DownloadScreen> {
                         ),
                         itemCount: 15,
                         itemBuilder: (context, index) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                              image: const DecorationImage(
-                                fit: BoxFit.fill,
-                                image:
-                                    AssetImage(ImageJPGManager.yellowPinkColor),
-                              ),
-                            ),
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const SetWallpaperScreen(
+                                    imgURL: ImageJPGManager.yellowPinkColor,
+                                  ),
+                                ),
+                              );
+                            },
+                            onLongPress: () {
+                              showModalBottomSheet(
+                                elevation: 0,
+                                backgroundColor: ColorManager.secondaryColor,
+                                context: context,
+                                isDismissible: false,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                ),
+                                builder: (context) => Container(
+                                  height: 400,
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                    ),
+                                  ),
+                                  padding: padding(
+                                      paddingType: PaddingType.all,
+                                      paddingValue: 0.02.sh),
+                                  child: Column(
+                                    // mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Downloads',
+                                        style: myTheme.textTheme.titleLarge,
+                                      ),
+                                      verticalSpace(0.05.sh),
+                                      bottomContent(
+                                        assetName: ImageAssetManager.favorite,
+                                        title: 'Save to my favorite',
+                                      ),
+                                      verticalSpace(0.04.sh),
+                                      GestureDetector(
+                                        onLongPress: () {
+                                          Navigator.pop(context);
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (context) => AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              backgroundColor:
+                                                  ColorManager.secondaryColor,
+                                              icon: Container(
+                                                margin: margin(
+                                                    marginType:
+                                                        MarginType.horizontal,
+                                                    marginValue: 0.15.sw),
+                                                height: 0.15.sh,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(25),
+                                                  image: const DecorationImage(
+                                                    image: AssetImage(
+                                                      ImageJPGManager
+                                                          .yellowPinkColor,
+                                                    ),
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                ),
+                                              ),
+                                              title: Text(
+                                                'Remove item?',
+                                                textAlign: TextAlign.center,
+                                                style: myTheme
+                                                    .textTheme.titleMedium,
+                                              ),
+                                              content: Text(
+                                                'Are you sure want to remove this item?',
+                                                textAlign: TextAlign.center,
+                                                style: myTheme
+                                                    .textTheme.headlineSmall,
+                                              ),
+                                              elevation: 2,
+                                              shadowColor: ColorManager.white,
+                                              actions: [
+                                                materialButton(
+                                                  onPressed: () {},
+                                                  buttonColor:
+                                                      const Color.fromRGBO(
+                                                          160, 152, 250, 1),
+                                                  buttonText: 'Sure',
+                                                ),
+                                                verticalSpace(0.03.sh),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Align(
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      'No, thanks',
+                                                      style: myTheme.textTheme
+                                                          .displaySmall,
+                                                    ),
+                                                  ),
+                                                ),
+                                                verticalSpace(0.02.sh),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                        child: bottomContent(
+                                          assetName: ImageAssetManager.delete,
+                                          title: 'Delete',
+                                        ),
+                                      ),
+                                      verticalSpace(0.04.sh),
+                                      bottomContent(
+                                        assetName: ImageAssetManager.share,
+                                        title: 'Share',
+                                      ),
+                                      verticalSpace(0.04.sh),
+                                      bottomContent(
+                                        assetName:
+                                            ImageAssetManager.reportAnIssue,
+                                        title: 'Report this',
+                                      ),
+                                      verticalSpace(0.02.sh),
+                                      const Divider(
+                                        color: ColorManager.primaryColor,
+                                      ),
+                                      materialButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        buttonColor: const Color.fromRGBO(
+                                            255, 128, 147, 1),
+                                        buttonText: 'Cancle',
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: Colors.black.withOpacity(0.05),
-                              ),
-                              alignment: Alignment.bottomRight,
-                              child: Padding(
-                                padding: padding(
-                                    paddingType: PaddingType.LTRB,
-                                    right: 0.01.sw,
-                                    bottom: 0.005.sh),
-                                child: const Icon(
-                                  Icons.favorite_rounded,
-                                  color: ColorManager.red,
+                                color: Colors.white,
+                                image: const DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: AssetImage(
+                                    ImageJPGManager.yellowPinkColor,
+                                  ),
                                 ),
                               ),
                             ),
