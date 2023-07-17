@@ -1,8 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:wallpaper/navigation/constants.dart';
-import 'package:wallpaper/navigation/fade_route.dart';
-import 'package:wallpaper/navigation/slide_transit.dart';
-import 'package:wallpaper/presentation/modules/login/view/login_screen.dart';
+import 'package:wallpaper/libs.dart';
 
 class NavigationUtilities {
   static final GlobalKey<NavigatorState> key = GlobalKey<NavigatorState>();
@@ -12,6 +8,16 @@ class NavigationUtilities {
       builder: (context) => widget,
       settings: RouteSettings(name: name),
     ));
+  }
+
+  static Future<dynamic>? pushNamed(String route,
+      {RouteType type = RouteType.left, Map<String, dynamic>? args}) {
+    args ??= <String, dynamic>{};
+    args["routeType"] = type;
+    return key.currentState!.pushNamed(
+      route,
+      arguments: args,
+    );
   }
 
   static Future<dynamic> pushRoute(String route,
@@ -24,22 +30,23 @@ class NavigationUtilities {
     );
   }
 
-  static Future<dynamic> pushNamed(String route,
-      {RouteType type = RouteType.left, Map? args}) {
-    args ??= <String, dynamic>{};
-    args["routeType"] = type;
-    return key.currentState!.pushNamed(
-      route,
-      arguments: args,
-    );
-  }
-
   static Future<dynamic>? pushReplacementNamed(String route,
       {RouteType type = RouteType.left, Map? args}) {
     args ??= <String, dynamic>{};
     args["routeType"] = type;
     return key.currentState!.pushReplacementNamed(
       route,
+      arguments: args,
+    );
+  }
+
+  static Future<dynamic>? pushNamedAndRemoveUntil(String route,
+      {RouteType type = RouteType.left, Map? args}) {
+    args ??= <String, dynamic>{};
+    args["routeType"] = type;
+    return key.currentState!.pushNamedAndRemoveUntil(
+      route,
+      ModalRoute.withName(HomeScreen.route),
       arguments: args,
     );
   }
@@ -61,10 +68,62 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
   Widget? screen;
 
   switch (routeName) {
+    case OnBoarding1Screen.route:
+      screen = const OnBoarding1Screen();
+      break;
+    case OnBoarding2Screen.route:
+      screen = const OnBoarding2Screen();
+      break;
+    case OnBoarding3Screen.route:
+      screen = const OnBoarding3Screen();
+      break;
     case LoginScreen.route:
       screen = const LoginScreen();
       break;
+    case RegistrationScreen.route:
+      screen = const RegistrationScreen();
+      break;
+    case EmailVarificationScreen.route:
+      screen = const EmailVarificationScreen();
+      break;
+    case OTPVarificationScreen.route:
+      screen = const OTPVarificationScreen();
+      break;
+    case SetPasswordScreen.route:
+      screen = const SetPasswordScreen();
+      break;
+    case ChangePasswordScreen.route:
+      screen = const ChangePasswordScreen();
+      break;
+    case BottomNavigationBarScreen.route:
+      screen = const BottomNavigationBarScreen();
+      break;
+    case CollectionViewScreen.route:
+      screen = CollectionViewScreen(args: arguments);
+      break;
+    case NotificationScreen.route:
+      screen = const NotificationScreen();
+      break;
+    case UpdateProfileScreen.route:
+      screen = const UpdateProfileScreen();
+      break;
+    case FavoriteScreen.route:
+      screen = const FavoriteScreen();
+      break;
+    case DownloadScreen.route:
+      screen = const DownloadScreen();
+      break;
+    case PrivacyPolicyScreen.route:
+      screen = const PrivacyPolicyScreen();
+      break;
+    case ReportAnIssueScreen.route:
+      screen = const ReportAnIssueScreen();
+      break;
+    case FilterScreen.route:
+      screen = const FilterScreen();
+      break;
   }
+
   switch (routeType) {
     case RouteType.fade:
       return FadeRoute(

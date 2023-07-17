@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
+import 'package:wallpaper/libs.dart';
+
 
 Widget textFormField({
   TextEditingController? controller,

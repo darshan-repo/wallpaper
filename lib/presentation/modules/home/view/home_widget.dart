@@ -1,8 +1,4 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 Widget dropDownButton({
   String? selectedValue,
@@ -44,5 +40,82 @@ Widget dropDownButton({
         ),
       ),
     ),
+  );
+}
+
+Widget homeGridview({
+  double height = 0.0,
+  required String assetName,
+  void Function()? downloadOnTap,
+  void Function()? favoriteOnTap,
+  bool isSelect = false,
+}) {
+  return Container(
+    height: height,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      color: Colors.white,
+      image: DecorationImage(
+        fit: BoxFit.fill,
+        image: AssetImage(assetName),
+      ),
+    ),
+    alignment: Alignment.bottomRight,
+    child: Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.black.withOpacity(0.05),
+      ),
+      alignment: Alignment.bottomRight,
+      child: Padding(
+        padding: padding(
+            paddingType: PaddingType.LTRB, right: 0.01.sw, bottom: 0.005.sh),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            GestureDetector(
+              onTap: downloadOnTap,
+              child: const Icon(
+                Icons.file_download_outlined,
+                color: ColorManager.white,
+              ),
+            ),
+            verticalSpace(0.02.sh),
+            GestureDetector(
+              onTap: favoriteOnTap,
+              child: isSelect
+                  ? const Icon(
+                      Icons.favorite_rounded,
+                      color: ColorManager.red,
+                    )
+                  : const Icon(
+                      Icons.favorite_border_rounded,
+                      color: ColorManager.white,
+                    ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget conatiner({
+  double height = 0.1,
+  double width = 0.29,
+  required String assetName,
+  Widget? child,
+}) {
+  return Container(
+    height: height.sh,
+    width: width.sw,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(15),
+      image: DecorationImage(
+        image: AssetImage(assetName),
+        fit: BoxFit.fill,
+      ),
+    ),
+    child: child,
   );
 }

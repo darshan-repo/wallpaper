@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:flutter/material.dart';
+import 'package:wallpaper/libs.dart';
 
 enum PaddingType { left, right, top, bottom, horizontal, vertical, all, LTRB }
 

@@ -10,6 +10,7 @@ class ImageAssetManager {
   static const onBoarding2 = "$imagePath/onboarding2.png";
   static const onBoarding3 = "$imagePath/onboarding3.png";
   static const collection = "$imagePath/collection.png";
+  static const grid = "$imagePath/grid.png";
   static const updateProfile = "$imagePath/update_profile.png";
   static const language = "$imagePath/language.png";
   static const reportAnIssue = "$imagePath/report_an_issue.png";

@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 Widget profileRow({
   String title = '',

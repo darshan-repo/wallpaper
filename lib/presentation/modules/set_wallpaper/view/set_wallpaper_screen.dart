@@ -1,14 +1,4 @@
-import 'package:async_wallpaper/async_wallpaper.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/common/buttons.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/modules/bottom_navigaton_bar/view/bottom_navigation_bar.dart';
-import 'package:wallpaper/presentation/resources/asset_manager.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 class SetWallpaperScreen extends StatefulWidget {
   final String imgURL;

@@ -1,8 +1,4 @@
-import 'dart:async';
-
-import 'package:flutter/material.dart';
-import 'package:wallpaper/presentation/modules/onboarding/onboarding1.dart';
-import 'package:wallpaper/presentation/resources/asset_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,17 +11,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   initState() {
     super.initState();
-    Timer(
-      const Duration(seconds: 3),
-      () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const OnBoarding1Screen(),
-          ),
-        );
-      },
-    );
+    Timer(const Duration(seconds: 3), () {
+      AppNavigation.shared.moveToOnBoarding1Screen();
+    });
   }
 
   @override

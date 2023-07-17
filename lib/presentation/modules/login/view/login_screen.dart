@@ -1,17 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/common/appbar.dart';
-import 'package:wallpaper/presentation/common/buttons.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/common/textformfield.dart';
-import 'package:wallpaper/presentation/modules/bottom_navigaton_bar/view/bottom_navigation_bar.dart';
-import 'package:wallpaper/presentation/modules/otp/view/email_varification.dart';
-import 'package:wallpaper/presentation/modules/register/view/registration_screen.dart';
-import 'package:wallpaper/presentation/resources/asset_manager.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/font_manager.dart';
-import 'package:wallpaper/presentation/resources/string_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -81,13 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const EmailVarificationScreen(),
-                            ),
-                          );
+                          AppNavigation.shared.moveToForgotPasswordScreen();
                         },
                         child: Text(
                           AppString.forgotYourPassword,
@@ -98,13 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     verticalSpace(0.05.sh),
                     materialButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const BottomNavigationBarScreen(),
-                          ),
-                        );
+                        AppNavigation.shared.moveToBottomNavigationBarScreen();
                       },
                       buttonColor: const Color.fromRGBO(136, 126, 249, 1),
                       buttonText: AppString.login,
@@ -142,13 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const RegistrationScreen(),
-                              ),
-                            );
+                            AppNavigation.shared.moveToRegistrationScreen();
                           },
                           child: Text(
                             AppString.signUp,

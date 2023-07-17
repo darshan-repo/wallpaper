@@ -1,14 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/modules/search/view/author_search.dart';
-import 'package:wallpaper/presentation/modules/search/view/categories_search.dart';
-import 'package:wallpaper/presentation/modules/search/view/photos_search.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
+  static const String route = 'SearchScreen';
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -31,7 +25,7 @@ class _SearchScreenState extends State<SearchScreen>
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),
+      padding: padding(paddingType: PaddingType.all, paddingValue: 0.01.sh),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

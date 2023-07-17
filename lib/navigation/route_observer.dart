@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:wallpaper/libs.dart';
 
 final routeObserver = _AppRouteObserver();
 

@@ -1,8 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/resources/asset_manager.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 class AuthorSearchScreen extends StatefulWidget {
   const AuthorSearchScreen({super.key});

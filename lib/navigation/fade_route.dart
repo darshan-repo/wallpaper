@@ -1,6 +1,5 @@
+import 'package:wallpaper/libs.dart';
 
-
-import 'package:flutter/material.dart';
 
 class FadeRoute<T> extends PageRoute<T> {
   FadeRoute({

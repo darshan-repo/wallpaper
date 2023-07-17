@@ -1,15 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:wallpaper/presentation/common/appbar.dart';
-import 'package:wallpaper/presentation/common/buttons.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/modules/otp/view/pinput_widget.dart';
-import 'package:wallpaper/presentation/modules/otp/view/set_password.dart';
-import 'package:wallpaper/presentation/resources/asset_manager.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/string_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 class OTPVarificationScreen extends StatefulWidget {
   const OTPVarificationScreen({Key? key}) : super(key: key);
@@ -117,12 +106,7 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                         ),
                         materialButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SetPasswordScreen(),
-                              ),
-                            );
+                            AppNavigation.shared.moveToSetPasswordScreen();
                           },
                           minWidth: 0.43.sw,
                           buttonColor: const Color.fromRGBO(160, 152, 250, 1),

@@ -1,14 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/modules/settings/view/update_profile/view/update_profile.dart';
-import 'package:wallpaper/presentation/resources/asset_manager.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
+  static const String route = 'SettingScreen';
 
   @override
   State<SettingScreen> createState() => _SettingScreenState();
@@ -31,7 +25,7 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),
+      padding: padding(paddingType: PaddingType.all, paddingValue: 0.01.sh),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -53,12 +47,7 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
             trailing: GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const UpdateProfileScreen(),
-                  ),
-                );
+                AppNavigation.shared.moveToUpdateProfileScreen();
               },
               child: const Icon(
                 Icons.arrow_forward_ios_rounded,

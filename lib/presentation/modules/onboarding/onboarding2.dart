@@ -1,16 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/common/buttons.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/modules/onboarding/onboarding3.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/string_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
-
-import '../../resources/asset_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 class OnBoarding2Screen extends StatelessWidget {
   const OnBoarding2Screen({super.key});
+  static const route = 'OnBoarding2Screen';
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +32,13 @@ class OnBoarding2Screen extends StatelessWidget {
             verticalSpace(0.05.sh),
             materialButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const OnBoarding3Screen(),
-                  ),
-                );
+                AppNavigation.shared.moveToOnBoarding3Screen();
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const OnBoarding3Screen(),
+                //   ),
+                // );
               },
               buttonText: 'Get Started',
             ),

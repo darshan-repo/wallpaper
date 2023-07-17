@@ -1,14 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/modules/home/view/home_widget.dart';
-import 'package:wallpaper/presentation/resources/asset_manager.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:wallpaper/libs.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+  static const String route = 'HomeSreen';
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -23,248 +17,242 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String? selectedValue = 'Trending';
   bool isSelectGrid = true;
-  bool isSelect = true;
+  bool isSelect = false;
   ScrollController scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),
-      child: Column(
-        children: [
-          Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Featured.',
-                      style: myTheme.textTheme.titleLarge,
-                    ),
-                  ),
-                  const Icon(
-                    Icons.arrow_back,
-                    color: Colors.white60,
-                  ),
-                  horizontalSpace(0.02.sw),
-                  const Icon(
-                    Icons.arrow_forward,
-                    color: ColorManager.white,
-                  ),
-                ],
-              ),
-              verticalSpace(0.03.sh),
-              Container(
-                height: 0.2.sh,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                  image: const DecorationImage(
-                    image: AssetImage(ImageJPGManager.seaSky),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
-              verticalSpace(0.009.sh),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    height: 0.1.sh,
-                    width: 0.29.sw,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                      image: const DecorationImage(
-                        image: AssetImage(ImageJPGManager.bananas),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 0.1.sh,
-                    width: 0.29.sw,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                      image: const DecorationImage(
-                        image: AssetImage(ImageJPGManager.yellowPinkColor),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 0.1.sh,
-                    width: 0.29.sw,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFffb38e),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      '+4',
-                      style: myTheme.textTheme.titleLarge,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          verticalSpace(0.03.sh),
-          Row(
-            children: [
-              dropDownButton(
-                selectedValue: selectedValue,
-                items: items
-                    .map(
-                      (item) => DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(
-                          item,
-                          style: myTheme.textTheme.titleMedium,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedValue = value.toString();
-                  });
-                },
-              ),
-              const Spacer(),
-              Container(
-                padding: padding(
-                  paddingType: PaddingType.LTRB,
-                  left: 0.015.sw,
-                  right: 0.015.sw,
-                ),
-                height: 0.05.sh,
-                decoration: BoxDecoration(
-                  color: ColorManager.secondaryColor,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
+      padding: padding(paddingType: PaddingType.all, paddingValue: 0.01.sh),
+      child: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (notification) {
+          notification.disallowIndicator();
+          return true;
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              leadingWidth: 0.0,
+              leading: const Text(''),
+              expandedHeight: 0.45.sh,
+              floating: true,
+              pinned: true,
+              backgroundColor: ColorManager.primaryColor,
+              elevation: 0,
+              scrolledUnderElevation: 0,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Column(
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isSelectGrid = true;
-                        });
-                      },
-                      child: Container(
-                        padding: padding(
-                          paddingType: PaddingType.all,
-                          paddingValue: 0.003.sh,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Featured.',
+                            style: myTheme.textTheme.titleLarge,
+                          ),
                         ),
-                        width: 0.085.sw,
-                        height: 0.04.sh,
-                        decoration: BoxDecoration(
-                          color: isSelectGrid
-                              ? ColorManager.primaryColor
-                              : const Color.fromRGBO(160, 152, 250, 1),
-                          borderRadius: BorderRadius.circular(4),
+                        const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white60,
                         ),
-                        child: Image.asset(
-                          fit: BoxFit.contain,
-                          ImageAssetManager.collection,
+                        horizontalSpace(0.02.sw),
+                        const Icon(
+                          Icons.arrow_forward,
                           color: ColorManager.white,
                         ),
-                      ),
+                      ],
                     ),
-                    horizontalSpace(0.02.sw),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isSelectGrid = false;
-                        });
-                      },
-                      child: Container(
-                        padding: padding(
-                          paddingType: PaddingType.all,
-                          paddingValue: 0.003.sh,
+                    verticalSpace(0.03.sh),
+                    conatiner(
+                      height: 0.2,
+                      width: double.infinity,
+                      assetName: ImageJPGManager.seaSky,
+                    ),
+                    verticalSpace(0.009.sh),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        conatiner(
+                          height: 0.1,
+                          width: 0.30,
+                          assetName: ImageJPGManager.bananas,
                         ),
-                        width: 0.085.sw,
-                        height: 0.04.sh,
-                        decoration: BoxDecoration(
-                          color: isSelectGrid
-                              ? const Color.fromRGBO(160, 152, 250, 1)
-                              : ColorManager.primaryColor,
-                          borderRadius: BorderRadius.circular(4),
+                        conatiner(
+                          height: 0.1,
+                          width: 0.30,
+                          assetName: ImageJPGManager.yellowPinkColor,
                         ),
-                        child: Image.asset(
-                          fit: BoxFit.contain,
-                          ImageAssetManager.collection,
-                          color: ColorManager.white,
+                        conatiner(
+                          height: 0.1,
+                          width: 0.30,
+                          assetName: ImageJPGManager.bananas,
+                          child: Container(
+                            height: 0.1.sh,
+                            width: 0.30.sh,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.black.withOpacity(0.2),
+                            ),
+                            child: Text(
+                              '+99',
+                              style: myTheme.textTheme.titleLarge,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          verticalSpace(0.01.sh),
-          isSelectGrid
-              ? Expanded(
-                  child: NotificationListener<OverscrollIndicatorNotification>(
-                    onNotification: (notification) {
-                      notification.disallowIndicator();
-                      return true;
-                    },
-                    child: MasonryGridView.count(
-                      controller: scrollController,
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      itemCount: 15,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          height: (index % 5 + 1) * 100,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                            image: const DecorationImage(
-                              fit: BoxFit.fill,
-                              image: AssetImage(ImageJPGManager.seaSky),
+                title: Container(
+                  width: double.infinity,
+                  padding: padding(
+                      paddingType: PaddingType.vertical, paddingValue: 0.01.sh),
+                  color: ColorManager.secondaryColor,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      dropDownButton(
+                        selectedValue: selectedValue,
+                        items: items
+                            .map(
+                              (item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: myTheme.textTheme.titleMedium,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedValue = value.toString();
+                          });
+                        },
+                      ),
+                      Container(
+                        padding: padding(
+                          paddingType: PaddingType.LTRB,
+                          left: 0.015.sw,
+                          right: 0.015.sw,
+                        ),
+                        height: 0.05.sh,
+                        decoration: BoxDecoration(
+                          color: ColorManager.secondaryColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isSelectGrid = true;
+                                });
+                              },
+                              child: Container(
+                                padding: padding(
+                                    paddingType: PaddingType.all,
+                                    paddingValue: 0.003.sh),
+                                width: 0.085.sw,
+                                height: 0.04.sh,
+                                decoration: BoxDecoration(
+                                  color: isSelectGrid
+                                      ? const Color.fromRGBO(160, 152, 250, 1)
+                                      : ColorManager.primaryColor,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Image.asset(
+                                  fit: BoxFit.contain,
+                                  ImageAssetManager.grid,
+                                  color: ColorManager.white,
+                                ),
+                              ),
                             ),
-                          ),
-                          alignment: Alignment.bottomRight,
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isSelect = !isSelect;
-                              });
-                            },
-                            child: Padding(
-                              padding: padding(
-                                  paddingType: PaddingType.LTRB,
-                                  right: 0.01.sw,
-                                  bottom: 0.005.sh),
-                              child: isSelect
-                                  ? const Icon(
-                                      Icons.favorite_border_rounded,
-                                      color: ColorManager.white,
-                                    )
-                                  : const Icon(
-                                      Icons.favorite_rounded,
-                                      color: ColorManager.red,
-                                    ),
+                            horizontalSpace(0.02.sw),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isSelectGrid = false;
+                                });
+                              },
+                              child: Container(
+                                padding: padding(
+                                  paddingType: PaddingType.all,
+                                  paddingValue: 0.003.sh,
+                                ),
+                                width: 0.085.sw,
+                                height: 0.04.sh,
+                                decoration: BoxDecoration(
+                                  color: isSelectGrid
+                                      ? ColorManager.primaryColor
+                                      : const Color.fromRGBO(160, 152, 250, 1),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Image.asset(
+                                  fit: BoxFit.contain,
+                                  ImageAssetManager.collection,
+                                  color: ColorManager.white,
+                                ),
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                )
-              : Expanded(
-                  child: NotificationListener<OverscrollIndicatorNotification>(
+                ),
+                expandedTitleScale: 1,
+                titlePadding: const EdgeInsets.all(0),
+              ),
+            ),
+            // isSelectGrid
+            //     ? SliverGrid.builder(
+            //         gridDelegate:
+            //             const SliverGridDelegateWithFixedCrossAxisCount(
+            //           crossAxisCount: 2,
+            //           // mainAxisExtent: 2
+            //         ),
+            //         itemBuilder: (context, index) {
+            //           return homeGridview(
+            //             assetName: ImageJPGManager.seaSky,
+            //             downloadOnTap: () {},
+            //             height: (index % 5 + 1) * 100,
+            //             favoriteOnTap: () {
+            //               setState(() {
+            //                 isSelect = !isSelect;
+            //               });
+            //             },
+            //             isSelect: isSelect,
+            //           );
+            //         },
+            //       )
+            isSelectGrid
+                ? SliverMasonryGrid.count(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                    childCount: 10,
+                    itemBuilder: (context, index) {
+                      return homeGridview(
+                        assetName: ImageJPGManager.seaSky,
+                        downloadOnTap: () {},
+                        height: (index % 5 + 1) * 100,
+                        favoriteOnTap: () {
+                          setState(() {
+                            isSelect = !isSelect;
+                          });
+                        },
+                        isSelect: isSelect,
+                      );
+                    },
+                  )
+                : NotificationListener<OverscrollIndicatorNotification>(
                     onNotification: (notification) {
                       notification.disallowIndicator();
                       return true;
                     },
-                    child: GridView.builder(
+                    child: SliverGrid(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
@@ -272,47 +260,25 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisSpacing: 10,
                         childAspectRatio: 0.6,
                       ),
-                      itemCount: 15,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                            image: const DecorationImage(
-                              fit: BoxFit.fill,
-                              image:
-                                  AssetImage(ImageJPGManager.yellowPinkColor),
-                            ),
-                          ),
-                          alignment: Alignment.bottomRight,
-                          child: GestureDetector(
-                            onTap: () {
+                      delegate: SliverChildBuilderDelegate(
+                        childCount: 15,
+                        (context, index) {
+                          return homeGridview(
+                            assetName: ImageJPGManager.yellowPinkColor,
+                            downloadOnTap: () {},
+                            favoriteOnTap: () {
                               setState(() {
                                 isSelect = !isSelect;
                               });
                             },
-                            child: Padding(
-                              padding: padding(
-                                  paddingType: PaddingType.LTRB,
-                                  right: 0.01.sw,
-                                  bottom: 0.005.sh),
-                              child: isSelect
-                                  ? const Icon(
-                                      Icons.favorite_border_rounded,
-                                      color: ColorManager.white,
-                                    )
-                                  : const Icon(
-                                      Icons.favorite_rounded,
-                                      color: ColorManager.red,
-                                    ),
-                            ),
-                          ),
-                        );
-                      },
+                            isSelect: isSelect,
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
-        ],
+          ],
+        ),
       ),
     );
   }

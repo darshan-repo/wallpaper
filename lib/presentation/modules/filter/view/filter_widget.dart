@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 Widget filterRow({
   ValueNotifier<bool>? controller,

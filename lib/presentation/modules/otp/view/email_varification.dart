@@ -1,18 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:wallpaper/presentation/common/appbar.dart';
-import 'package:wallpaper/presentation/common/buttons.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/common/textformfield.dart';
-import 'package:wallpaper/presentation/modules/login/view/login_screen.dart';
-import 'package:wallpaper/presentation/modules/register/view/registration_screen.dart';
-import 'package:wallpaper/presentation/resources/asset_manager.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/string_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
-
-import 'otp_varification.dart';
+import 'package:wallpaper/libs.dart';
 
 class EmailVarificationScreen extends StatefulWidget {
   const EmailVarificationScreen({Key? key}) : super(key: key);
@@ -92,23 +78,14 @@ class _EmailVarificationScreenState extends State<EmailVarificationScreen> {
                                 builder: (context) => alertDialog(
                                   context,
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const RegistrationScreen(),
-                                      ),
-                                    );
+                                    Navigator.pop(context);
+                                    AppNavigation.shared
+                                        .moveToRegistrationScreen();
                                   },
                                 ),
                               )
-                            : Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const OTPVarificationScreen(),
-                                ),
-                              );
+                            : AppNavigation.shared
+                                .moveToOTPVatificationScreen();
                       },
                       buttonColor: const Color.fromRGBO(160, 152, 250, 1),
                       buttonText: 'Send Code',
@@ -123,12 +100,7 @@ class _EmailVarificationScreenState extends State<EmailVarificationScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
-                              ),
-                            );
+                            AppNavigation.shared.moveToLoginScreen();
                           },
                           child: Text(
                             'Login',
@@ -150,8 +122,8 @@ class _EmailVarificationScreenState extends State<EmailVarificationScreen> {
 
 Widget alertDialog(
   BuildContext context, {
-    String buttonText = '',
-  required void Function()? onPressed,
+  String buttonText = '',
+  Function()? onPressed,
 }) {
   return AlertDialog(
     shape: RoundedRectangleBorder(

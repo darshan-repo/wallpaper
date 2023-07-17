@@ -1,15 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/common/appbar.dart';
-import 'package:wallpaper/presentation/common/buttons.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/common/textformfield.dart';
-import 'package:wallpaper/presentation/modules/login/view/login_screen.dart';
-import 'package:wallpaper/presentation/resources/asset_manager.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/font_manager.dart';
-import 'package:wallpaper/presentation/resources/string_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -98,7 +87,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     verticalSpace(0.05.sh),
                     materialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        AppNavigation.shared.moveToBottomNavigationBarScreen();
+                      },
                       buttonColor: const Color.fromRGBO(136, 126, 249, 1),
                       buttonText: AppString.register,
                     ),
@@ -141,12 +132,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
-                              ),
-                            );
+                            AppNavigation.shared.moveToLoginScreen();
                           },
                           child: Text(
                             AppString.signIn,

@@ -1,13 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/resources/asset_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
-
-import 'collection_view/collection_view.dart';
+import 'package:wallpaper/libs.dart';
 
 class CollectionScreen extends StatefulWidget {
   const CollectionScreen({super.key});
+  static const String route = 'CollectionScreen';
 
   @override
   State<CollectionScreen> createState() => _CollectionScreenState();
@@ -39,10 +34,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding(
-        paddingType: PaddingType.all,
-        paddingValue: 0.02.sh,
-      ),
+      padding: padding(paddingType: PaddingType.all, paddingValue: 0.01.sh),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -60,15 +52,12 @@ class _CollectionScreenState extends State<CollectionScreen> {
               child: ListView.builder(
                 itemCount: collection.length,
                 itemBuilder: (context, index) => GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CollectionViewScreen(
-                          title: collection[index]['collectionName'],
-                          desc: collection[index]['totalCollection'],
-                        ),
-                      ),
+                  onTap: () async {
+                    await AppNavigation.shared.moveToCollectionViewScreen(
+                      {
+                        'collectionName': collection[index]['collectionName'],
+                        'totalCollection': collection[index]['totalCollection'],
+                      },
                     );
                   },
                   child: Container(

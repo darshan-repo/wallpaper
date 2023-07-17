@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:wallpaper/libs.dart';
 
 class SlideRoute extends PageRouteBuilder {
   final Widget enterPage;

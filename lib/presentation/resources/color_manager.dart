@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:wallpaper/libs.dart';
 
 class ColorManager {
   static const Color primaryColor = Color(0xFF121928);

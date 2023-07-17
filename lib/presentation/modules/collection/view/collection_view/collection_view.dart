@@ -1,15 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/common/appbar.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/resources/asset_manager.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 class CollectionViewScreen extends StatefulWidget {
-  final String title, desc;
-  const CollectionViewScreen(
-      {super.key, required this.title, required this.desc});
+  final Map<String, dynamic> args;
+  const CollectionViewScreen({super.key, required this.args});
+  static const route = 'CollectionViewScreen';
 
   @override
   State<CollectionViewScreen> createState() => _CollectionViewScreenState();
@@ -31,12 +25,12 @@ class _CollectionViewScreenState extends State<CollectionViewScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.title,
+              widget.args['collectionName'],
               style: myTheme.textTheme.titleLarge,
             ),
             verticalSpace(0.01.sh),
             Text(
-              widget.desc,
+              widget.args['totalCollection'],
               style: myTheme.textTheme.labelMedium,
             ),
             verticalSpace(0.01.sh),

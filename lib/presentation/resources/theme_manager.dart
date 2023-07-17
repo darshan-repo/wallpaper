@@ -1,8 +1,5 @@
 // ignore_for_file: deprecated_member_use
-
-import 'package:flutter/material.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/font_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 final ThemeData myTheme = ThemeData(
   textTheme: TextTheme(

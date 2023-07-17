@@ -1,23 +1,8 @@
-import 'package:dot_navigation_bar/dot_navigation_bar.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/modules/collection/view/collection.dart';
-import 'package:wallpaper/presentation/modules/downloads/view/downloads_screen.dart';
-import 'package:wallpaper/presentation/modules/favorites/view/favorite_screen.dart';
-import 'package:wallpaper/presentation/modules/home/view/home_screen.dart';
-import 'package:wallpaper/presentation/modules/privacy_policy/view/privacy_policy.dart';
-import 'package:wallpaper/presentation/modules/report_an_issue/view/report_an_issue_screen.dart';
-import 'package:wallpaper/presentation/modules/search/view/search_screen.dart';
-import 'package:wallpaper/presentation/modules/settings/view/settings.dart';
-import 'package:wallpaper/presentation/resources/asset_manager.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-
-import '../../notification/view/notification_screen.dart';
+import 'package:wallpaper/libs.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
   const BottomNavigationBarScreen({Key? key}) : super(key: key);
+  static const route = 'BottomNavigationBarScreen';
 
   @override
   State<BottomNavigationBarScreen> createState() =>
@@ -102,12 +87,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
               ),
               ListTile(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const BottomNavigationBarScreen(),
-                    ),
-                  );
+                  AppNavigation.shared.moveToBottomNavigationBarScreen();
                 },
                 splashColor: ColorManager.transparentColor,
                 leading: Image.asset(
@@ -120,12 +100,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
               ),
               ListTile(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const FavoriteScreen(),
-                    ),
-                  );
+                  AppNavigation.shared.moveToFavoriteScreen();
                 },
                 splashColor: ColorManager.transparentColor,
                 leading: Image.asset(
@@ -138,12 +113,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
               ),
               ListTile(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DownloadScreen(),
-                    ),
-                  );
+                  AppNavigation.shared.moveToDownloadScreen();
                 },
                 splashColor: ColorManager.transparentColor,
                 leading: Image.asset(
@@ -156,12 +126,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
               ),
               ListTile(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PrivacyPolicyScreen(),
-                    ),
-                  );
+                  AppNavigation.shared.moveToPrivacyPolicyScreen();
                 },
                 splashColor: ColorManager.transparentColor,
                 leading: Image.asset(
@@ -174,12 +139,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
               ),
               ListTile(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ReportAnIssueScreen(),
-                    ),
-                  );
+                  AppNavigation.shared.moveToReportAnIssueScreen();
                 },
                 splashColor: ColorManager.transparentColor,
                 leading: Image.asset(
@@ -208,6 +168,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                     paddingType: PaddingType.bottom, paddingValue: 0.025.sh),
                 child: const Text(
                   'Terms of Service | Privacy Policy',
+                  style: TextStyle(color: ColorManager.white),
                 ),
               ),
             ],
@@ -247,12 +208,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                   paddingType: PaddingType.right, paddingValue: 0.035.sw),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const NotificationScreen(),
-                    ),
-                  );
+                  AppNavigation.shared.moveToNotificationScreen();
                 },
                 child: const Icon(Icons.notification_important_outlined),
               ),
@@ -261,23 +217,21 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
         ),
         extendBody: true,
         body: NavigationScreen(screensList[activeIndex]),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: DotNavigationBar(
-            backgroundColor: ColorManager.secondaryColor,
-            splashColor: ColorManager.transparentColor,
-            duration: Duration.zero,
-            currentIndex: activeIndex,
-            dotIndicatorColor: Colors.white,
-            unselectedItemColor: Colors.grey[300],
-            splashBorderRadius: 50,
-            onTap: (int index) {
-              setState(() {
-                activeIndex = index;
-              });
-            },
-            items: tabData,
-          ),
+        bottomNavigationBar: DotNavigationBar(
+          marginR: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+          backgroundColor: ColorManager.secondaryColor,
+          splashColor: ColorManager.transparentColor,
+          duration: Duration.zero,
+          currentIndex: activeIndex,
+          dotIndicatorColor: Colors.white,
+          unselectedItemColor: Colors.grey[300],
+          splashBorderRadius: 50,
+          onTap: (int index) {
+            setState(() {
+              activeIndex = index;
+            });
+          },
+          items: tabData,
         ),
       ),
     );

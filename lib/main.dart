@@ -1,9 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/modules/splash/view/splash_screen.dart';
+import 'package:wallpaper/libs.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+    [
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ],
+  );
   runApp(const WallPaper());
 }
 
@@ -13,10 +17,17 @@ class WallPaper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      splitScreenMode: false,
-      builder: (context, child) => const MaterialApp(
-        home: SplashScreen(),
-        debugShowCheckedModeBanner: false,
+      splitScreenMode: true,
+      builder: (context, child) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: MaterialApp(
+          navigatorKey: NavigationUtilities.key,
+          onGenerateRoute: onGenerateRoute,
+          navigatorObservers: [routeObserver],
+          home: const SplashScreen(),
+          debugShowCheckedModeBanner: false,
+        ),
       ),
     );
   }

@@ -1,14 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/common/appbar.dart';
-import 'package:wallpaper/presentation/common/buttons.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/modules/filter/view/filter_widget.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 class FilterScreen extends StatefulWidget {
   const FilterScreen({super.key});
+  static const route = 'FilterScreen';
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();
@@ -63,7 +57,9 @@ class _FilterScreenState extends State<FilterScreen> {
             filterRow(title: 'Sort By Size', controller: controller05),
             const Spacer(),
             materialButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               buttonText: 'Apply Filters',
               buttonColor: const Color(0xFFA098FA),
             ),

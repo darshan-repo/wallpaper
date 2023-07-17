@@ -1,15 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/common/buttons.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/modules/login/view/login_screen.dart';
-import 'package:wallpaper/presentation/resources/asset_manager.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/string_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 class OnBoarding3Screen extends StatelessWidget {
   const OnBoarding3Screen({super.key});
+  static const route = 'OnBoarding3Screen';
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +32,7 @@ class OnBoarding3Screen extends StatelessWidget {
             verticalSpace(0.05.sh),
             materialButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginScreen(),
-                  ),
-                );
+                AppNavigation.shared.moveToBottomNavigationBarScreen();
               },
               buttonText: 'Get Started',
             ),

@@ -1,17 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
 
-Widget materialButton(
-    {required void Function()? onPressed,
-    String buttonText = '',
-    Color buttonColor = ColorManager.secondaryColor,
-    String? assetName,
-    Color? imageColor,
-    double minWidth = double.infinity,
-    Widget? child}) {
+import 'package:wallpaper/libs.dart';
+
+Widget materialButton({
+  Function()? onPressed,
+  String buttonText = '',
+  Color buttonColor = ColorManager.secondaryColor,
+  String? assetName,
+  Color? imageColor,
+  double minWidth = double.infinity,
+  Widget? child,
+}) {
   return MaterialButton(
     onPressed: onPressed,
     color: buttonColor,

@@ -1,15 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:wallpaper/presentation/common/appbar.dart';
-import 'package:wallpaper/presentation/common/buttons.dart';
-import 'package:wallpaper/presentation/common/common_spaces.dart';
-import 'package:wallpaper/presentation/common/textformfield.dart';
-import 'package:wallpaper/presentation/modules/otp/view/change_password.dart';
-import 'package:wallpaper/presentation/resources/asset_manager.dart';
-import 'package:wallpaper/presentation/resources/color_manager.dart';
-import 'package:wallpaper/presentation/resources/string_manager.dart';
-import 'package:wallpaper/presentation/resources/theme_manager.dart';
+import 'package:wallpaper/libs.dart';
 
 class SetPasswordScreen extends StatefulWidget {
   const SetPasswordScreen({Key? key}) : super(key: key);
@@ -102,12 +91,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                     verticalSpace(0.1.sh),
                     materialButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ChangePasswordScreen(),
-                          ),
-                        );
+                        AppNavigation.shared.moveToChangePasswordScreen();
                       },
                       buttonColor: const Color(0xFFA098FA),
                       buttonText: AppString.reserPassword,
