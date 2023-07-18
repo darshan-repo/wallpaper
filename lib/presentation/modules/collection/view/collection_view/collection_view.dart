@@ -49,49 +49,59 @@ class _CollectionViewScreenState extends State<CollectionViewScreen> {
                   ),
                   itemCount: 15,
                   itemBuilder: (context, index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                        image: const DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage(ImageJPGManager.yellowPinkColor),
-                        ),
-                      ),
+                    return GestureDetector(
+                      onTap: () {
+                        AppNavigation.shared.moveToSetWallpaperScreen({
+                          'img':
+                              'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgitwckhqakWVDzZFPu0kn80NvBP3xXbbuS94Jl0pgHNUEvrKZtNtB1nMkwBtwVL49kski81Xb8aDKonFKrlbM9eKR28R1hRbsn7W8W7wArqOGXjqZRp5Uioj8PbnJCWC8dbEshwFEY2ut_k5xU62D0eP7e0IxzxoR59pmi6Iq4TTSEcsdrmvq7Ywk3/w296-h640/BIKER.jpg'
+                        });
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.white,
+                          image: const DecorationImage(
+                            fit: BoxFit.fill,
+                            image: AssetImage(ImageJPGManager.yellowPinkColor),
+                          ),
                         ),
-                        alignment: Alignment.bottomRight,
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isSelect = !isSelect;
-                            });
-                          },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.black.withOpacity(0.05),
+                          ),
+                          alignment: Alignment.bottomRight,
                           child: Padding(
                             padding: padding(
-                                paddingType: PaddingType.LTRB,
-                                right: 0.01.sw,
-                                bottom: 0.005.sh),
+                              paddingType: PaddingType.LTRB,
+                              right: 0.01.sw,
+                              bottom: 0.005.sh,
+                            ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.file_download_outlined,
+                                  size: 0.035.sh,
                                   color: ColorManager.white,
                                 ),
-                                verticalSpace(0.01.sh),
-                                isSelect
-                                    ? const Icon(
-                                        Icons.favorite_border_rounded,
-                                        color: ColorManager.white,
-                                      )
-                                    : const Icon(
-                                        Icons.favorite_rounded,
-                                        color: ColorManager.red,
-                                      ),
+                                verticalSpace(0.02.sh),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isSelect = !isSelect;
+                                    });
+                                  },
+                                  child: isSelect
+                                      ? const Icon(
+                                          Icons.favorite_border_rounded,
+                                          color: ColorManager.white,
+                                        )
+                                      : const Icon(
+                                          Icons.favorite_rounded,
+                                          color: ColorManager.red,
+                                        ),
+                                ),
                               ],
                             ),
                           ),

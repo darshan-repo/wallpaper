@@ -122,6 +122,12 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
     case FilterScreen.route:
       screen = const FilterScreen();
       break;
+    case FeaturedScreen.route:
+      screen = const FeaturedScreen();
+      break;
+    case SetWallpaperScreen.route:
+      screen = SetWallpaperScreen(imgURL: arguments);
+      break;
   }
 
   switch (routeType) {

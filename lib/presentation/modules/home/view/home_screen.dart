@@ -81,21 +81,26 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: 0.30,
                           assetName: ImageJPGManager.yellowPinkColor,
                         ),
-                        conatiner(
-                          height: 0.1,
-                          width: 0.30,
-                          assetName: ImageJPGManager.bananas,
-                          child: Container(
-                            height: 0.1.sh,
-                            width: 0.30.sh,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Colors.black.withOpacity(0.2),
-                            ),
-                            child: Text(
-                              '+99',
-                              style: myTheme.textTheme.titleLarge,
+                        GestureDetector(
+                          onTap: () {
+                            AppNavigation.shared.moveToFeaturedScreen();
+                          },
+                          child: conatiner(
+                            height: 0.1,
+                            width: 0.30,
+                            assetName: ImageJPGManager.bananas,
+                            child: Container(
+                              height: 0.1.sh,
+                              width: 0.30.sh,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.black.withOpacity(0.2),
+                              ),
+                              child: Text(
+                                '+99',
+                                style: myTheme.textTheme.titleLarge,
+                              ),
                             ),
                           ),
                         ),
@@ -107,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: double.infinity,
                   padding: padding(
                       paddingType: PaddingType.vertical, paddingValue: 0.01.sh),
-                  color: ColorManager.secondaryColor,
+                  color: ColorManager.primaryColor,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -206,27 +211,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 titlePadding: const EdgeInsets.all(0),
               ),
             ),
-            // isSelectGrid
-            //     ? SliverGrid.builder(
-            //         gridDelegate:
-            //             const SliverGridDelegateWithFixedCrossAxisCount(
-            //           crossAxisCount: 2,
-            //           // mainAxisExtent: 2
-            //         ),
-            //         itemBuilder: (context, index) {
-            //           return homeGridview(
-            //             assetName: ImageJPGManager.seaSky,
-            //             downloadOnTap: () {},
-            //             height: (index % 5 + 1) * 100,
-            //             favoriteOnTap: () {
-            //               setState(() {
-            //                 isSelect = !isSelect;
-            //               });
-            //             },
-            //             isSelect: isSelect,
-            //           );
-            //         },
-            //       )
             isSelectGrid
                 ? SliverMasonryGrid.count(
                     crossAxisCount: 2,
@@ -234,16 +218,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisSpacing: 10,
                     childCount: 10,
                     itemBuilder: (context, index) {
-                      return homeGridview(
-                        assetName: ImageJPGManager.seaSky,
-                        downloadOnTap: () {},
-                        height: (index % 5 + 1) * 100,
-                        favoriteOnTap: () {
-                          setState(() {
-                            isSelect = !isSelect;
+                      return GestureDetector(
+                        onTap: () {
+                          AppNavigation.shared.moveToSetWallpaperScreen({
+                            'img':
+                                'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgitwckhqakWVDzZFPu0kn80NvBP3xXbbuS94Jl0pgHNUEvrKZtNtB1nMkwBtwVL49kski81Xb8aDKonFKrlbM9eKR28R1hRbsn7W8W7wArqOGXjqZRp5Uioj8PbnJCWC8dbEshwFEY2ut_k5xU62D0eP7e0IxzxoR59pmi6Iq4TTSEcsdrmvq7Ywk3/w296-h640/BIKER.jpg'
                           });
                         },
-                        isSelect: isSelect,
+                        child: homeGridview(
+                          assetName: ImageJPGManager.seaSky,
+                          downloadOnTap: () {},
+                          height: (index % 5 + 1) * 100,
+                          favoriteOnTap: () {
+                            setState(() {
+                              isSelect = !isSelect;
+                            });
+                          },
+                          isSelect: isSelect,
+                        ),
                       );
                     },
                   )
@@ -263,15 +255,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       delegate: SliverChildBuilderDelegate(
                         childCount: 15,
                         (context, index) {
-                          return homeGridview(
-                            assetName: ImageJPGManager.yellowPinkColor,
-                            downloadOnTap: () {},
-                            favoriteOnTap: () {
-                              setState(() {
-                                isSelect = !isSelect;
+                          return GestureDetector(
+                            onTap: () {
+                              AppNavigation.shared.moveToSetWallpaperScreen({
+                                'img':
+                                    'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgitwckhqakWVDzZFPu0kn80NvBP3xXbbuS94Jl0pgHNUEvrKZtNtB1nMkwBtwVL49kski81Xb8aDKonFKrlbM9eKR28R1hRbsn7W8W7wArqOGXjqZRp5Uioj8PbnJCWC8dbEshwFEY2ut_k5xU62D0eP7e0IxzxoR59pmi6Iq4TTSEcsdrmvq7Ywk3/w296-h640/BIKER.jpg'
                               });
                             },
-                            isSelect: isSelect,
+                            child: homeGridview(
+                              assetName: ImageJPGManager.yellowPinkColor,
+                              downloadOnTap: () {},
+                              favoriteOnTap: () {
+                                setState(() {
+                                  isSelect = !isSelect;
+                                });
+                              },
+                              isSelect: isSelect,
+                            ),
                           );
                         },
                       ),

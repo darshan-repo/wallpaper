@@ -34,74 +34,74 @@ class _SettingScreenState extends State<SettingScreen> {
             style: myTheme.textTheme.titleLarge,
           ),
           verticalSpace(0.02.sh),
-          ListTile(
-            leading: Image.asset(
-              ImageAssetManager.updateProfile,
-              color: ColorManager.white,
-              height: 0.035.sh,
-              width: 0.035.sh,
-            ),
-            title: Text(
-              'Update Profile',
-              style: myTheme.textTheme.displayMedium,
-            ),
-            trailing: GestureDetector(
-              onTap: () {
-                AppNavigation.shared.moveToUpdateProfileScreen();
-              },
-              child: const Icon(
-                Icons.arrow_forward_ios_rounded,
-                color: ColorManager.white,
-              ),
-            ),
-          ),
-          const Divider(
-            color: ColorManager.secondaryColor,
-          ),
-          ListTile(
-            leading: Image.asset(
-              ImageAssetManager.language,
-              color: ColorManager.white,
-              height: 0.035.sh,
-              width: 0.035.sh,
-            ),
-            title: Text(
-              'Language',
-              style: myTheme.textTheme.displayMedium,
-            ),
-            subtitle: Text(
-              'English',
-              style: myTheme.textTheme.headlineSmall,
-            ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios_rounded,
-              color: ColorManager.white,
-            ),
-          ),
-          const Divider(
-            color: ColorManager.secondaryColor,
-          ),
-          ListTile(
-            leading: Image.asset(
-              ImageAssetManager.theme,
-              color: ColorManager.white,
-              height: 0.035.sh,
-              width: 0.035.sh,
-            ),
-            title: Text(
-              'Dark Theme',
-              style: myTheme.textTheme.displayMedium,
-            ),
-            trailing: AdvancedSwitch(
-              width: 56,
-              height: 32,
-              controller: themeController,
-              borderRadius: BorderRadius.circular(18),
-            ),
-          ),
-          const Divider(
-            color: ColorManager.secondaryColor,
-          ),
+          // ListTile(
+          //   leading: Image.asset(
+          //     ImageAssetManager.updateProfile,
+          //     color: ColorManager.white,
+          //     height: 0.035.sh,
+          //     width: 0.035.sh,
+          //   ),
+          //   title: Text(
+          //     'Update Profile',
+          //     style: myTheme.textTheme.displayMedium,
+          //   ),
+          //   trailing: GestureDetector(
+          //     onTap: () {
+          //       AppNavigation.shared.moveToUpdateProfileScreen();
+          //     },
+          //     child: const Icon(
+          //       Icons.arrow_forward_ios_rounded,
+          //       color: ColorManager.white,
+          //     ),
+          //   ),
+          // ),
+          // const Divider(
+          //   color: ColorManager.secondaryColor,
+          // ),
+          // ListTile(
+          //   leading: Image.asset(
+          //     ImageAssetManager.language,
+          //     color: ColorManager.white,
+          //     height: 0.035.sh,
+          //     width: 0.035.sh,
+          //   ),
+          //   title: Text(
+          //     'Language',
+          //     style: myTheme.textTheme.displayMedium,
+          //   ),
+          //   subtitle: Text(
+          //     'English',
+          //     style: myTheme.textTheme.headlineSmall,
+          //   ),
+          //   trailing: const Icon(
+          //     Icons.arrow_forward_ios_rounded,
+          //     color: ColorManager.white,
+          //   ),
+          // ),
+          // const Divider(
+          //   color: ColorManager.secondaryColor,
+          // ),
+          // ListTile(
+          //   leading: Image.asset(
+          //     ImageAssetManager.theme,
+          //     color: ColorManager.white,
+          //     height: 0.035.sh,
+          //     width: 0.035.sh,
+          //   ),
+          //   title: Text(
+          //     'Dark Theme',
+          //     style: myTheme.textTheme.displayMedium,
+          //   ),
+          //   trailing: AdvancedSwitch(
+          //     width: 56,
+          //     height: 32,
+          //     controller: themeController,
+          //     borderRadius: BorderRadius.circular(18),
+          //   ),
+          // ),
+          // const Divider(
+          //   color: ColorManager.secondaryColor,
+          // ),
           ListTile(
             leading: Image.asset(
               ImageAssetManager.autoUpdate,
@@ -156,21 +156,21 @@ class _SettingScreenState extends State<SettingScreen> {
               style: myTheme.textTheme.displayMedium,
             ),
           ),
-          const Divider(
-            color: ColorManager.secondaryColor,
-          ),
-          ListTile(
-            leading: Image.asset(
-              ImageAssetManager.share,
-              color: ColorManager.white,
-              height: 0.035.sh,
-              width: 0.035.sh,
-            ),
-            title: Text(
-              'Share with friend',
-              style: myTheme.textTheme.displayMedium,
-            ),
-          ),
+          // const Divider(
+          //   color: ColorManager.secondaryColor,
+          // ),
+          // ListTile(
+          //   leading: Image.asset(
+          //     ImageAssetManager.share,
+          //     color: ColorManager.white,
+          //     height: 0.035.sh,
+          //     width: 0.035.sh,
+          //   ),
+          //   title: Text(
+          //     'Share with friend',
+          //     style: myTheme.textTheme.displayMedium,
+          //   ),
+          // ),
         ],
       ),
     );

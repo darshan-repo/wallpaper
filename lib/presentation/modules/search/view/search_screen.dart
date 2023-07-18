@@ -16,7 +16,7 @@ class _SearchScreenState extends State<SearchScreen>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 3, vsync: this, initialIndex: 0);
+    tabController = TabController(length: 2, vsync: this, initialIndex: 0);
   }
 
   int tabIndex = 0;
@@ -96,12 +96,6 @@ class _SearchScreenState extends State<SearchScreen>
                     ? myTheme.textTheme.displaySmall
                     : myTheme.textTheme.labelMedium,
               ),
-              Text(
-                'Author',
-                style: tabIndex == 2
-                    ? myTheme.textTheme.displaySmall
-                    : myTheme.textTheme.labelMedium,
-              ),
             ],
           ),
           verticalSpace(0.02.sh),
@@ -112,7 +106,6 @@ class _SearchScreenState extends State<SearchScreen>
               children: const [
                 PhotosSearchScreen(),
                 CategoriesSearchScreen(),
-                AuthorSearchScreen(),
               ],
             ),
           ),

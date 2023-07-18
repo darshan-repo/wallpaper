@@ -1,6 +1,5 @@
 import 'package:wallpaper/libs.dart';
 
-
 PreferredSizeWidget appbar(BuildContext context,
     {IconData? actionIcon,
     void Function()? actionOnTap,

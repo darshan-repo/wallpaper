@@ -75,7 +75,8 @@ Widget homeGridview({
           children: [
             GestureDetector(
               onTap: downloadOnTap,
-              child: const Icon(
+              child: Icon(
+                size: 0.035.sh,
                 Icons.file_download_outlined,
                 color: ColorManager.white,
               ),

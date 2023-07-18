@@ -1,7 +1,8 @@
 import 'package:wallpaper/libs.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SharedPref.init;
   SystemChrome.setPreferredOrientations(
     [
       DeviceOrientation.portraitUp,

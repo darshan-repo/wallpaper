@@ -1,4 +1,5 @@
 import 'package:wallpaper/libs.dart';
+
 class DownloadScreen extends StatefulWidget {
   const DownloadScreen({super.key});
   static const route = 'DownloadScreen';
@@ -94,17 +95,6 @@ class _DownloadScreenState extends State<DownloadScreen> {
                           itemBuilder: (context, index) {
                             return InkWell(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SetWallpaperScreen(
-                                      imgURL: ImageJPGManager.yellowPinkColor,
-                                    ),
-                                  ),
-                                );
-                              },
-                              onLongPress: () {
                                 showModalBottomSheet(
                                   elevation: 0,
                                   backgroundColor: ColorManager.secondaryColor,

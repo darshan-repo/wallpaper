@@ -1,6 +1,5 @@
 import 'package:wallpaper/libs.dart';
 
-
 class PhotosSearchScreen extends StatefulWidget {
   const PhotosSearchScreen({super.key});
 
@@ -9,6 +8,7 @@ class PhotosSearchScreen extends StatefulWidget {
 }
 
 class _PhotosSearchScreenState extends State<PhotosSearchScreen> {
+  bool isSelect = false;
   @override
   Widget build(BuildContext context) {
     return NotificationListener<OverscrollIndicatorNotification>(
@@ -48,14 +48,27 @@ class _PhotosSearchScreenState extends State<PhotosSearchScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.file_download_outlined,
+                      size: 0.035.sh,
                       color: ColorManager.white,
                     ),
-                    verticalSpace(0.01.sh),
-                    const Icon(
-                      Icons.favorite_rounded,
-                      color: ColorManager.red,
+                    verticalSpace(0.02.sh),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isSelect = !isSelect;
+                        });
+                      },
+                      child: isSelect
+                          ? const Icon(
+                              Icons.favorite_rounded,
+                              color: ColorManager.red,
+                            )
+                          : const Icon(
+                              Icons.favorite_border_rounded,
+                              color: ColorManager.white,
+                            ),
                     ),
                   ],
                 ),

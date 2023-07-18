@@ -3,6 +3,12 @@ import 'package:wallpaper/libs.dart';
 class AppNavigation {
   static final AppNavigation shared = AppNavigation();
 
+  goNextFromSplash() {
+    SharedPref.getIsScanned == true
+        ? moveToBottomNavigationBarScreen()
+        : moveToOnBoarding1Screen();
+  }
+
   void moveToOnBoarding1Screen() {
     NavigationUtilities.pushNamed(OnBoarding1Screen.route);
   }
@@ -79,5 +85,13 @@ class AppNavigation {
 
   void moveToFilterScreen() {
     NavigationUtilities.pushNamed(FilterScreen.route, type: RouteType.down);
+  }
+
+  void moveToFeaturedScreen() {
+    NavigationUtilities.pushNamed(FeaturedScreen.route);
+  }
+
+  Future moveToSetWallpaperScreen(Map<String, dynamic> args) async {
+    await NavigationUtilities.pushNamed(SetWallpaperScreen.route, args: args);
   }
 }

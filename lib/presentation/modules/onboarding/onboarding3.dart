@@ -32,6 +32,7 @@ class OnBoarding3Screen extends StatelessWidget {
             verticalSpace(0.05.sh),
             materialButton(
               onPressed: () {
+                SharedPref.setIsScanned = true;
                 AppNavigation.shared.moveToBottomNavigationBarScreen();
               },
               buttonText: 'Get Started',

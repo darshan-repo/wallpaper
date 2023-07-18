@@ -3,7 +3,6 @@ import 'package:wallpaper/libs.dart';
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
   static const route = 'FavoriteScreen';
-  
 
   @override
   State<FavoriteScreen> createState() => _FavoriteScreenState();
@@ -116,13 +115,15 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.file_download_outlined,
+                                        size: 0.035.sh,
                                         color: ColorManager.white,
                                       ),
-                                      verticalSpace(0.01.sh),
-                                      const Icon(
+                                      verticalSpace(0.02.sh),
+                                      Icon(
                                         Icons.favorite_rounded,
+                                        size: 0.035.sh,
                                         color: ColorManager.red,
                                       ),
                                     ],

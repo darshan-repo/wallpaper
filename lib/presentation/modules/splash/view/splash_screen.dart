@@ -12,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
   initState() {
     super.initState();
     Timer(const Duration(seconds: 3), () {
-      AppNavigation.shared.moveToOnBoarding1Screen();
+      AppNavigation.shared.goNextFromSplash();
     });
   }
 
