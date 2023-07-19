@@ -63,4 +63,3 @@ export 'package:wallpaper/presentation/common/willpopscope.dart';
 export 'package:wallpaper/presentation/modules/set_wallpaper/view/set_wallpaper_widget.dart';
 export 'package:wallpaper/presentation/modules/featured_screen/view/featured_screen.dart';
 export 'package:shared_preferences/shared_preferences.dart';
-export 'package:wallpaper/presentation/common/shared_pref.dart';

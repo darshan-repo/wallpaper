@@ -89,9 +89,6 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
     case OTPVarificationScreen.route:
       screen = const OTPVarificationScreen();
       break;
-    case SetPasswordScreen.route:
-      screen = const SetPasswordScreen();
-      break;
     case ChangePasswordScreen.route:
       screen = const ChangePasswordScreen();
       break;

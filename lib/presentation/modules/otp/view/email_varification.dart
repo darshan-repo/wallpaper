@@ -1,4 +1,6 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallpaper/libs.dart';
+import 'package:wallpaper/logic/auth_bloc/bloc/auth_bloc_bloc.dart';
 
 class EmailVarificationScreen extends StatefulWidget {
   const EmailVarificationScreen({Key? key}) : super(key: key);
@@ -13,8 +15,14 @@ class _EmailVarificationScreenState extends State<EmailVarificationScreen> {
   GlobalKey<FormState> forgotPassKey = GlobalKey<FormState>();
   TextEditingController txtEmailIdController = TextEditingController();
   bool isShow = true;
+  String pattern =
+      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+      r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+      r"{0,253}[a-zA-Z0-9])?)*$";
+
   @override
   Widget build(BuildContext context) {
+    RegExp regex = RegExp(pattern);
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -25,95 +33,105 @@ class _EmailVarificationScreenState extends State<EmailVarificationScreen> {
       child: Scaffold(
         backgroundColor: ColorManager.primaryColor,
         appBar: appbar(context),
-        body: Padding(
-          padding: padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),
-          child: NotificationListener<OverscrollIndicatorNotification>(
-            onNotification: (notification) {
-              notification.disallowIndicator();
-              return true;
-            },
-            child: SingleChildScrollView(
-              child: Form(
-                key: forgotPassKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AppString.forgotPassword,
-                      style: myTheme.textTheme.titleLarge,
-                    ),
-                    verticalSpace(0.01.sh),
-                    Text(
-                      AppString.forgotPasswordDesc,
-                      style: myTheme.textTheme.labelSmall,
-                    ),
-                    verticalSpace(0.05.sh),
-                    isShow
-                        ? Align(
-                            alignment: Alignment.center,
-                            child: SvgPicture.asset(
-                              ImageSVGManager.forgotPassword,
-                              height: 0.3.sh,
-                              width: 0.3.sw,
-                            ),
-                          )
-                        : const SizedBox(),
-                    verticalSpace(0.05.sh),
-                    textFormField(
-                        controller: txtEmailIdController,
-                        hintText: AppString.enterYourEmail,
-                        keyboardType: TextInputType.emailAddress,
-                        onTap: () {
-                          setState(() {
-                            isShow = !isShow;
-                          });
-                        }),
-                    verticalSpace(0.04.sh),
-                    materialButton(
-                      onPressed: () {
-                        txtEmailIdController.text != 'darshankikani@gmail.com'
-                            ? showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) => alertDialog(
-                                  context,
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    AppNavigation.shared
-                                        .moveToRegistrationScreen();
-                                  },
-                                ),
-                              )
-                            : AppNavigation.shared
-                                .moveToOTPVatificationScreen();
-                      },
-                      buttonColor: const Color.fromRGBO(160, 152, 250, 1),
-                      buttonText: 'Send Code',
-                    ),
-                    verticalSpace(0.06.sh),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+        body: BlocBuilder<AuthBlocBloc, AuthBlocState>(
+          builder: (context, state) {
+            if (state is AuthBlocLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return Padding(
+              padding:
+                  padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),
+              child: NotificationListener<OverscrollIndicatorNotification>(
+                onNotification: (notification) {
+                  notification.disallowIndicator();
+                  return true;
+                },
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: forgotPassKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Remember Password?  ',
-                          style: myTheme.textTheme.labelMedium,
+                          AppString.forgotPassword,
+                          style: myTheme.textTheme.titleLarge,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            AppNavigation.shared.moveToLoginScreen();
+                        verticalSpace(0.01.sh),
+                        Text(
+                          AppString.forgotPasswordDesc,
+                          style: myTheme.textTheme.labelSmall,
+                        ),
+                        verticalSpace(0.05.sh),
+                        isShow
+                            ? Align(
+                                alignment: Alignment.center,
+                                child: SvgPicture.asset(
+                                  ImageSVGManager.forgotPassword,
+                                  height: 0.3.sh,
+                                  width: 0.3.sw,
+                                ),
+                              )
+                            : const SizedBox(),
+                        verticalSpace(0.05.sh),
+                        textFormField(
+                            controller: txtEmailIdController,
+                            hintText: AppString.enterYourEmail,
+                            keyboardType: TextInputType.emailAddress,
+                            onTap: () {
+                              setState(() {
+                                isShow = !isShow;
+                              });
+                            },
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Email cannot be empty";
+                              } else if (!regex.hasMatch(value)) {
+                                return "Enter a valid email";
+                              }
+                              return null;
+                            }),
+                        verticalSpace(0.04.sh),
+                        materialButton(
+                          onPressed: () {
+                            final FormState? form = forgotPassKey.currentState;
+                            if (form!.validate()) {
+                              BlocProvider.of<AuthBlocBloc>(context).add(
+                                  ForgotOtpSend(
+                                      email: txtEmailIdController.text,
+                                      context: context));
+                            }
                           },
-                          child: Text(
-                            'Login',
-                            style: myTheme.textTheme.displaySmall,
-                          ),
+                          buttonColor: const Color.fromRGBO(160, 152, 250, 1),
+                          buttonText: 'Send Code',
+                        ),
+                        verticalSpace(0.06.sh),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Remember Password?  ',
+                              style: myTheme.textTheme.labelMedium,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                AppNavigation.shared.moveToLoginScreen();
+                              },
+                              child: Text(
+                                'Login',
+                                style: myTheme.textTheme.displaySmall,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

@@ -1,4 +1,6 @@
+import 'package:get/get.dart';
 import 'package:wallpaper/libs.dart';
+import 'package:wallpaper/presentation/common/shared_prefs.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
   const BottomNavigationBarScreen({Key? key}) : super(key: key);
@@ -36,6 +38,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
     const SettingScreen(),
   ];
   final advancedDrawerController = AdvancedDrawerController();
+
   @override
   Widget build(BuildContext context) {
     return AdvancedDrawer(
@@ -152,7 +155,10 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
               ),
               verticalSpace(0.2.sh),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  Get.offAll(const LoginScreen());
+                  UserPreferences().reset();
+                },
                 splashColor: ColorManager.transparentColor,
                 leading: Image.asset(
                   ImageAssetManager.logout,
@@ -240,6 +246,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
 
 class NavigationScreen extends StatefulWidget {
   final Widget currentPage;
+
   const NavigationScreen(this.currentPage, {super.key});
 
   @override

@@ -1,7 +1,14 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallpaper/libs.dart';
+import 'package:wallpaper/logic/auth_bloc/bloc/auth_bloc_bloc.dart';
 
 class OTPVarificationScreen extends StatefulWidget {
-  const OTPVarificationScreen({Key? key}) : super(key: key);
+  const OTPVarificationScreen(
+      {Key? key, this.isForgot = true, this.email, this.passWord})
+      : super(key: key);
+  final bool isForgot;
+  final String? email;
+  final String? passWord;
   static const route = 'OTPVarificationScreen';
 
   @override
@@ -12,6 +19,7 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
   GlobalKey<FormState> forgotPassKey = GlobalKey<FormState>();
   TextEditingController txtEnterCodeController = TextEditingController();
   bool isShow = true;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -46,20 +54,9 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                       AppString.otpVerificationDesc,
                       style: myTheme.textTheme.labelSmall,
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          'dars****@gmail.com. ',
-                          style: myTheme.textTheme.labelSmall,
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Text(
-                            AppString.changeEmailAddress,
-                            style: myTheme.textTheme.displaySmall,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      widget.email ?? "",
+                      style: myTheme.textTheme.labelSmall,
                     ),
                     verticalSpace(0.05.sh),
                     isShow
@@ -106,7 +103,26 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                         ),
                         materialButton(
                           onPressed: () {
-                            AppNavigation.shared.moveToSetPasswordScreen();
+                            if (widget.isForgot) {
+                              BlocProvider.of<AuthBlocBloc>(context).add(
+                                ForgotOtpVerify(
+                                  email: widget.email ?? "",
+                                  otp: int.parse(
+                                    txtEnterCodeController.text,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              BlocProvider.of<AuthBlocBloc>(context).add(
+                                VerifyOtp(
+                                  email: widget.email ?? "",
+                                  passWord: widget.passWord ?? "",
+                                  otp: int.parse(
+                                    txtEnterCodeController.text,
+                                  ),
+                                ),
+                              );
+                            }
                           },
                           minWidth: 0.43.sw,
                           buttonColor: const Color.fromRGBO(160, 152, 250, 1),

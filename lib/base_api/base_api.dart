@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 
@@ -9,7 +10,6 @@ class BaseApi {
     // var headers = {'Content-Type': 'application/json',};
 
     final response = await http.get(
-      // headers: headers,
       Uri.parse("$baseUrl$path"),
     );
     if (response.statusCode == 200) {
@@ -19,20 +19,20 @@ class BaseApi {
     }
   }
 
-// Future postRequest(String path, {Map? data}) async {
-//   log(json.encode(data));
-//   var headers = {'Content-Type': 'application/json'};
-//   http.Response response = await http.post(
-//     Uri.parse("$baseUrl$path"),
-//     headers: headers,
-//     body: json.encode(data),
-//   );
-//   Map responseBody = json.decode(response.body);
-//   if (response.statusCode == 200) {
-//     return responseBody;
-//   } else {
-//     log(response.reasonPhrase!);
-//     return responseBody;
-//   }
-// }
+  static Future postRequest(String path, {Map? data}) async {
+    log(json.encode(data));
+    var headers = {'Content-Type': 'application/json'};
+    http.Response response = await http.post(
+      Uri.parse("$baseUrl$path"),
+      headers: headers,
+      body: json.encode(data),
+    );
+    Map responseBody = json.decode(response.body);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return responseBody;
+    } else {
+      log(response.reasonPhrase!);
+      return responseBody;
+    }
+  }
 }

@@ -1,4 +1,6 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallpaper/libs.dart';
+import 'package:wallpaper/logic/collection_bloc/bloc/collection_bloc_bloc.dart';
 
 class CollectionScreen extends StatefulWidget {
   const CollectionScreen({super.key});
@@ -10,21 +12,36 @@ class CollectionScreen extends StatefulWidget {
 }
 
 class _CollectionScreenState extends State<CollectionScreen> {
-  // AbstractWallpaper? abstractWallpaperData;
   bool loading = false;
 
-  // @override
-  // void initState() {
-  //   getAbstractWallpaperData();
-  //   super.initState();
-  // }
-  //
-  // getAbstractWallpaperData() async {
-  //   loading = true;
-  //   abstractWallpaperData = await NetworkApi.fetchAbsttractWallpaper();
-  //   loading = false;
-  //   setState(() {});
-  // }
+  @override
+  void initState() {
+    BlocProvider.of<CollectionBlocBloc>(context).add(GetWallpaper());
+    super.initState();
+  }
+
+  List<Map> collection = [
+    {
+      'collectionName': 'Abstract',
+      'totalCollection': '1207 Wallpapers',
+      'collectionImage': ImageJPGManager.abstractCollection,
+    },
+    {
+      'collectionName': 'Architecture',
+      'totalCollection': '643 Wallpapers',
+      'collectionImage': ImageJPGManager.architectureCollection,
+    },
+    {
+      'collectionName': 'Colorful',
+      'totalCollection': '988 Wallpapers',
+      'collectionImage': ImageJPGManager.colorfulCollection,
+    },
+    {
+      'collectionName': 'Nature',
+      'totalCollection': '2690 Wallpapers',
+      'collectionImage': ImageJPGManager.natureCollection,
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -38,30 +55,36 @@ class _CollectionScreenState extends State<CollectionScreen> {
             style: myTheme.textTheme.titleLarge,
           ),
           verticalSpace(0.02.sh),
-          loading
-              ? const Center(
-                  child: CircularProgressIndicator(
-                    color: ColorManager.white,
-                  ),
-                )
-              : Expanded(
+          BlocBuilder<CollectionBlocBloc, CollectionBlocState>(
+            builder: (context, state) {
+              if (state is CollectionLoading) {
+                return const Center(
+                    child: CircularProgressIndicator(
+                  color: ColorManager.white,
+                ));
+              } else if (state is CollectionLoaded) {
+                return Expanded(
                   child: NotificationListener<OverscrollIndicatorNotification>(
                     onNotification: (notification) {
                       notification.disallowIndicator();
                       return true;
                     },
                     child: ListView.builder(
-                      itemCount: 15,
+                      itemCount: BlocProvider.of<CollectionBlocBloc>(context)
+                          .getWallpaperModel!
+                          .categories!
+                          .length,
+                      // itemCount: collection.length,
                       itemBuilder: (context, index) => GestureDetector(
                         onTap: () async {
-                          // await AppNavigation.shared.moveToCollectionViewScreen(
-                          //   {
-                          //     'collectionName': collection[index]
-                          //         ['collectionName'],
-                          //     'totalCollection': collection[index]
-                          //         ['totalCollection'],
-                          //   },
-                          // );
+                          await AppNavigation.shared.moveToCollectionViewScreen(
+                            {
+                              'collectionName': collection[index]
+                                  ['collectionName'],
+                              'totalCollection': collection[index]
+                                  ['totalCollection'],
+                            },
+                          );
                         },
                         child: Container(
                           margin: margin(
@@ -72,9 +95,9 @@ class _CollectionScreenState extends State<CollectionScreen> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
                             image: DecorationImage(
-                              image: NetworkImage(''
-                                  // abstractWallpaperData!.data[index].wallpaper,
-                                  ),
+                              image: AssetImage(
+                                collection[index]['collectionImage'],
+                              ),
                               fit: BoxFit.fill,
                             ),
                           ),
@@ -91,13 +114,16 @@ class _CollectionScreenState extends State<CollectionScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '',
-                                  // abstractWallpaperData!.data[index].category,
+                                  BlocProvider.of<CollectionBlocBloc>(context)
+                                          .getWallpaperModel!
+                                          .categories![index]
+                                          .name ??
+                                      "",
                                   style: myTheme.textTheme.titleLarge,
                                 ),
                                 verticalSpace(0.02.sh),
                                 Text(
-                                  '',
+                                  collection[index]['totalCollection'],
                                   style: myTheme.textTheme.labelMedium,
                                 ),
                               ],
@@ -107,7 +133,11 @@ class _CollectionScreenState extends State<CollectionScreen> {
                       ),
                     ),
                   ),
-                ),
+                );
+              }
+              return Container();
+            },
+          ),
         ],
       ),
     );

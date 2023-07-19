@@ -4,9 +4,8 @@ class AppNavigation {
   static final AppNavigation shared = AppNavigation();
 
   goNextFromSplash() {
-    SharedPref.getIsScanned == true
-        ? moveToBottomNavigationBarScreen()
-        : moveToOnBoarding1Screen();
+        // ? moveToBottomNavigationBarScreen()
+         moveToOnBoarding1Screen();
   }
 
   void moveToOnBoarding1Screen() {
@@ -22,8 +21,7 @@ class AppNavigation {
   }
 
   void moveToLoginScreen() {
-    NavigationUtilities.pushReplacementNamed(LoginScreen.route,
-        type: RouteType.up);
+    NavigationUtilities.pushNamed(LoginScreen.route, type: RouteType.up);
   }
 
   void moveToRegistrationScreen() {

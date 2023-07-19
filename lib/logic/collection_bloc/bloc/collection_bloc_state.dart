@@ -5,9 +5,7 @@ abstract class CollectionBlocState {}
 
 class CollectionBlocInitial extends CollectionBlocState {}
 
-class CollectionLoading extends CollectionBlocState {
-  
-}
+class CollectionLoading extends CollectionBlocState {}
 
 class CollectionLoaded extends CollectionBlocState {}
 

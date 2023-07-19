@@ -230,9 +230,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           downloadOnTap: () {},
                           height: (index % 5 + 1) * 100,
                           favoriteOnTap: () {
-                            setState(() {
-                              isSelect = !isSelect;
-                            });
+                            // setState(() {
+                            //   isSelect = !isSelect;
+                            // });
                           },
                           isSelect: isSelect,
                         ),

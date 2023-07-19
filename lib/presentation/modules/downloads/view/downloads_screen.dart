@@ -19,14 +19,12 @@ class _DownloadScreenState extends State<DownloadScreen> {
         backgroundColor: ColorManager.primaryColor,
         appBar: appbar(
           context,
+          leadingOnTap: () {
+            AppNavigation.shared.moveToBottomNavigationBarScreen();
+          },
           actionIcon: Icons.filter_alt_outlined,
           actionOnTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const FilterScreen(),
-              ),
-            );
+            AppNavigation.shared.moveToFilterScreen();
           },
         ),
         body: Padding(

@@ -10,6 +10,7 @@ class CollectionViewScreen extends StatefulWidget {
 }
 
 class _CollectionViewScreenState extends State<CollectionViewScreen> {
+  
   bool isSelect = true;
   @override
   Widget build(BuildContext context) {

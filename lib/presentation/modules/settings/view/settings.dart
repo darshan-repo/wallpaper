@@ -1,3 +1,4 @@
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:wallpaper/libs.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -34,74 +35,6 @@ class _SettingScreenState extends State<SettingScreen> {
             style: myTheme.textTheme.titleLarge,
           ),
           verticalSpace(0.02.sh),
-          // ListTile(
-          //   leading: Image.asset(
-          //     ImageAssetManager.updateProfile,
-          //     color: ColorManager.white,
-          //     height: 0.035.sh,
-          //     width: 0.035.sh,
-          //   ),
-          //   title: Text(
-          //     'Update Profile',
-          //     style: myTheme.textTheme.displayMedium,
-          //   ),
-          //   trailing: GestureDetector(
-          //     onTap: () {
-          //       AppNavigation.shared.moveToUpdateProfileScreen();
-          //     },
-          //     child: const Icon(
-          //       Icons.arrow_forward_ios_rounded,
-          //       color: ColorManager.white,
-          //     ),
-          //   ),
-          // ),
-          // const Divider(
-          //   color: ColorManager.secondaryColor,
-          // ),
-          // ListTile(
-          //   leading: Image.asset(
-          //     ImageAssetManager.language,
-          //     color: ColorManager.white,
-          //     height: 0.035.sh,
-          //     width: 0.035.sh,
-          //   ),
-          //   title: Text(
-          //     'Language',
-          //     style: myTheme.textTheme.displayMedium,
-          //   ),
-          //   subtitle: Text(
-          //     'English',
-          //     style: myTheme.textTheme.headlineSmall,
-          //   ),
-          //   trailing: const Icon(
-          //     Icons.arrow_forward_ios_rounded,
-          //     color: ColorManager.white,
-          //   ),
-          // ),
-          // const Divider(
-          //   color: ColorManager.secondaryColor,
-          // ),
-          // ListTile(
-          //   leading: Image.asset(
-          //     ImageAssetManager.theme,
-          //     color: ColorManager.white,
-          //     height: 0.035.sh,
-          //     width: 0.035.sh,
-          //   ),
-          //   title: Text(
-          //     'Dark Theme',
-          //     style: myTheme.textTheme.displayMedium,
-          //   ),
-          //   trailing: AdvancedSwitch(
-          //     width: 56,
-          //     height: 32,
-          //     controller: themeController,
-          //     borderRadius: BorderRadius.circular(18),
-          //   ),
-          // ),
-          // const Divider(
-          //   color: ColorManager.secondaryColor,
-          // ),
           ListTile(
             leading: Image.asset(
               ImageAssetManager.autoUpdate,
@@ -145,6 +78,61 @@ class _SettingScreenState extends State<SettingScreen> {
             color: ColorManager.secondaryColor,
           ),
           ListTile(
+            onTap: () {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  backgroundColor: ColorManager.secondaryColor,
+                  
+                  title: Text(
+                    'Rate this App',
+                    textAlign: TextAlign.center,
+                    style: myTheme.textTheme.titleMedium,
+                  ),
+                  contentPadding: padding(
+                      paddingType: PaddingType.all, paddingValue: 0.02.sh),
+                  content: RatingBar.builder(
+                    initialRating: 0,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    glow: false,
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (rating) {
+                      
+                    },
+                    
+                  ),
+                  elevation: 2,
+                  shadowColor: ColorManager.white,
+                  actions: [
+                    materialButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const BottomNavigationBarScreen(),
+                          ),
+                        );
+                      },
+                      minWidth: 0.02.sw,
+                      buttonColor: const Color.fromRGBO(160, 152, 250, 1),
+                      buttonText: 'Ok',
+                    ),
+                  ],
+                ),
+              );
+            },
             leading: Image.asset(
               ImageAssetManager.star,
               color: ColorManager.white,
@@ -156,21 +144,6 @@ class _SettingScreenState extends State<SettingScreen> {
               style: myTheme.textTheme.displayMedium,
             ),
           ),
-          // const Divider(
-          //   color: ColorManager.secondaryColor,
-          // ),
-          // ListTile(
-          //   leading: Image.asset(
-          //     ImageAssetManager.share,
-          //     color: ColorManager.white,
-          //     height: 0.035.sh,
-          //     width: 0.035.sh,
-          //   ),
-          //   title: Text(
-          //     'Share with friend',
-          //     style: myTheme.textTheme.displayMedium,
-          //   ),
-          // ),
         ],
       ),
     );

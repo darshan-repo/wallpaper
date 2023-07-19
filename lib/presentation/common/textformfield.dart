@@ -1,6 +1,5 @@
 import 'package:wallpaper/libs.dart';
 
-
 Widget textFormField({
   TextEditingController? controller,
   String hintText = '',
@@ -10,6 +9,7 @@ Widget textFormField({
   void Function()? suffixOnPressed,
   int maxLines = 1,
   void Function()? onTap,
+  String? Function(String?)? validator,
 }) {
   return TextFormField(
     onTap: onTap,
@@ -18,6 +18,7 @@ Widget textFormField({
     obscureText: obscureText,
     keyboardType: keyboardType,
     style: myTheme.textTheme.labelMedium,
+    validator: validator,
     cursorColor: ColorManager.white,
     decoration: InputDecoration(
       filled: true,

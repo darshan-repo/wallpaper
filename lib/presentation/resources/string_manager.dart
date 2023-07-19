@@ -19,7 +19,7 @@ class AppString {
       'Welcome back, You\'ve been missed';
   static const String enterYourEmail = 'Enter your email';
   static const String enterYourPassword = 'Enter your password';
-  static const String forgotYourPassword = 'Forgot your password?';
+  static const String forgotYourPassword = 'Forgot password?';
   static const String login = 'Login';
   static const String orContinueWithSocialAccount =
       'Or Continue With Social Account';

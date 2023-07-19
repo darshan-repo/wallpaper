@@ -1,7 +1,7 @@
 import 'package:wallpaper/libs.dart';
 
 Widget enterCode({
-  TextEditingController? controller,
+  required TextEditingController controller,
   void Function()? onTap,
 }) {
   return Directionality(
@@ -11,7 +11,7 @@ Widget enterCode({
       androidSmsAutofillMethod: AndroidSmsAutofillMethod.smsUserConsentApi,
       listenForMultipleSmsOnAndroid: true,
       validator: (value) {
-        return value == '2222' ? null : '';
+        return value == controller.text ? null : '';
       },
       hapticFeedbackType: HapticFeedbackType.lightImpact,
       onCompleted: (pin) {
