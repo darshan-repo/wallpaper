@@ -1,9 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
-import 'package:wallpaper/libs.dart';
-import 'package:wallpaper/logic/auth_bloc/bloc/auth_bloc_bloc.dart';
-import 'package:wallpaper/logic/collection_bloc/bloc/collection_bloc_bloc.dart';
-import 'package:wallpaper/presentation/common/shared_prefs.dart';
+import 'package:walper/libs.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,11 +33,8 @@ class WallPaper extends StatelessWidget {
       builder: (context, child) => GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: GetMaterialApp(
-          navigatorKey: NavigationUtilities.key,
-          onGenerateRoute: onGenerateRoute,
-          navigatorObservers: [routeObserver],
-          home: const SplashScreen(),
+        child: const GetMaterialApp(
+          home: SplashScreen(),
           debugShowCheckedModeBanner: false,
         ),
       ),

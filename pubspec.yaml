@@ -1,4 +1,4 @@
-name: wallpaper
+name: walper
 description: A new Flutter project.
 
 publish_to: 'none'
@@ -27,6 +27,7 @@ dependencies:
   http: ^1.1.0
   flutter_bloc: ^8.1.3
   flutter_rating_bar: ^4.0.1
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:

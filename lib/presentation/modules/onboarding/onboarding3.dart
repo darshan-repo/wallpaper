@@ -1,4 +1,4 @@
-import 'package:wallpaper/libs.dart';
+import 'package:walper/libs.dart';
 
 class OnBoarding3Screen extends StatelessWidget {
   const OnBoarding3Screen({super.key});
@@ -32,9 +32,7 @@ class OnBoarding3Screen extends StatelessWidget {
             verticalSpace(0.05.sh),
             materialButton(
               onPressed: () {
-                AppNavigation.shared.moveToLoginScreen();
-
-                // AppNavigation.shared.moveToBottomNavigationBarScreen();
+                Get.to(const BottomNavigationBarScreen());
               },
               buttonText: 'Get Started',
             ),

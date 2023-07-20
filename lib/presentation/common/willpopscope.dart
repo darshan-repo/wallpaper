@@ -1,6 +1,6 @@
-import 'package:wallpaper/libs.dart';
+import 'package:walper/libs.dart';
 
 Future<bool> onWillPop() {
-  AppNavigation.shared.moveToBottomNavigationBarScreen();
+  Get.off(const BottomNavigationBarScreen());
   return Future.value(true);
 }

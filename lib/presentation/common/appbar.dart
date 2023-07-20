@@ -1,4 +1,4 @@
-import 'package:wallpaper/libs.dart';
+import 'package:walper/libs.dart';
 
 PreferredSizeWidget appbar(BuildContext context,
     {IconData? actionIcon,

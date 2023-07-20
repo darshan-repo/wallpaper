@@ -1,4 +1,4 @@
-import 'package:wallpaper/libs.dart';
+import 'package:walper/libs.dart';
 
 class FontFamily {
   static const String roboto = "Roboto";

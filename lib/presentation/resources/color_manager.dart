@@ -1,4 +1,4 @@
-import 'package:wallpaper/libs.dart';
+import 'package:walper/libs.dart';
 
 class ColorManager {
   static const Color primaryColor = Color(0xFF121928);

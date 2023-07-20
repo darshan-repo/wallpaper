@@ -1,5 +1,5 @@
 // ignore_for_file: deprecated_member_use
-import 'package:wallpaper/libs.dart';
+import 'package:walper/libs.dart';
 
 final ThemeData myTheme = ThemeData(
   textTheme: TextTheme(

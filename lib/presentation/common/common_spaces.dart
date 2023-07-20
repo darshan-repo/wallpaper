@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:wallpaper/libs.dart';
+import 'package:walper/libs.dart';
 
 enum PaddingType { left, right, top, bottom, horizontal, vertical, all, LTRB }
 
