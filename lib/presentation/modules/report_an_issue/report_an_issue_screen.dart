@@ -2,7 +2,6 @@ import 'package:walper/libs.dart';
 
 class ReportAnIssueScreen extends StatefulWidget {
   const ReportAnIssueScreen({super.key});
-  static const route = 'ReportAnIssueScreen';
 
   @override
   State<ReportAnIssueScreen> createState() => _ReportAnIssueScreenState();

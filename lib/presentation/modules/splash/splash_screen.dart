@@ -12,7 +12,9 @@ class _SplashScreenState extends State<SplashScreen> {
   initState() {
     super.initState();
     Timer(const Duration(seconds: 3), () {
-      Get.to(const OnBoarding1Screen());
+      UserPreferences.getUserEnter() == true
+          ? Get.to(const OnBoarding1Screen())
+          : Get.to(const BottomNavigationBarScreen());
     });
   }
 

@@ -1,10 +1,7 @@
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/modules/home/home_widget.dart';
-import 'package:walper/presentation/modules/set_wallpaper/set_wallpaper_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-  static const String route = 'HomeSreen';
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();

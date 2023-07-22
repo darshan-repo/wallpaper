@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:walper/libs.dart';
 
 class UserPreferences {
   static final UserPreferences _instance = UserPreferences._ctor();
@@ -28,21 +28,16 @@ class UserPreferences {
     return _prefs.getString("userId") ?? "";
   }
 
-
-
-
-  void setUserId(String id) {
+  static setUserId(String id) {
     _prefs.setString("userId", id);
     print("=======>> userId set <<=======");
   }
 
-
-  void setToken(String token) {
-    _prefs.setString("token", token);
-    print("=======>> token set <<=======");
+  static setUserEntered(String id) {
+    _prefs.setBool(id, true);
   }
 
-  getToken() {
-    return _prefs.getString("token");
+  static getUserEnter() {
+    return _prefs.getBool('id');
   }
 }

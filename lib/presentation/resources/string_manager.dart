@@ -52,7 +52,7 @@ class AppString {
   static const String otpVerificationDesc =
       'Enter the varification code we just sent to';
   static const String changeEmailAddress = 'Change email address?';
-  static const String resendCodeAfter = 'Resend code after  ';
+  static const String resendCodeAfter = 'Resend code after:  ';
   static const String resend = 'Resend';
   static const String confirm = 'Confirm';
 

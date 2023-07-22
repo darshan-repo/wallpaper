@@ -10,17 +10,19 @@ Future<void> main() async {
       DeviceOrientation.portraitDown,
     ],
   );
-  runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider<CollectionBlocBloc>(
-        create: (context) => CollectionBlocBloc(),
-      ),
-      BlocProvider<AuthBlocBloc>(
-        create: (context) => AuthBlocBloc(),
-      ),
-    ],
-    child: const WallPaper(),
-  ));
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<CollectionBlocBloc>(
+          create: (context) => CollectionBlocBloc(),
+        ),
+        BlocProvider<AuthBlocBloc>(
+          create: (context) => AuthBlocBloc(),
+        ),
+      ],
+      child: const WallPaper(),
+    ),
+  );
 }
 
 class WallPaper extends StatelessWidget {

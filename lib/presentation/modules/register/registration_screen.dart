@@ -3,7 +3,6 @@ import 'package:walper/libs.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
-  static const route = 'RegistrationScreen';
 
   @override
   State<RegistrationScreen> createState() => _RegistrationScreenState();

@@ -2,7 +2,6 @@ import 'package:walper/libs.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({Key? key}) : super(key: key);
-  static const route = 'ChangePasswordScreen';
 
   @override
   State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();

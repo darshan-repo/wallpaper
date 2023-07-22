@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:walper/libs.dart';
 
 errorSnackbar(String description) {
   Get.snackbar(

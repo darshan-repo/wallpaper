@@ -1,24 +1,26 @@
 import 'dart:convert';
 
-SendLikeModel sendlikeModelFromJson(String str) =>
-    SendLikeModel.fromJson(json.decode(str));
+SendDownloadModel sendDownloadModelFromJson(String str) =>
+    SendDownloadModel.fromJson(json.decode(str));
 
-String sendlikeModelToJson(SendLikeModel data) => json.encode(data.toJson());
+String sendDownloadModelToJson(SendDownloadModel data) =>
+    json.encode(data.toJson());
 
-class SendLikeModel {
+class SendDownloadModel {
   String? userId;
   String? name;
   String? category;
   String? wallpaper;
 
-  SendLikeModel({
+  SendDownloadModel({
     this.userId,
     this.name,
     this.category,
     this.wallpaper,
   });
 
-  factory SendLikeModel.fromJson(Map<String, dynamic> json) => SendLikeModel(
+  factory SendDownloadModel.fromJson(Map<String, dynamic> json) =>
+      SendDownloadModel(
         userId: json["userId"],
         name: json["name"],
         category: json["category"],
@@ -33,37 +35,39 @@ class SendLikeModel {
       };
 }
 
-GetLikeModel getLikeModelFromJson(String str) =>
-    GetLikeModel.fromJson(json.decode(str));
+GetDownloadModel getDownloadModelFromJson(String str) =>
+    GetDownloadModel.fromJson(json.decode(str));
 
-String getLikeModelToJson(GetLikeModel data) => json.encode(data.toJson());
+String getDownloadModelToJson(GetDownloadModel data) =>
+    json.encode(data.toJson());
 
-class GetLikeModel {
+class GetDownloadModel {
   String? message;
-  List<LikesDatum>? likesData;
+  List<DownloadDatum>? downloadData;
 
-  GetLikeModel({
+  GetDownloadModel({
     this.message,
-    this.likesData,
+    this.downloadData,
   });
 
-  factory GetLikeModel.fromJson(Map<String, dynamic> json) => GetLikeModel(
+  factory GetDownloadModel.fromJson(Map<String, dynamic> json) =>
+      GetDownloadModel(
         message: json["message"],
-        likesData: json["likesData"] == null
+        downloadData: json["downloadData"] == null
             ? []
-            : List<LikesDatum>.from(
-                json["likesData"]!.map((x) => LikesDatum.fromJson(x))),
+            : List<DownloadDatum>.from(
+                json["downloadData"]!.map((x) => DownloadDatum.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "message": message,
-        "likesData": likesData == null
+        "downloadData": downloadData == null
             ? []
-            : List<dynamic>.from(likesData!.map((x) => x.toJson())),
+            : List<dynamic>.from(downloadData!.map((x) => x.toJson())),
       };
 }
 
-class LikesDatum {
+class DownloadDatum {
   String? id;
   String? wallpaperId;
   String? userId;
@@ -73,7 +77,7 @@ class LikesDatum {
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  LikesDatum({
+  DownloadDatum({
     this.id,
     this.wallpaperId,
     this.userId,
@@ -84,7 +88,7 @@ class LikesDatum {
     this.updatedAt,
   });
 
-  factory LikesDatum.fromJson(Map<String, dynamic> json) => LikesDatum(
+  factory DownloadDatum.fromJson(Map<String, dynamic> json) => DownloadDatum(
         id: json["id"],
         wallpaperId: json["wallpaperId"],
         userId: json["userId"],

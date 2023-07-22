@@ -1,5 +1,4 @@
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/modules/home/home_widget.dart';
 
 class FeaturedScreen extends StatefulWidget {
   const FeaturedScreen({super.key});

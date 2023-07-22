@@ -1,9 +1,7 @@
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/modules/privacy_policy/privacy_policy_widget.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
-  static const route = 'PrivacyPolicyScreen';
 
   @override
   Widget build(BuildContext context) {

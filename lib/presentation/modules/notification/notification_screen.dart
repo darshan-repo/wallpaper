@@ -2,7 +2,6 @@ import 'package:walper/libs.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
-  static const route = 'NotificationScreen';
 
   @override
   State<NotificationScreen> createState() => _NotificationScreenState();

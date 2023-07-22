@@ -52,3 +52,12 @@ class ResetPassWord extends AuthBlocEvent {
       required this.password,
       required this.confirmPassword});
 }
+
+class ResendOtp extends AuthBlocEvent {
+  final String email;
+  final String password;
+  ResendOtp({
+    required this.email,
+    required this.password,
+  });
+}

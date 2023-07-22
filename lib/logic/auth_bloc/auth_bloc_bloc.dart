@@ -14,6 +14,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     on<ForgotOtpSend>(_forgotOtpSend);
     on<ForgotOtpVerify>(_verifyForgotOtp);
     on<ResetPassWord>(_resetPassword);
+    on<ResendOtp>(_resendOtp);
   }
 
   _userSignUp(UserSignUp event, Emitter<AuthBlocState> emit) async {
@@ -77,8 +78,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
       if (data["message"] == "login successfully") {
         log("USER ID::: ${data["user"]["id"]}");
         log("TOKEN::::${data["token"]}");
-        UserPreferences().setUserId(data["user"]["id"]);
-        UserPreferences().setToken(data["token"]);
+        UserPreferences.setUserId(data["user"]["id"]);
         Get.off(const BottomNavigationBarScreen());
         emit(AuthBlocLoaded());
       } else {
@@ -155,6 +155,27 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
       log("REASONABLE ::$data");
       if (data["message"] == "password change successfully") {
         Get.off(const ChangePasswordScreen());
+        emit(AuthBlocLoaded());
+      } else {
+        errorSnackbar(data["message"]);
+        emit(AuthBlocLoaded());
+      }
+    } catch (e) {
+      errorSnackbar(e.toString());
+      log(e.toString());
+      emit(AuthBlocError());
+    }
+  }
+
+  _resendOtp(ResendOtp event, Emitter<AuthBlocState> emit) async {
+    emit(AuthBlocLoading());
+    try {
+      Map<String, dynamic> data = await BaseApi.postRequest("sentotp",
+          data: {"email": event.email, 'password': event.password});
+
+      log("REASONABLE ::$data");
+      if (data["message"] == "otp sent successfully") {
+        successSnackbar('OTP Resend Successfully.');
         emit(AuthBlocLoaded());
       } else {
         errorSnackbar(data["message"]);

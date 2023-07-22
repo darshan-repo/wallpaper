@@ -1,10 +1,8 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/modules/downloads/download_screen_widget.dart';
-import 'package:walper/presentation/modules/filter/filter_screen.dart';
 
 class DownloadScreen extends StatefulWidget {
   const DownloadScreen({super.key});
-  static const route = 'DownloadScreen';
 
   @override
   State<DownloadScreen> createState() => _DownloadScreenState();
@@ -44,39 +42,47 @@ class _DownloadScreenState extends State<DownloadScreen> {
                 style: myTheme.textTheme.labelMedium,
               ),
               verticalSpace(0.01.sh),
-              isShow
-                  ? Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SvgPicture.asset(
-                            ImageSVGManager.noDataFound,
-                            height: 0.5.sh,
-                            width: 0.5.sw,
-                          ),
-                          Text(
-                            'Oops ! No downloads to display',
-                            style: TextStyle(
-                              fontSize: FontSize.s18,
-                              fontFamily: FontFamily.roboto,
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeightManager.semiBold,
-                              foreground: Paint()
-                                ..shader = const LinearGradient(
-                                  colors: <Color>[
-                                    Color.fromRGBO(160, 152, 250, 1),
-                                    Color.fromRGBO(175, 117, 112, 1),
-                                    Colors.yellow
-                                  ],
-                                ).createShader(
-                                  const Rect.fromLTWH(100.0, 0.0, 180.0, 70.0),
-                                ),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  : Expanded(
+              // Center(
+              //             child: Column(
+              //               mainAxisSize: MainAxisSize.min,
+              //               children: [
+              //                 SvgPicture.asset(
+              //                   ImageSVGManager.noDataFound,
+              //                   height: 0.5.sh,
+              //                   width: 0.5.sw,
+              //                 ),
+              //                 Text(
+              //                   'Oops ! No downloads to display',
+              //                   style: TextStyle(
+              //                     fontSize: FontSize.s18,
+              //                     fontFamily: FontFamily.roboto,
+              //                     fontStyle: FontStyle.normal,
+              //                     fontWeight: FontWeightManager.semiBold,
+              //                     foreground: Paint()
+              //                       ..shader = const LinearGradient(
+              //                         colors: <Color>[
+              //                           Color.fromRGBO(160, 152, 250, 1),
+              //                           Color.fromRGBO(175, 117, 112, 1),
+              //                           Colors.yellow
+              //                         ],
+              //                       ).createShader(
+              //                         const Rect.fromLTWH(100.0, 0.0, 180.0, 70.0),
+              //                       ),
+              //                   ),
+              //                 )
+              //               ],
+              //             ),
+              //           )
+
+              BlocBuilder<CollectionBlocBloc, CollectionBlocState>(
+                builder: (context, state) {
+                  if (state is CollectionLoading) {
+                    return const Center(
+                      child:
+                          CircularProgressIndicator(color: ColorManager.white),
+                    );
+                  } else if (state is CollectionLoaded) {
+                    return Expanded(
                       child:
                           NotificationListener<OverscrollIndicatorNotification>(
                         onNotification: (notification) {
@@ -256,7 +262,11 @@ class _DownloadScreenState extends State<DownloadScreen> {
                           },
                         ),
                       ),
-                    ),
+                    );
+                  }
+                  return Container();
+                },
+              ),
             ],
           ),
         ),

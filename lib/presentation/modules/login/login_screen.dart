@@ -3,7 +3,6 @@ import 'package:walper/libs.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
-  static const route = 'LoginScreen';
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();

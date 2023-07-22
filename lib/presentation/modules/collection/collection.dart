@@ -83,7 +83,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
                                       .getWallpaperModel!
                                       .categories![index]
                                       .id ??
-                                  "",
+                                  "", 
                               category:
                                   BlocProvider.of<CollectionBlocBloc>(context)
                                           .getWallpaperModel!

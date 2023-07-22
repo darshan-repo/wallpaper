@@ -1,10 +1,7 @@
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/modules/search/categories_search.dart';
-import 'package:walper/presentation/modules/search/photos_search.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
-  static const String route = 'SearchScreen';
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();

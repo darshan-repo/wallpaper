@@ -1,9 +1,7 @@
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:walper/libs.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
-  static const String route = 'SettingScreen';
 
   @override
   State<SettingScreen> createState() => _SettingScreenState();
@@ -87,7 +85,6 @@ class _SettingScreenState extends State<SettingScreen> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   backgroundColor: ColorManager.secondaryColor,
-                  
                   title: Text(
                     'Rate this App',
                     textAlign: TextAlign.center,
@@ -107,10 +104,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       Icons.star,
                       color: Colors.amber,
                     ),
-                    onRatingUpdate: (rating) {
-                      
-                    },
-                    
+                    onRatingUpdate: (rating) {},
                   ),
                   elevation: 2,
                   shadowColor: ColorManager.white,

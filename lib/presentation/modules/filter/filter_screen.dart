@@ -1,9 +1,7 @@
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/modules/filter/filter_widget.dart';
 
 class FilterScreen extends StatefulWidget {
   const FilterScreen({super.key});
-  static const route = 'FilterScreen';
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();

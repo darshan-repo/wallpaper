@@ -1,13 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/modules/set_wallpaper/set_wallpaper_screen.dart';
 
 class CollectionViewScreen extends StatefulWidget {
   final String id;
   final String category;
   const CollectionViewScreen(
       {super.key, required this.id, required this.category});
-  static const route = 'CollectionViewScreen';
 
   @override
   State<CollectionViewScreen> createState() => _CollectionViewScreenState();
@@ -15,10 +13,9 @@ class CollectionViewScreen extends StatefulWidget {
 
 class _CollectionViewScreenState extends State<CollectionViewScreen> {
   bool isLiked = false;
-
-  List<int> likes = [];
   @override
   Widget build(BuildContext context) {
+    String userID = UserPreferences.getUserId();
     return Scaffold(
       backgroundColor: ColorManager.primaryColor,
       appBar: appbar(
@@ -110,7 +107,48 @@ class _CollectionViewScreenState extends State<CollectionViewScreen> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          if (userID.isEmpty) {
+                                            Get.to(const LoginScreen());
+                                          } else {
+                                            BlocProvider.of<CollectionBlocBloc>(
+                                                    context)
+                                                .add(
+                                              SendDownloadWallpaper(
+                                                id: BlocProvider.of<
+                                                                CollectionBlocBloc>(
+                                                            context)
+                                                        .getCollectionModel!
+                                                        .data![index]
+                                                        .id ??
+                                                    "",
+                                                userId:
+                                                    UserPreferences.getUserId(),
+                                                name: BlocProvider.of<
+                                                                CollectionBlocBloc>(
+                                                            context)
+                                                        .getCollectionModel!
+                                                        .data![index]
+                                                        .name ??
+                                                    "",
+                                                category: BlocProvider.of<
+                                                                CollectionBlocBloc>(
+                                                            context)
+                                                        .getCollectionModel!
+                                                        .data![index]
+                                                        .category ??
+                                                    "",
+                                                wallpaper: BlocProvider.of<
+                                                                CollectionBlocBloc>(
+                                                            context)
+                                                        .getCollectionModel!
+                                                        .data![index]
+                                                        .wallpaper ??
+                                                    "",
+                                              ),
+                                            );
+                                          }
+                                        },
                                         child: Icon(
                                           Icons.file_download_outlined,
                                           size: 0.035.sh,
@@ -120,25 +158,55 @@ class _CollectionViewScreenState extends State<CollectionViewScreen> {
                                       verticalSpace(0.02.sh),
                                       GestureDetector(
                                         onTap: () {
-                                          setState(() {
-                                            isLiked = !isLiked;
-                                          });
-                                          if (isLiked == true) {
-                                            likes.add(index);
-                                          } else if (isLiked == false) {
-                                            likes.remove(index);
-                                          }
-                                          print('===============>> $likes');
-                                        },
-                                        child: isLiked
-                                            ? const Icon(
-                                                Icons.favorite_rounded,
-                                                color: ColorManager.red,
-                                              )
-                                            : const Icon(
-                                                Icons.favorite_border_rounded,
-                                                color: ColorManager.white,
+                                          if (userID.isEmpty) {
+                                            Get.to(const LoginScreen());
+                                          } else {
+                                            BlocProvider.of<CollectionBlocBloc>(
+                                                    context)
+                                                .add(
+                                              SendLikedWallpaper(
+                                                id: BlocProvider.of<
+                                                                CollectionBlocBloc>(
+                                                            context)
+                                                        .getCollectionModel!
+                                                        .data![index]
+                                                        .id ??
+                                                    "",
+                                                userId:
+                                                    UserPreferences.getUserId(),
+                                                name: BlocProvider.of<
+                                                                CollectionBlocBloc>(
+                                                            context)
+                                                        .getCollectionModel!
+                                                        .data![index]
+                                                        .name ??
+                                                    "",
+                                                category: BlocProvider.of<
+                                                                CollectionBlocBloc>(
+                                                            context)
+                                                        .getCollectionModel!
+                                                        .data![index]
+                                                        .category ??
+                                                    "",
+                                                wallpaper: BlocProvider.of<
+                                                                CollectionBlocBloc>(
+                                                            context)
+                                                        .getCollectionModel!
+                                                        .data![index]
+                                                        .wallpaper ??
+                                                    "",
                                               ),
+                                            );
+                                          }
+                                        },
+                                        child: Icon(
+                                          isLiked
+                                              ? Icons.favorite_rounded
+                                              : Icons.favorite_border_rounded,
+                                          color: isLiked
+                                              ? ColorManager.red
+                                              : ColorManager.white,
+                                        ),
                                       ),
                                     ],
                                   ),

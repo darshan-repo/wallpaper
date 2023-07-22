@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/modules/otp/pinput_widget.dart';
 
 class OTPVarificationScreen extends StatefulWidget {
   const OTPVarificationScreen(
@@ -9,7 +8,6 @@ class OTPVarificationScreen extends StatefulWidget {
   final bool isForgot;
   final String? email;
   final String? passWord;
-  static const route = 'OTPVarificationScreen';
 
   @override
   State<OTPVarificationScreen> createState() => _OTPVarificationScreenState();
@@ -19,6 +17,45 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
   GlobalKey<FormState> forgotPassKey = GlobalKey<FormState>();
   TextEditingController txtEnterCodeController = TextEditingController();
   bool isShow = true;
+
+  int secondsRemaining = 30;
+  bool enableResend = false;
+  late Timer timer;
+
+  @override
+  initState() {
+    super.initState();
+    timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (secondsRemaining != 0) {
+        setState(() {
+          secondsRemaining--;
+        });
+      } else {
+        setState(() {
+          enableResend = true;
+        });
+      }
+    });
+  }
+
+  void resendCode() {
+    BlocProvider.of<AuthBlocBloc>(context).add(
+      ResendOtp(
+        email: widget.email ?? '',
+        password: widget.passWord ?? '',
+      ),
+    );
+    setState(() {
+      secondsRemaining = 30;
+      enableResend = false;
+    });
+  }
+
+  @override
+  dispose() {
+    timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +93,7 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                     ),
                     Text(
                       widget.email ?? "",
-                      style: myTheme.textTheme.labelSmall,
+                      style: myTheme.textTheme.bodySmall,
                     ),
                     verticalSpace(0.05.sh),
                     isShow
@@ -86,7 +123,7 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                           style: myTheme.textTheme.labelSmall,
                         ),
                         Text(
-                          '00:36',
+                          secondsRemaining.toString(),
                           style: myTheme.textTheme.displaySmall,
                         ),
                       ],
@@ -96,7 +133,9 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         materialButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            enableResend ? resendCode() : null;
+                          },
                           minWidth: 0.43.sw,
                           buttonColor: ColorManager.transparentColor,
                           buttonText: AppString.resend,

@@ -1,4 +1,3 @@
-
 import 'package:walper/libs.dart';
 
 Widget materialButton({
@@ -6,15 +5,18 @@ Widget materialButton({
   String buttonText = '',
   Color buttonColor = ColorManager.secondaryColor,
   String? assetName,
+  Color? disabledColor,
   Color? imageColor,
   double minWidth = double.infinity,
   Widget? child,
+  bool isEnabled = false,
 }) {
   return MaterialButton(
     onPressed: onPressed,
     color: buttonColor,
     height: 0.07.sh,
     minWidth: minWidth,
+    disabledColor: disabledColor,
     splashColor: Colors.transparent,
     highlightColor: Colors.transparent,
     hoverColor: Colors.transparent,

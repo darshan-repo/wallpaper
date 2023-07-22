@@ -1,13 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/modules/set_wallpaper/set_wallpaper_widget.dart';
 
 class SetWallpaperScreen extends StatefulWidget {
   final String imgURL, uploaded;
   const SetWallpaperScreen(
       {super.key, required this.imgURL, required this.uploaded});
-  static const route = 'SetWallpaperScreen';
 
   @override
   State<SetWallpaperScreen> createState() => _SetWallpaperScreenState();

@@ -52,6 +52,13 @@ final ThemeData myTheme = ThemeData(
       fontWeight: FontWeightManager.medium,
       fontStyle: FontStyle.normal,
     ),
+    bodySmall: TextStyle(
+      color: const Color.fromRGBO(136, 126, 249, 1),
+      fontSize: FontSize.s12,
+      fontFamily: FontFamily.roboto,
+      fontWeight: FontWeightManager.regular,
+      fontStyle: FontStyle.normal,
+    ),
     displaySmall: TextStyle(
       color: const Color.fromRGBO(136, 126, 249, 1),
       fontSize: FontSize.s16,

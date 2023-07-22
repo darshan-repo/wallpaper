@@ -2,7 +2,6 @@ import 'package:walper/libs.dart';
 
 class OnBoarding3Screen extends StatelessWidget {
   const OnBoarding3Screen({super.key});
-  static const route = 'OnBoarding3Screen';
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +31,7 @@ class OnBoarding3Screen extends StatelessWidget {
             verticalSpace(0.05.sh),
             materialButton(
               onPressed: () {
+                UserPreferences.setUserEntered('isUserEntered');
                 Get.to(const BottomNavigationBarScreen());
               },
               buttonText: 'Get Started',

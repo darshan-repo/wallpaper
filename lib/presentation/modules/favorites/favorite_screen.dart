@@ -1,9 +1,8 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/modules/filter/filter_screen.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
-  static const route = 'FavoriteScreen';
 
   @override
   State<FavoriteScreen> createState() => _FavoriteScreenState();
@@ -43,39 +42,15 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                 style: myTheme.textTheme.labelMedium,
               ),
               verticalSpace(0.01.sh),
-              isShow
-                  ? Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SvgPicture.asset(
-                            ImageSVGManager.noDataFound,
-                            height: 0.5.sh,
-                            width: 0.5.sw,
-                          ),
-                          Text(
-                            'Oops ! No favorites to display',
-                            style: TextStyle(
-                              fontSize: FontSize.s18,
-                              fontFamily: FontFamily.roboto,
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeightManager.semiBold,
-                              foreground: Paint()
-                                ..shader = const LinearGradient(
-                                  colors: <Color>[
-                                    Color(0xffA098FA),
-                                    Color.fromARGB(255, 141, 82, 77),
-                                    Colors.yellow
-                                  ],
-                                ).createShader(
-                                  const Rect.fromLTWH(100.0, 0.0, 180.0, 70.0),
-                                ),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  : Expanded(
+              BlocBuilder<CollectionBlocBloc, CollectionBlocState>(
+                builder: (context, state) {
+                  if (state is CollectionLoading) {
+                    return const Center(
+                      child:
+                          CircularProgressIndicator(color: ColorManager.white),
+                    );
+                  } else if (state is CollectionLoaded) {
+                    return Expanded(
                       child:
                           NotificationListener<OverscrollIndicatorNotification>(
                         onNotification: (notification) {
@@ -90,16 +65,27 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                             crossAxisSpacing: 10,
                             childAspectRatio: 0.6,
                           ),
-                          itemCount: 15,
+                          itemCount:
+                              BlocProvider.of<CollectionBlocBloc>(context)
+                                  .getLikedModel!
+                                  .likesData!
+                                  .length,
                           itemBuilder: (context, index) {
+                            final image =
+                                BlocProvider.of<CollectionBlocBloc>(context)
+                                    .getLikedModel!
+                                    .likesData![index]
+                                    .wallpaper
+                                    ?.split("/")
+                                    .last;
                             return Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                                image: const DecorationImage(
+                                image: DecorationImage(
                                   fit: BoxFit.fill,
-                                  image: AssetImage(
-                                      ImageJPGManager.yellowPinkColor),
+                                  image: NetworkImage(
+                                    BaseApi.imgUrl + image!,
+                                  ),
                                 ),
                               ),
                               child: Container(
@@ -135,7 +121,42 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           },
                         ),
                       ),
-                    ),
+                    );
+                  }
+                  return Container();
+                },
+              ),
+              // Center(
+              //   child: Column(
+              //     mainAxisSize: MainAxisSize.min,
+              //     children: [
+              //       SvgPicture.asset(
+              //         ImageSVGManager.noDataFound,
+              //         height: 0.5.sh,
+              //         width: 0.5.sw,
+              //       ),
+              //       Text(
+              //         'Oops ! No favorites to display',
+              //         style: TextStyle(
+              //           fontSize: FontSize.s18,
+              //           fontFamily: FontFamily.roboto,
+              //           fontStyle: FontStyle.normal,
+              //           fontWeight: FontWeightManager.semiBold,
+              //           foreground: Paint()
+              //             ..shader = const LinearGradient(
+              //               colors: <Color>[
+              //                 Color.fromRGBO(160, 152, 250, 1),
+              //                 Color.fromRGBO(141, 82, 77, 1),
+              //                 Colors.yellow
+              //               ],
+              //             ).createShader(
+              //               const Rect.fromLTWH(100.0, 0.0, 180.0, 70.0),
+              //             ),
+              //         ),
+              //       )
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         ),

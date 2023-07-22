@@ -3,7 +3,6 @@ import 'package:walper/libs.dart';
 
 class EmailVarificationScreen extends StatefulWidget {
   const EmailVarificationScreen({Key? key}) : super(key: key);
-  static const route = 'EmailVarificationScreen';
 
   @override
   State<EmailVarificationScreen> createState() =>
@@ -97,9 +96,11 @@ class _EmailVarificationScreenState extends State<EmailVarificationScreen> {
                             final FormState? form = forgotPassKey.currentState;
                             if (form!.validate()) {
                               BlocProvider.of<AuthBlocBloc>(context).add(
-                                  ForgotOtpSend(
-                                      email: txtEmailIdController.text,
-                                      context: context));
+                                ForgotOtpSend(
+                                  email: txtEmailIdController.text,
+                                  context: context,
+                                ),
+                              );
                             }
                           },
                           buttonColor: const Color.fromRGBO(160, 152, 250, 1),

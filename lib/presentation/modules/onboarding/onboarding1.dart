@@ -2,7 +2,6 @@ import 'package:walper/libs.dart';
 
 class OnBoarding1Screen extends StatelessWidget {
   const OnBoarding1Screen({super.key});
-  static const route = 'OnBoarding1Screen';
 
   @override
   Widget build(BuildContext context) {

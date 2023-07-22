@@ -1,13 +1,8 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/modules/collection/collection.dart';
-import 'package:walper/presentation/modules/downloads/downloads_screen.dart';
-import 'package:walper/presentation/modules/home/home_screen.dart';
-import 'package:walper/presentation/modules/privacy_policy/privacy_policy.dart';
-import 'package:walper/presentation/modules/search/search_screen.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
   const BottomNavigationBarScreen({Key? key}) : super(key: key);
-  static const route = 'BottomNavigationBarScreen';
 
   @override
   State<BottomNavigationBarScreen> createState() =>
@@ -106,7 +101,9 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
               ),
               ListTile(
                 onTap: () {
-                  Get.to(const FavoriteScreen());
+                  BlocProvider.of<CollectionBlocBloc>(context).add(
+                    GetLikedWallpaper(id: UserPreferences.getUserId()),
+                  );
                 },
                 splashColor: ColorManager.transparentColor,
                 leading: Image.asset(
@@ -119,7 +116,9 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
               ),
               ListTile(
                 onTap: () {
-                  Get.to(const DownloadScreen());
+                  BlocProvider.of<CollectionBlocBloc>(context).add(
+                    GetDownloadWallpaper(id: UserPreferences.getUserId()),
+                  );
                 },
                 splashColor: ColorManager.transparentColor,
                 leading: Image.asset(
