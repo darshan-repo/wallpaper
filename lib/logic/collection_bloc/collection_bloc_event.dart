@@ -3,6 +3,8 @@ part of 'collection_bloc_bloc.dart';
 @immutable
 abstract class CollectionBlocEvent {}
 
+class GetAllWallpaper extends CollectionBlocEvent {}
+
 class GetWallpaper extends CollectionBlocEvent {}
 
 class GetCollection extends CollectionBlocEvent {
@@ -51,4 +53,12 @@ class SendDownloadWallpaper extends CollectionBlocEvent {
 class GetDownloadWallpaper extends CollectionBlocEvent {
   final String id;
   GetDownloadWallpaper({required this.id});
+}
+
+class DeleteDownloadWallpaper extends CollectionBlocEvent {
+  final String id, userId;
+  DeleteDownloadWallpaper({
+    required this.id,
+    required this.userId,
+  });
 }

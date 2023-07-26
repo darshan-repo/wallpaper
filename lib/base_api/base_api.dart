@@ -4,13 +4,10 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 
 class BaseApi {
-  static String baseUrl = "http://192.168.1.7:2200/api/";
-    static String imgUrl = "http://192.168.1.7:2200/profile/";
-
+  static String baseUrl = "http://192.168.1.9:2200/api/";
+  static String imgUrl = "http://192.168.1.9:2200/profile/";
 
   static Future getRequest(String path) async {
-    // var headers = {'Content-Type': 'application/json',};
-
     final response = await http.get(
       Uri.parse("$baseUrl$path"),
     );

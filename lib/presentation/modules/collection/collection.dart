@@ -15,29 +15,6 @@ class _CollectionScreenState extends State<CollectionScreen> {
     super.initState();
   }
 
-  List<Map> collection = [
-    {
-      'collectionName': 'Abstract',
-      'totalCollection': '1207 Wallpapers',
-      'collectionImage': ImageJPGManager.abstractCollection,
-    },
-    {
-      'collectionName': 'Architecture',
-      'totalCollection': '643 Wallpapers',
-      'collectionImage': ImageJPGManager.architectureCollection,
-    },
-    {
-      'collectionName': 'Colorful',
-      'totalCollection': '988 Wallpapers',
-      'collectionImage': ImageJPGManager.colorfulCollection,
-    },
-    {
-      'collectionName': 'Nature',
-      'totalCollection': '2690 Wallpapers',
-      'collectionImage': ImageJPGManager.natureCollection,
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -72,9 +49,9 @@ class _CollectionScreenState extends State<CollectionScreen> {
                     },
                     child: ListView.builder(
                       itemCount: BlocProvider.of<CollectionBlocBloc>(context)
-                          .getWallpaperModel!
-                          .categories!
-                          .length,
+                          .getWallpaperModel
+                          ?.categories
+                          ?.length,
                       itemBuilder: (context, index) => GestureDetector(
                         onTap: () {
                           BlocProvider.of<CollectionBlocBloc>(context).add(
@@ -83,7 +60,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
                                       .getWallpaperModel!
                                       .categories![index]
                                       .id ??
-                                  "", 
+                                  "",
                               category:
                                   BlocProvider.of<CollectionBlocBloc>(context)
                                           .getWallpaperModel!
@@ -101,9 +78,9 @@ class _CollectionScreenState extends State<CollectionScreen> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
-                            image: DecorationImage(
+                            image: const DecorationImage(
                               image: AssetImage(
-                                collection[index]['collectionImage'],
+                                ImageJPGManager.abstractCollection,
                               ),
                               fit: BoxFit.fill,
                             ),
@@ -122,15 +99,15 @@ class _CollectionScreenState extends State<CollectionScreen> {
                               children: [
                                 Text(
                                   BlocProvider.of<CollectionBlocBloc>(context)
-                                          .getWallpaperModel!
-                                          .categories![index]
+                                          .getWallpaperModel
+                                          ?.categories![index]
                                           .name ??
                                       "",
                                   style: myTheme.textTheme.titleLarge,
                                 ),
                                 verticalSpace(0.02.sh),
                                 Text(
-                                  collection[index]['totalCollection'],
+                                  '00 Wallpapers',
                                   style: myTheme.textTheme.labelMedium,
                                 ),
                               ],

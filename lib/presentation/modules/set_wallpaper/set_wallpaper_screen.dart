@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:walper/libs.dart';
 
 class SetWallpaperScreen extends StatefulWidget {
@@ -112,15 +113,25 @@ class _SetWallpaperScreenState extends State<SetWallpaperScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorManager.primaryColor,
       body: Stack(
         children: [
           SizedBox(
             height: double.infinity,
             width: double.infinity,
-            child: Image.network(
-              widget.imgURL,
-              fit: BoxFit.fill,
-              height: double.infinity,
+            child: CachedNetworkImage(
+              imageUrl: widget.imgURL,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+              placeholder: (context, url) =>
+                  const Center(child: SpinKitCircle(color: ColorManager.white)),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
           Align(
@@ -189,49 +200,6 @@ class _SetWallpaperScreenState extends State<SetWallpaperScreen> {
                         isSelect ? Icons.close : Icons.info_outline,
                         color: ColorManager.white,
                       ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: padding(
-                paddingType: PaddingType.LTRB,
-                left: 0.02.sw,
-                right: 0.03.sw,
-                bottom: 0.18.sh,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isLiked = !isLiked;
-                      });
-                    },
-                    child: isLiked
-                        ? Icon(
-                            Icons.favorite_rounded,
-                            size: 0.04.sh,
-                            color: ColorManager.red,
-                          )
-                        : Icon(
-                            Icons.favorite_border_rounded,
-                            size: 0.04.sh,
-                            color: ColorManager.white,
-                          ),
-                  ),
-                  verticalSpace(0.03.sh),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Icon(
-                      Icons.file_download_outlined,
-                      size: 0.04.sh,
-                      color: ColorManager.white,
                     ),
                   ),
                 ],
@@ -357,3 +325,48 @@ class _SetWallpaperScreenState extends State<SetWallpaperScreen> {
     );
   }
 }
+
+
+   // Align(
+          //   alignment: Alignment.bottomRight,
+          //   child: Padding(
+          //     padding: padding(
+          //       paddingType: PaddingType.LTRB,
+          //       left: 0.02.sw,
+          //       right: 0.03.sw,
+          //       bottom: 0.18.sh,
+          //     ),
+          //     child: Column(
+          //       mainAxisAlignment: MainAxisAlignment.end,
+          //       children: [
+          //         GestureDetector(
+          //           onTap: () {
+          //             setState(() {
+          //               isLiked = !isLiked;
+          //             });
+          //           },
+          //           child: isLiked
+          //               ? Icon(
+          //                   Icons.favorite_rounded,
+          //                   size: 0.04.sh,
+          //                   color: ColorManager.red,
+          //                 )
+          //               : Icon(
+          //                   Icons.favorite_border_rounded,
+          //                   size: 0.04.sh,
+          //                   color: ColorManager.white,
+          //                 ),
+          //         ),
+          //         verticalSpace(0.03.sh),
+          //         GestureDetector(
+          //           onTap: () {},
+          //           child: Icon(
+          //             Icons.file_download_outlined,
+          //             size: 0.04.sh,
+          //             color: ColorManager.white,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),

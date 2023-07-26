@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:walper/libs.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -34,11 +36,9 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
           verticalSpace(0.02.sh),
           ListTile(
-            leading: Image.asset(
-              ImageAssetManager.autoUpdate,
+            leading:  SvgPicture.asset(
+              SVGIconManager.autoChangeWallpaper,
               color: ColorManager.white,
-              height: 0.035.sh,
-              width: 0.035.sh,
             ),
             title: Text(
               'Auto Change Wallpaper',
@@ -55,11 +55,9 @@ class _SettingScreenState extends State<SettingScreen> {
             color: ColorManager.secondaryColor,
           ),
           ListTile(
-            leading: Image.asset(
-              ImageAssetManager.notification,
+            leading: SvgPicture.asset(
+              SVGIconManager.settingNotification,
               color: ColorManager.white,
-              height: 0.035.sh,
-              width: 0.035.sh,
             ),
             title: Text(
               'Enable Notification',
@@ -127,11 +125,9 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
               );
             },
-            leading: Image.asset(
-              ImageAssetManager.star,
+            leading:  SvgPicture.asset(
+              SVGIconManager.rateThisApp,
               color: ColorManager.white,
-              height: 0.035.sh,
-              width: 0.035.sh,
             ),
             title: Text(
               'Rate this App',

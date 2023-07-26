@@ -1,3 +1,4 @@
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:walper/libs.dart';
 
 Widget dropDownButton({
@@ -50,53 +51,63 @@ Widget homeGridview({
   void Function()? favoriteOnTap,
   bool isSelect = false,
 }) {
-  return Container(
+  return SizedBox(
     height: height,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(10),
-      color: Colors.white,
-      image: DecorationImage(
-        fit: BoxFit.fill,
-        image: AssetImage(assetName),
-      ),
-    ),
-    alignment: Alignment.bottomRight,
-    child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.black.withOpacity(0.05),
-      ),
-      alignment: Alignment.bottomRight,
-      child: Padding(
-        padding: padding(
-            paddingType: PaddingType.LTRB, right: 0.01.sw, bottom: 0.005.sh),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            GestureDetector(
-              onTap: downloadOnTap,
-              child: Icon(
-                size: 0.035.sh,
-                Icons.file_download_outlined,
-                color: ColorManager.white,
-              ),
+    child: CachedNetworkImage(
+      imageUrl: assetName,
+      imageBuilder: (context, imageProvider) => Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          image: DecorationImage(
+            fit: BoxFit.fill,
+            image: imageProvider,
+          ),
+        ),
+        alignment: Alignment.bottomRight,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.black.withOpacity(0.05),
+          ),
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: padding(
+                paddingType: PaddingType.LTRB,
+                right: 0.01.sw,
+                bottom: 0.005.sh),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: downloadOnTap,
+                  child: Icon(
+                    size: 0.035.sh,
+                    Icons.file_download_outlined,
+                    color: ColorManager.white,
+                  ),
+                ),
+                verticalSpace(0.02.sh),
+                GestureDetector(
+                  onTap: favoriteOnTap,
+                  child: isSelect
+                      ? const Icon(
+                          Icons.favorite_rounded,
+                          color: ColorManager.red,
+                        )
+                      : const Icon(
+                          Icons.favorite_border_rounded,
+                          color: ColorManager.white,
+                        ),
+                ),
+              ],
             ),
-            verticalSpace(0.02.sh),
-            GestureDetector(
-              onTap: favoriteOnTap,
-              child: isSelect
-                  ? const Icon(
-                      Icons.favorite_rounded,
-                      color: ColorManager.red,
-                    )
-                  : const Icon(
-                      Icons.favorite_border_rounded,
-                      color: ColorManager.white,
-                    ),
-            ),
-          ],
+          ),
         ),
       ),
+      placeholder: (context, url) =>
+          const Center(child: SpinKitCircle(color: ColorManager.white)),
+      errorWidget: (context, url, error) => const Icon(Icons.error),
     ),
   );
 }

@@ -61,7 +61,5 @@ export 'package:walper/presentation/modules/home/home_widget.dart';
 export 'package:walper/presentation/modules/filter/filter_widget.dart';
 export 'package:walper/presentation/modules/otp/pinput_widget.dart';
 export 'package:walper/presentation/modules/privacy_policy/privacy_policy_widget.dart';
-export 'package:walper/presentation/modules/search/categories_search.dart';
-export 'package:walper/presentation/modules/search/photos_search.dart';
 export 'package:walper/presentation/modules/set_wallpaper/set_wallpaper_widget.dart';
 export 'package:flutter_rating_bar/flutter_rating_bar.dart';

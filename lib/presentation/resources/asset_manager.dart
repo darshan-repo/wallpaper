@@ -28,6 +28,7 @@ class ImageAssetManager {
   static const star = "$imagePath/star.png";
   static const notification = "$imagePath/notification.png";
   static const setWallpaperDone = "$imagePath/set_wallpaper_done.png";
+  static const deleteDownloads = "$imagePath/delete_downloads.png";
 }
 
 class ImageJPGManager {
@@ -53,4 +54,23 @@ class ImageSVGManager {
   static const otpVerification = "$imagePath/otp_verification.svg";
   static const changePassword = "$imagePath/change_password.svg";
   static const noDataFound = "$imagePath/no_data_found.svg";
+  static const noWallpaperFound = "$imagePath/no_wallpaper_found.svg";
+}
+
+class SVGIconManager {
+  static const String imagePath = "assets/images/icons";
+  static const notification = "$imagePath/notification.svg";
+  static const home = "$imagePath/home.svg";
+  static const collection = "$imagePath/collection.svg";
+  static const search = "$imagePath/search.svg";
+  static const setting = "$imagePath/setting.svg";
+  static const gridCollection = "$imagePath/grid_collection.svg";
+  static const favorite = "$imagePath/favorite.svg";
+  static const download = "$imagePath/download.svg";
+  static const privacypolicy = "$imagePath/privacy_policy.svg";
+  static const login = "$imagePath/login.svg";
+  static const logout = "$imagePath/logout.svg";
+  static const autoChangeWallpaper = "$imagePath/auto_change_wallpaper.svg";
+  static const settingNotification = "$imagePath/setting_notification.svg";
+  static const rateThisApp = "$imagePath/rate_this_app.svg";
 }

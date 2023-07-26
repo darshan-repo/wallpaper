@@ -114,3 +114,30 @@ class DownloadDatum {
         "updatedAt": updatedAt?.toIso8601String(),
       };
 }
+
+// DeleteDownloadModel deleteDownloadModelFromJson(String str) =>
+//     DeleteDownloadModel.fromJson(json.decode(str));
+
+// String deleteDownloadModelToJson(DeleteDownloadModel data) =>
+//     json.encode(data.toJson());
+
+// class DeleteDownloadModel {
+//   String? message;
+//   int? removeDownload;
+
+//   DeleteDownloadModel({
+//     this.message,
+//     this.removeDownload,
+//   });
+
+//   factory DeleteDownloadModel.fromJson(Map<String, dynamic> json) =>
+//       DeleteDownloadModel(
+//         message: json["message"],
+//         removeDownload: json["removeDownload"],
+//       );
+
+//   Map<String, dynamic> toJson() => {
+//         "message": message,
+//         "removeDownload": removeDownload,
+//       };
+// }

@@ -27,3 +27,17 @@ successSnackbar(String description) {
     ),
   );
 }
+
+warningSnackbar(String description) {
+  Get.snackbar(
+    "Warning!",
+    description,
+    shouldIconPulse: true,
+    colorText: Colors.white,
+    backgroundColor: Colors.orange,
+    icon: const Icon(
+      Icons.login,
+      color: Colors.white,
+    ),
+  );
+}

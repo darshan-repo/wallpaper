@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 
@@ -10,21 +12,27 @@ class BottomNavigationBarScreen extends StatefulWidget {
 }
 
 class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
+  String userID = UserPreferences.getUserId();
+
   List<DotNavigationBarItem> tabData = [
     DotNavigationBarItem(
-      icon: const Icon(Icons.home),
+      icon: SvgPicture.asset(SVGIconManager.home, color: ColorManager.white),
       selectedColor: ColorManager.primaryColor,
     ),
     DotNavigationBarItem(
-      icon: const Icon(Icons.view_comfy),
+      icon: SvgPicture.asset(SVGIconManager.collection,
+          color: ColorManager.white),
       selectedColor: ColorManager.primaryColor,
     ),
     DotNavigationBarItem(
-      icon: const Icon(Icons.search_sharp),
+      icon: SvgPicture.asset(SVGIconManager.search, color: ColorManager.white),
       selectedColor: ColorManager.primaryColor,
     ),
     DotNavigationBarItem(
-      icon: const Icon(Icons.settings),
+      icon: SvgPicture.asset(
+        SVGIconManager.setting,
+        color: ColorManager.white,
+      ),
       selectedColor: ColorManager.primaryColor,
     ),
   ];
@@ -91,41 +99,43 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                   Get.off(const BottomNavigationBarScreen());
                 },
                 splashColor: ColorManager.transparentColor,
-                leading: Image.asset(
-                  ImageAssetManager.home,
+                leading: SvgPicture.asset(
+                  SVGIconManager.home,
                   color: ColorManager.white,
-                  height: 0.035.sh,
-                  width: 0.035.sh,
                 ),
                 title: const Text('Home'),
               ),
               ListTile(
                 onTap: () {
-                  BlocProvider.of<CollectionBlocBloc>(context).add(
-                    GetLikedWallpaper(id: UserPreferences.getUserId()),
-                  );
+                  if (userID.isEmpty) {
+                    warningSnackbar('User not found. please login to continue');
+                  } else {
+                    BlocProvider.of<CollectionBlocBloc>(context).add(
+                      GetLikedWallpaper(id: UserPreferences.getUserId()),
+                    );
+                  }
                 },
                 splashColor: ColorManager.transparentColor,
-                leading: Image.asset(
-                  ImageAssetManager.favorite,
+                leading: SvgPicture.asset(
+                  SVGIconManager.favorite,
                   color: ColorManager.white,
-                  height: 0.035.sh,
-                  width: 0.035.sh,
                 ),
                 title: const Text('Favorites'),
               ),
               ListTile(
                 onTap: () {
-                  BlocProvider.of<CollectionBlocBloc>(context).add(
-                    GetDownloadWallpaper(id: UserPreferences.getUserId()),
-                  );
+                  if (userID.isEmpty) {
+                    warningSnackbar('User not found. please login to continue');
+                  } else {
+                    BlocProvider.of<CollectionBlocBloc>(context).add(
+                      GetDownloadWallpaper(id: UserPreferences.getUserId()),
+                    );
+                  }
                 },
                 splashColor: ColorManager.transparentColor,
-                leading: Image.asset(
-                  ImageAssetManager.download,
+                leading: SvgPicture.asset(
+                  SVGIconManager.download,
                   color: ColorManager.white,
-                  height: 0.035.sh,
-                  width: 0.035.sh,
                 ),
                 title: const Text('Downloads'),
               ),
@@ -134,11 +144,9 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                   Get.to(const PrivacyPolicyScreen());
                 },
                 splashColor: ColorManager.transparentColor,
-                leading: Image.asset(
-                  ImageAssetManager.privacyPolicy,
+                leading: SvgPicture.asset(
+                  SVGIconManager.privacypolicy,
                   color: ColorManager.white,
-                  height: 0.035.sh,
-                  width: 0.035.sh,
                 ),
                 title: const Text('Privacy Policy'),
               ),
@@ -158,17 +166,27 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
               verticalSpace(0.2.sh),
               ListTile(
                 onTap: () {
-                  Get.offAll(const LoginScreen());
-                  UserPreferences().reset();
+                  setState(() {
+                    if (userID.isNotEmpty) {
+                      UserPreferences().reset();
+                    } else {
+                      Get.offAll(const LoginScreen());
+                    }
+                  });
                 },
                 splashColor: ColorManager.transparentColor,
-                leading: Image.asset(
-                  ImageAssetManager.logout,
-                  color: ColorManager.white,
-                  height: 0.035.sh,
-                  width: 0.035.sh,
-                ),
-                title: const Text('Logout'),
+                leading: userID.isNotEmpty
+                    ? SvgPicture.asset(
+                        SVGIconManager.logout,
+                        color: ColorManager.white,
+                      )
+                    : SvgPicture.asset(
+                        SVGIconManager.login,
+                        color: ColorManager.white,
+                      ),
+                title: userID.isNotEmpty
+                    ? const Text('Logout')
+                    : const Text('Log In'),
               ),
               const Spacer(),
               Padding(
@@ -218,7 +236,10 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                 onTap: () {
                   Get.to(const NotificationScreen());
                 },
-                child: const Icon(Icons.notification_important_outlined),
+                child: SvgPicture.asset(
+                  SVGIconManager.notification,
+                  color: ColorManager.white,
+                ),
               ),
             )
           ],
@@ -231,7 +252,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
           splashColor: ColorManager.transparentColor,
           duration: Duration.zero,
           currentIndex: activeIndex,
-          dotIndicatorColor: Colors.white,
+          // dotIndicatorColor: Colors.white,
           unselectedItemColor: Colors.grey[300],
           splashBorderRadius: 50,
           onTap: (int index) {

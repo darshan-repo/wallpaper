@@ -25,7 +25,9 @@ class _LoginScreenState extends State<LoginScreen> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         backgroundColor: ColorManager.primaryColor,
-        appBar: appbar(context),
+        appBar: appbar(context, leadingOnTap: () {
+          Get.offAll(const BottomNavigationBarScreen());
+        }),
         body: BlocBuilder<AuthBlocBloc, AuthBlocState>(
           builder: (context, state) {
             if (state is AuthBlocLoading) {
