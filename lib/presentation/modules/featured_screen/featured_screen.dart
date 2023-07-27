@@ -1,3 +1,4 @@
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:walper/libs.dart';
 
 class FeaturedScreen extends StatefulWidget {
@@ -34,8 +35,56 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
               childAspectRatio: 0.6,
             ),
             itemCount: 10,
-            itemBuilder: (context, index) => homeGridview(
-              assetName: ImageJPGManager.bananas,
+            itemBuilder: (context, index) => CachedNetworkImage(
+              imageUrl: ImageJPGManager.bananas,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  image: DecorationImage(
+                    fit: BoxFit.fill,
+                    image: imageProvider,
+                  ),
+                ),
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.black.withOpacity(0.05),
+                  ),
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: padding(
+                        paddingType: PaddingType.LTRB,
+                        right: 0.01.sw,
+                        bottom: 0.005.sh),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          onTap: () async {},
+                          child: Icon(
+                            size: 0.035.sh,
+                            Icons.file_download_outlined,
+                            color: ColorManager.white,
+                          ),
+                        ),
+                        verticalSpace(0.02.sh),
+                        GestureDetector(
+                          onTap: () {},
+                          child: const Icon(
+                            Icons.favorite_rounded,
+                            color: ColorManager.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              placeholder: (context, url) =>
+                  const Center(child: SpinKitCircle(color: ColorManager.white)),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
         ),

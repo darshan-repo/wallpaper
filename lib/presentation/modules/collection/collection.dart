@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:walper/libs.dart';
 
 class CollectionScreen extends StatefulWidget {
@@ -35,8 +36,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
                   children: [
                     SizedBox(height: 0.3.sh),
                     const Center(
-                      child:
-                          CircularProgressIndicator(color: ColorManager.white),
+                      child: SpinKitCircle(color: ColorManager.white),
                     ),
                   ],
                 );
@@ -52,69 +52,90 @@ class _CollectionScreenState extends State<CollectionScreen> {
                           .getWallpaperModel
                           ?.categories
                           ?.length,
-                      itemBuilder: (context, index) => GestureDetector(
-                        onTap: () {
-                          BlocProvider.of<CollectionBlocBloc>(context).add(
-                            GetCollection(
-                              id: BlocProvider.of<CollectionBlocBloc>(context)
-                                      .getWallpaperModel!
-                                      .categories![index]
-                                      .id ??
-                                  "",
-                              category:
-                                  BlocProvider.of<CollectionBlocBloc>(context)
-                                          .getWallpaperModel!
-                                          .categories![index]
-                                          .name ??
-                                      "",
-                            ),
-                          );
-                        },
-                        child: Container(
-                          margin: margin(
-                              marginType: MarginType.bottom,
-                              marginValue: 0.01.sh),
-                          height: 0.19.sh,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            image: const DecorationImage(
-                              image: AssetImage(
-                                ImageJPGManager.abstractCollection,
+                      itemBuilder: (context, index) {
+                        final image =
+                            BlocProvider.of<CollectionBlocBloc>(context)
+                                    .getWallpaperModel
+                                    ?.categories![index]
+                                    .background!
+                                    .split("/")
+                                    .last ??
+                                "";
+                        return GestureDetector(
+                          onTap: () {
+                            Get.to(
+                              CollectionViewScreen(
+                                categoriesData:
+                                    BlocProvider.of<CollectionBlocBloc>(context)
+                                        .getWallpaperModel
+                                        ?.categories?[index]
+                                        .categoryDatas,
+                                categoryName:
+                                    BlocProvider.of<CollectionBlocBloc>(context)
+                                            .getWallpaperModel
+                                            ?.categories![index]
+                                            .name ??
+                                        "",
                               ),
-                              fit: BoxFit.fill,
+                            );
+                          },
+                          child: SizedBox(
+                            height: 0.19.sh,
+                            child: CachedNetworkImage(
+                              imageUrl: BaseApi.imgUrl + image,
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                margin: margin(
+                                    marginType: MarginType.bottom,
+                                    marginValue: 0.01.sh),
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                child: Container(
+                                  padding: padding(
+                                      paddingType: PaddingType.left,
+                                      paddingValue: 0.08.sw),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        BlocProvider.of<CollectionBlocBloc>(
+                                                    context)
+                                                .getWallpaperModel
+                                                ?.categories![index]
+                                                .name ??
+                                            "",
+                                        style: myTheme.textTheme.titleLarge,
+                                      ),
+                                      verticalSpace(0.02.sh),
+                                      Text(
+                                        '${BlocProvider.of<CollectionBlocBloc>(context).getWallpaperModel?.categories![index].categoryDatas!.length} wallpapers',
+                                        style: myTheme.textTheme.labelMedium,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              placeholder: (context, url) => const Center(
+                                child: SpinKitCircle(color: ColorManager.white),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
                             ),
                           ),
-                          child: Container(
-                            padding: padding(
-                                paddingType: PaddingType.left,
-                                paddingValue: 0.08.sw),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  BlocProvider.of<CollectionBlocBloc>(context)
-                                          .getWallpaperModel
-                                          ?.categories![index]
-                                          .name ??
-                                      "",
-                                  style: myTheme.textTheme.titleLarge,
-                                ),
-                                verticalSpace(0.02.sh),
-                                Text(
-                                  '00 Wallpapers',
-                                  style: myTheme.textTheme.labelMedium,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ),
                 );

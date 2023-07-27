@@ -135,7 +135,7 @@ class _SearchScreenState extends State<SearchScreen>
               builder: (context, state) {
                 if (state is CollectionLoading) {
                   return const Center(
-                    child: CircularProgressIndicator(color: ColorManager.white),
+                    child: SpinKitCircle(color: ColorManager.white),
                   );
                 } else if (state is CollectionLoaded) {
                   return TabBarView(
@@ -476,26 +476,7 @@ class _SearchScreenState extends State<SearchScreen>
                                         ?.length,
                                 itemBuilder: (context, index) =>
                                     GestureDetector(
-                                  onTap: () {
-                                    BlocProvider.of<CollectionBlocBloc>(context)
-                                        .add(
-                                      GetCollection(
-                                        id: BlocProvider.of<CollectionBlocBloc>(
-                                                    context)
-                                                .getWallpaperModel!
-                                                .categories![index]
-                                                .id ??
-                                            "",
-                                        category:
-                                            BlocProvider.of<CollectionBlocBloc>(
-                                                        context)
-                                                    .getWallpaperModel!
-                                                    .categories![index]
-                                                    .name ??
-                                                "",
-                                      ),
-                                    );
-                                  },
+                                  onTap: () {},
                                   child: Container(
                                     margin: margin(
                                         marginType: MarginType.bottom,
@@ -560,23 +541,7 @@ class _SearchScreenState extends State<SearchScreen>
                                         searchCategoryWallpaperModel.length,
                                     itemBuilder: (context, index) =>
                                         GestureDetector(
-                                      onTap: () {
-                                        BlocProvider.of<CollectionBlocBloc>(
-                                                context)
-                                            .add(
-                                          GetCollection(
-                                            id: searchCategoryWallpaperModel[
-                                                        index]
-                                                    .id ??
-                                                "",
-                                            category:
-                                                searchCategoryWallpaperModel[
-                                                            index]
-                                                        .name ??
-                                                    "",
-                                          ),
-                                        );
-                                      },
+                                      onTap: () {},
                                       child: Container(
                                         margin: margin(
                                             marginType: MarginType.bottom,

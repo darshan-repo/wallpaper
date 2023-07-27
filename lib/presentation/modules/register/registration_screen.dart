@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:walper/libs.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -33,7 +34,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           builder: (context, state) {
             if (state is AuthBlocLoading) {
               return const Center(
-                child: CircularProgressIndicator(),
+                child: SpinKitCircle(color: ColorManager.white),
               );
             }
             return Padding(

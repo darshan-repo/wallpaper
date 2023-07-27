@@ -46,8 +46,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                 builder: (context, state) {
                   if (state is CollectionLoading) {
                     return const Center(
-                      child:
-                          CircularProgressIndicator(color: ColorManager.white),
+                      child: SpinKitCircle(color: ColorManager.white),
                     );
                   } else if (state is CollectionLoaded) {
                     return BlocProvider.of<CollectionBlocBloc>(context)

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:walper/libs.dart';
 
 class EmailVarificationScreen extends StatefulWidget {
@@ -25,7 +26,7 @@ class _EmailVarificationScreenState extends State<EmailVarificationScreen> {
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
         setState(() {
-          isShow = true;
+          isShow = !isShow;
         });
       },
       child: Scaffold(
@@ -35,7 +36,7 @@ class _EmailVarificationScreenState extends State<EmailVarificationScreen> {
           builder: (context, state) {
             if (state is AuthBlocLoading) {
               return const Center(
-                child: CircularProgressIndicator(),
+                child: SpinKitCircle(color: ColorManager.white),
               );
             }
             return Padding(

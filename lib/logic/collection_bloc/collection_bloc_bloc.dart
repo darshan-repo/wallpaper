@@ -14,12 +14,12 @@ class CollectionBlocBloc
   CollectionBlocBloc() : super(CollectionBlocInitial()) {
     on<GetAllWallpaper>(_getAllWallPaper);
     on<GetWallpaper>(_getWallPaper);
-    on<GetCollection>(_getCollection);
     on<SendLikedWallpaper>(_sendLikedWallpaper);
     on<GetLikedWallpaper>(_getLikedWallpaper);
     on<SendDownloadWallpaper>(_sendDownloadWallpaper);
     on<GetDownloadWallpaper>(_getDownloadWallpaper);
     on<DeleteDownloadWallpaper>(_deleteDownloadWallpaper);
+    on<SendDissLikeWallpaper>(_sendDissLikedWallpaper);
   }
 
   GetAllWallpaperModel? getAllWallpaperModel;
@@ -28,8 +28,8 @@ class CollectionBlocBloc
   GetWallpaperModel? getWallpaperModel;
   SendLikeModel? sendLikeModelData;
 
-  _getAllWallPaper(
-      GetAllWallpaper event, Emitter<CollectionBlocState> emit) async {
+  _getAllWallPaper(GetAllWallpaper event,
+      Emitter<CollectionBlocState> emit) async {
     emit(CollectionLoading());
     try {
       Map<String, dynamic> data = await BaseApi.getRequest("allWallpapers");
@@ -63,31 +63,12 @@ class CollectionBlocBloc
     }
   }
 
-  _getCollection(GetCollection event, Emitter<CollectionBlocState> emit) async {
-    emit(CollectionLoading());
+  _sendLikedWallpaper(SendLikedWallpaper event,
+      Emitter<CollectionBlocState> emit) async {
+    // emit(CollectionLoading());
     try {
       Map<String, dynamic> data =
-          await BaseApi.getRequest("getWallpaperByCategory/${event.id}");
-      log("RESPONSE :: $data");
-      if (data["data"] != null) {
-        getCollectionModel = GetCollectionModel.fromJson(data);
-        Get.to(CollectionViewScreen(id: event.id, category: event.category));
-        emit(CollectionLoaded());
-      } else {
-        emit(CollectionLoaded());
-      }
-    } catch (e) {
-      log(e.toString());
-      emit(CollectionError());
-    }
-  }
-
-  _sendLikedWallpaper(
-      SendLikedWallpaper event, Emitter<CollectionBlocState> emit) async {
-    emit(CollectionLoading());
-    try {
-      Map<String, dynamic> data =
-          await BaseApi.postRequest("like/${event.id}", data: {
+      await BaseApi.postRequest("like/${event.id}", data: {
         "userId": event.userId,
         "name": event.name,
         "category": event.category,
@@ -95,7 +76,29 @@ class CollectionBlocBloc
       });
       log("RESPONSE :: $data");
       if (data["data"] != null) {
+        add(GetLikedWallpaper());
         sendLikeModelData = SendLikeModel.fromJson(data);
+        emit(CollectionLoaded());
+      } else {
+        add(GetLikedWallpaper());
+
+        emit(CollectionLoaded());
+      }
+    } catch (e) {
+      log(e.toString());
+      emit(CollectionError());
+    }
+  }
+
+  _getLikedWallpaper(GetLikedWallpaper event,
+      Emitter<CollectionBlocState> emit) async {
+    // emit(CollectionLoading());
+    try {
+      Map<String, dynamic> data = await BaseApi.getRequest(
+          "getLikesByUser/${UserPreferences.getUserId()}");
+      log("RESPONSE :: $data");
+      if (data["message"] == "likes fetched") {
+        getLikedModel = GetLikeModel.fromJson(data);
         emit(CollectionLoaded());
       } else {
         emit(CollectionLoaded());
@@ -106,18 +109,19 @@ class CollectionBlocBloc
     }
   }
 
-  _getLikedWallpaper(
-      GetLikedWallpaper event, Emitter<CollectionBlocState> emit) async {
+  _sendDissLikedWallpaper(SendDissLikeWallpaper event,
+      Emitter<CollectionBlocState> emit) async {
     emit(CollectionLoading());
     try {
-      Map<String, dynamic> data =
-          await BaseApi.getRequest("getLikesByUser/${event.id}");
+      Map<String, dynamic> data = await BaseApi.postRequest(
+          "removeLike/${event.id}",
+          data: {'userId': event.userId});
       log("RESPONSE :: $data");
-      if (data["message"] == "likes fetched") {
-        getLikedModel = GetLikeModel.fromJson(data);
-        Get.to(const FavoriteScreen());
+      if (data["data"] != null) {
+        add(GetLikedWallpaper());
         emit(CollectionLoaded());
       } else {
+        add(GetLikedWallpaper());
         emit(CollectionLoaded());
       }
     } catch (e) {
@@ -127,12 +131,13 @@ class CollectionBlocBloc
   }
 
   SendDownloadModel? sendDownloadModel;
-  _sendDownloadWallpaper(
-      SendDownloadWallpaper event, Emitter<CollectionBlocState> emit) async {
+
+  _sendDownloadWallpaper(SendDownloadWallpaper event,
+      Emitter<CollectionBlocState> emit) async {
     emit(CollectionLoading());
     try {
       Map<String, dynamic> data =
-          await BaseApi.postRequest("download/${event.id}", data: {
+      await BaseApi.postRequest("download/${event.id}", data: {
         "userId": event.userId,
         "name": event.name,
         "category": event.category,
@@ -152,12 +157,13 @@ class CollectionBlocBloc
   }
 
   GetDownloadModel? getDownloadModel;
-  _getDownloadWallpaper(
-      GetDownloadWallpaper event, Emitter<CollectionBlocState> emit) async {
+
+  _getDownloadWallpaper(GetDownloadWallpaper event,
+      Emitter<CollectionBlocState> emit) async {
     emit(CollectionLoading());
     try {
       Map<String, dynamic> data =
-          await BaseApi.getRequest("getDownloadsByUser/${event.id}");
+      await BaseApi.getRequest("getDownloadsByUser/${event.id}");
       log("RESPONSE :: $data");
       if (data["message"] == "downloads fetched") {
         getDownloadModel = GetDownloadModel.fromJson(data);
@@ -173,8 +179,8 @@ class CollectionBlocBloc
   }
 
   //  GetDownloadModel? getDownloadModel;
-  _deleteDownloadWallpaper(
-      DeleteDownloadWallpaper event, Emitter<CollectionBlocState> emit) async {
+  _deleteDownloadWallpaper(DeleteDownloadWallpaper event,
+      Emitter<CollectionBlocState> emit) async {
     emit(CollectionLoading());
     try {
       Map<String, dynamic> data = await BaseApi.postRequest(

@@ -48,8 +48,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       children: [
                         verticalSpace(0.3.sh),
                         const Center(
-                          child: CircularProgressIndicator(
-                              color: ColorManager.white),
+                          child: SpinKitCircle(color: ColorManager.white),
                         ),
                       ],
                     );

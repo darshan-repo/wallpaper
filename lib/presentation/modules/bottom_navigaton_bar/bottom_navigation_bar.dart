@@ -14,6 +14,16 @@ class BottomNavigationBarScreen extends StatefulWidget {
 class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
   String userID = UserPreferences.getUserId();
 
+  @override
+  void initState() {
+    if (userID.isNotEmpty) {
+      BlocProvider.of<CollectionBlocBloc>(context).add(
+        GetLikedWallpaper(),
+      );
+    }
+    super.initState();
+  }
+
   List<DotNavigationBarItem> tabData = [
     DotNavigationBarItem(
       icon: SvgPicture.asset(SVGIconManager.home, color: ColorManager.white),
@@ -110,9 +120,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                   if (userID.isEmpty) {
                     warningSnackbar('User not found. please login to continue');
                   } else {
-                    BlocProvider.of<CollectionBlocBloc>(context).add(
-                      GetLikedWallpaper(id: UserPreferences.getUserId()),
-                    );
+                    Get.to(const FavoriteScreen());
                   }
                 },
                 splashColor: ColorManager.transparentColor,

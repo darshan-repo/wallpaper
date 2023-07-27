@@ -7,12 +7,6 @@ class GetAllWallpaper extends CollectionBlocEvent {}
 
 class GetWallpaper extends CollectionBlocEvent {}
 
-class GetCollection extends CollectionBlocEvent {
-  final String id;
-  final String category;
-  GetCollection({required this.id, required this.category});
-}
-
 class SendLikedWallpaper extends CollectionBlocEvent {
   final String id;
   final String userId;
@@ -29,9 +23,13 @@ class SendLikedWallpaper extends CollectionBlocEvent {
   });
 }
 
-class GetLikedWallpaper extends CollectionBlocEvent {
+class GetLikedWallpaper extends CollectionBlocEvent {}
+
+class SendDissLikeWallpaper extends CollectionBlocEvent {
   final String id;
-  GetLikedWallpaper({required this.id});
+  final String userId;
+
+  SendDissLikeWallpaper({required this.id, required this.userId});
 }
 
 class SendDownloadWallpaper extends CollectionBlocEvent {
@@ -52,11 +50,13 @@ class SendDownloadWallpaper extends CollectionBlocEvent {
 
 class GetDownloadWallpaper extends CollectionBlocEvent {
   final String id;
+
   GetDownloadWallpaper({required this.id});
 }
 
 class DeleteDownloadWallpaper extends CollectionBlocEvent {
   final String id, userId;
+
   DeleteDownloadWallpaper({
     required this.id,
     required this.userId,

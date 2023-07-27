@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();  
+  WidgetsFlutterBinding.ensureInitialized();
   await UserPreferences().init();
   SystemChrome.setPreferredOrientations(
     [
