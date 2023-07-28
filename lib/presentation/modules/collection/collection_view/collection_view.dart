@@ -1,8 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/common/download_image.dart';
+import 'package:http/http.dart' as http;
 
 class CollectionViewScreen extends StatefulWidget {
   final List<CategoryData>? categoriesData;
@@ -17,6 +20,7 @@ class CollectionViewScreen extends StatefulWidget {
 
 class _CollectionViewScreenState extends State<CollectionViewScreen> {
   List<String> likedWallpaper = [];
+  List<String> downloadWallpaper = [];
   final String userId = UserPreferences.getUserId();
 
   @override
@@ -44,6 +48,20 @@ class _CollectionViewScreenState extends State<CollectionViewScreen> {
       }
     }
     super.initState();
+  }
+
+  downloadAndSaveImageToGallery({required String imageUrl}) async {
+    var response = await http.get(Uri.parse(imageUrl));
+    if (response.statusCode == 200) {
+      var imageData = Uint8List.fromList(response.bodyBytes);
+      await ImageGallerySaver.saveImage(
+        imageData,
+        quality: 60,
+        name: DateTime.now().toString(),
+      );
+    } else {
+      log("Failed to load image: ${response.statusCode}");
+    }
   }
 
   @override
@@ -125,12 +143,12 @@ class _CollectionViewScreenState extends State<CollectionViewScreen> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   GestureDetector(
-                                    onTap: () async {
+                                    onTap: () {
                                       if (userID.isEmpty) {
                                         Get.to(const LoginScreen());
                                       } else {
-                                        await downloadAndSaveImage(
-                                            BaseApi.imgUrl + image);
+                                        downloadAndSaveImageToGallery(
+                                            imageUrl: BaseApi.imgUrl + image);
                                         BlocProvider.of<CollectionBlocBloc>(
                                                 context)
                                             .add(

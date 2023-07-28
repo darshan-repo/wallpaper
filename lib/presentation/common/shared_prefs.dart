@@ -28,9 +28,18 @@ class UserPreferences {
     return _prefs.getString("userId") ?? "";
   }
 
+  static getDeviceToken() {
+    return _prefs.getString("setDeviceToken") ?? "";
+  }
+
   static setUserId(String id) {
     _prefs.setString("userId", id);
     print("=======>> userId set <<=======");
+  }
+
+  static setDeviceToken(String setDeviceToken) {
+    _prefs.setString("setDeviceToken", setDeviceToken);
+    print("=======>> setDeviceToken set <<=======");
   }
 
   static setUserEntered(String id) {

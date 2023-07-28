@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 
@@ -141,7 +144,7 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                           buttonText: AppString.resend,
                         ),
                         materialButton(
-                          onPressed: () {
+                          onPressed: () async {
                             if (widget.isForgot) {
                               BlocProvider.of<AuthBlocBloc>(context).add(
                                 ForgotOtpVerify(
@@ -152,13 +155,16 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                                 ),
                               );
                             } else {
+                              final fcmToken = await FirebaseMessaging.instance
+                                  .getToken(
+                                      vapidKey:
+                                          "BMddJ7CcjA7Or2PPl-TwHRW_hWheRqnyxdzRvkRH3u7uxEjIqJvDCmDuWJpV5B-GGCvJfdqpmvC-yUS5qVXF1WE");
                               BlocProvider.of<AuthBlocBloc>(context).add(
                                 VerifyOtp(
                                   email: widget.email ?? "",
                                   passWord: widget.passWord ?? "",
-                                  otp: int.parse(
-                                    txtEnterCodeController.text,
-                                  ),
+                                  otp: int.parse(txtEnterCodeController.text),
+                                  fcmToken: fcmToken!,
                                 ),
                               );
                             }

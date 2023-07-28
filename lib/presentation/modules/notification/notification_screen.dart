@@ -1,4 +1,7 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:walper/libs.dart';
+import 'package:walper/logic/notification_bloc/notification_bloc.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -11,7 +14,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
   bool isShow = false;
 
   @override
+  void initState() {
+    BlocProvider.of<NotificationBloc>(context).add(GetNotification());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final String userId = UserPreferences.getUserId();
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 0.09.sh,
@@ -60,82 +71,164 @@ class _NotificationScreenState extends State<NotificationScreen> {
         ],
       ),
       backgroundColor: ColorManager.primaryColor,
-      body: Padding(
-        padding: padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),
-        child: isShow
-            ? Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.asset(
-                      ImageAssetManager.noNotificationFound,
-                    ),
-                    Text(
-                      'Oops ! No notifications right now.',
-                      style: TextStyle(
-                        fontSize: FontSize.s18,
-                        fontFamily: FontFamily.roboto,
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeightManager.semiBold,
-                        foreground: Paint()
-                          ..shader = const LinearGradient(
-                            colors: <Color>[
-                              Color.fromRGBO(160, 152, 250, 1),
-                              Color.fromRGBO(175, 117, 112, 1),
-                              Colors.yellow
-                            ],
-                          ).createShader(
-                            const Rect.fromLTWH(100.0, 0.0, 180.0, 70.0),
-                          ),
-                      ),
-                    )
-                  ],
-                ),
-              )
-            : NotificationListener<OverscrollIndicatorNotification>(
-                onNotification: (notification) {
-                  notification.disallowIndicator();
-                  return true;
-                },
-                child: ListView.separated(
-                  itemBuilder: (context, index) => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'New wallpapers Available',
-                            style: myTheme.textTheme.labelMedium,
-                          ),
-                          verticalSpace(0.02.sh),
-                          Text(
-                            'Wed, 10 Jun 2020 12:39 PM',
-                            style: myTheme.textTheme.labelSmall,
-                          ),
-                        ],
-                      ),
-                      Container(
-                        height: 0.08.sh,
-                        width: 0.18.sw,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: ColorManager.secondaryColor,
-                          image: const DecorationImage(
-                            image: AssetImage(ImageJPGManager.yellowPinkColor),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ),
-                    ],
+      body: userId.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    ImageAssetManager.noNotificationFound,
+                    height: 0.25.sh,
+                    width: 0.8.sw,
                   ),
-                  separatorBuilder: (context, index) =>
-                      const Divider(color: ColorManager.secondaryColor),
-                  itemCount: 15,
-                ),
+                  Text(
+                    'Oops ! No notifications right now.',
+                    style: TextStyle(
+                      fontSize: FontSize.s18,
+                      fontFamily: FontFamily.roboto,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeightManager.semiBold,
+                      foreground: Paint()
+                        ..shader = const LinearGradient(
+                          colors: <Color>[
+                            Color.fromRGBO(160, 152, 250, 1),
+                            Color.fromRGBO(175, 117, 112, 1),
+                            Colors.yellow
+                          ],
+                        ).createShader(
+                          const Rect.fromLTWH(100.0, 0.0, 180.0, 70.0),
+                        ),
+                    ),
+                  )
+                ],
               ),
-      ),
+            )
+          : BlocBuilder<NotificationBloc, NotificationState>(
+              builder: (context, state) {
+                if (state is NotificationLoading) {
+                  return const Center(
+                      child: SpinKitCircle(color: ColorManager.white));
+                } else if (state is NotificationLoaded) {
+                  return Padding(
+                    padding: padding(
+                        paddingType: PaddingType.all, paddingValue: 0.02.sh),
+                    child: BlocProvider.of<NotificationBloc>(context)
+                            .getNotificationModel!
+                            .notificationData!
+                            .isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  ImageAssetManager.noNotificationFound,
+                                  height: 0.25.sh,
+                                  width: 0.8.sw,
+                                ),
+                                Text(
+                                  'Oops ! No notifications right now.',
+                                  style: TextStyle(
+                                    fontSize: FontSize.s18,
+                                    fontFamily: FontFamily.roboto,
+                                    fontStyle: FontStyle.normal,
+                                    fontWeight: FontWeightManager.semiBold,
+                                    foreground: Paint()
+                                      ..shader = const LinearGradient(
+                                        colors: <Color>[
+                                          Color.fromRGBO(160, 152, 250, 1),
+                                          Color.fromRGBO(175, 117, 112, 1),
+                                          Colors.yellow
+                                        ],
+                                      ).createShader(
+                                        const Rect.fromLTWH(
+                                            100.0, 0.0, 180.0, 70.0),
+                                      ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        : NotificationListener<OverscrollIndicatorNotification>(
+                            onNotification: (notification) {
+                              notification.disallowIndicator();
+                              return true;
+                            },
+                            child: ListView.separated(
+                              separatorBuilder: (context, index) =>
+                                  const Divider(
+                                      color: ColorManager.secondaryColor),
+                              itemCount:
+                                  BlocProvider.of<NotificationBloc>(context)
+                                      .getNotificationModel!
+                                      .notificationData!
+                                      .length,
+                              itemBuilder: (context, index) {
+                                final data =
+                                    BlocProvider.of<NotificationBloc>(context)
+                                        .getNotificationModel!
+                                        .notificationData![index];
+                                final image = data.wallpaper!.split("/").last;
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(
+                                          width: 0.72.sw,
+                                          child: Text(
+                                            data.message!,
+                                            style:
+                                                myTheme.textTheme.labelMedium,
+                                          ),
+                                        ),
+                                        verticalSpace(0.02.sh),
+                                        Text(
+                                          '${data.createdAt!.day.toString()}/${data.createdAt!.month.toString()}/${data.createdAt!.year.toString()}   ${data.createdAt!.hour.toString()}:${data.createdAt!.minute.toString()}',
+                                          style: myTheme.textTheme.labelSmall,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 0.08.sh,
+                                      width: 0.18.sw,
+                                      child: CachedNetworkImage(
+                                        imageUrl: BaseApi.imgUrl + image!,
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: ColorManager.secondaryColor,
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ),
+                                        placeholder: (context, url) =>
+                                            const Center(
+                                          child: SpinKitCircle(
+                                              color: ColorManager.white),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                  );
+                }
+                return Container();
+              },
+            ),
     );
   }
 }

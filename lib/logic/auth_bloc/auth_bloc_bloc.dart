@@ -45,8 +45,11 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
   _loginWithOtp(LoginWithOtp event, Emitter<AuthBlocState> emit) async {
     emit(AuthBlocLoading());
     try {
-      Map<String, dynamic> data = await BaseApi.postRequest("sentotp",
-          data: {"email": event.email, "password": event.passWord});
+      Map<String, dynamic> data = await BaseApi.postRequest("sentotp", data: {
+        "email": event.email,
+        "password": event.passWord,
+        "deviceId": event.fcmToken
+      });
       log("REASONABLE ::$data");
       if (data["message"] == "otp sent successfully") {
         Get.to(OTPVarificationScreen(
@@ -72,7 +75,8 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
       Map<String, dynamic> data = await BaseApi.postRequest("signin", data: {
         "email": event.email,
         "password": event.passWord,
-        "Otp": event.otp
+        "Otp": event.otp,
+        "deviceId": event.fcmToken
       });
       log("REASONABLE ::$data");
       if (data["message"] == "login successfully") {

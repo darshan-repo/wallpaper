@@ -1,9 +1,13 @@
 // ignore_for_file: deprecated_member_use, use_build_context_synchronously
 
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/common/download_image.dart';
+import 'package:http/http.dart' as http;
+import 'package:walper/models/get_all_wallpaper.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,13 +17,63 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final List items = [
+    'Recent',
+    'Trending',
+    'Exclusive',
+  ];
+
+  String? selectedValue = 'Exclusive';
+  bool isSelectGrid = true;
+  ScrollController scrollController = ScrollController();
+
   List<String> likedWallpaper = [];
   final String userId = UserPreferences.getUserId();
+  List<Wallpaper> trendingWallpaper = [];
+  List<Wallpaper> recentWallpaper = [];
+  List<Wallpaper> exclusiveWallpaper = [];
+
+  Future<void> sortingWallpaper(String values) async {
+    trendingWallpaper.clear();
+    recentWallpaper.clear();
+    exclusiveWallpaper.clear();
+    if (selectedValue == 'Recent') {
+      for (int i = BlocProvider.of<CollectionBlocBloc>(context)
+                  .getAllWallpaperModel!
+                  .wallpapers!
+                  .length -
+              1;
+          i > 0;
+          i--) {
+        recentWallpaper.add(BlocProvider.of<CollectionBlocBloc>(context)
+            .getAllWallpaperModel!
+            .wallpapers![i]);
+      }
+      print('Recent==============>>$recentWallpaper');
+      setState(() {});
+    } else if (selectedValue == "Trending") {
+      print('Trending==============>>$trendingWallpaper');
+    } else if (selectedValue == "Exclusive") {
+      for (int i = 0;
+          i <
+              BlocProvider.of<CollectionBlocBloc>(context)
+                  .getAllWallpaperModel!
+                  .wallpapers!
+                  .length;
+          i++) {
+        exclusiveWallpaper.add(BlocProvider.of<CollectionBlocBloc>(context)
+            .getAllWallpaperModel!
+            .wallpapers![i]);
+      }
+      print('Exclusive==============>>$exclusiveWallpaper');
+      setState(() {});
+    }
+    setState(() {});
+  }
 
   @override
   void initState() {
     BlocProvider.of<CollectionBlocBloc>(context).add(GetAllWallpaper());
-
     if (userId.isNotEmpty) {
       if (BlocProvider.of<CollectionBlocBloc>(context)
               .getLikedModel
@@ -41,20 +95,26 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         }
       }
+      setState(() {});
     }
+    sortingWallpaper('Exclusive');
+
     super.initState();
   }
 
-  final List items = [
-    'Recent',
-    'Trending',
-    'Exclusive',
-  ];
-
-  String? selectedValue = 'Trending';
-  bool isSelectGrid = true;
-  bool isSelect = false;
-  ScrollController scrollController = ScrollController();
+  downloadAndSaveImageToGallery({required String imageUrl}) async {
+    var response = await http.get(Uri.parse(imageUrl));
+    if (response.statusCode == 200) {
+      var imageData = Uint8List.fromList(response.bodyBytes);
+      await ImageGallerySaver.saveImage(
+        imageData,
+        quality: 60,
+        name: DateTime.now().toString(),
+      );
+    } else {
+      log("Failed to load image: ${response.statusCode}");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +224,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   .toList(),
                               onChanged: (value) {
                                 setState(() {
-                                  selectedValue = value.toString();
+                                  selectedValue = value as String;
+                                  sortingWallpaper(selectedValue!);
                                 });
                               },
                             ),
@@ -248,17 +309,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisCount: 2,
                           mainAxisSpacing: 10,
                           crossAxisSpacing: 10,
-                          childCount:
-                              BlocProvider.of<CollectionBlocBloc>(context)
-                                  .getAllWallpaperModel
-                                  ?.wallpapers
-                                  ?.length,
+                          childCount: selectedValue == "Recent"
+                              ? recentWallpaper.length
+                              : selectedValue == "Trending"
+                                  ? trendingWallpaper.length
+                                  : exclusiveWallpaper.length,
                           itemBuilder: (context, index) {
-                            final data =
-                                BlocProvider.of<CollectionBlocBloc>(context)
-                                    .getAllWallpaperModel!
-                                    .wallpapers?[index];
-                            final image = data?.wallpaper!.split("/").last;
+                            final data;
+                            if (selectedValue == "Recent") {
+                              data = recentWallpaper[index];
+                            } else if (selectedValue == "Trending") {
+                              data = trendingWallpaper[index];
+                            } else {
+                              data = exclusiveWallpaper[index];
+                            }
+                            final image = data.wallpaper!.split("/").last;
                             return GestureDetector(
                               onTap: () {
                                 Get.to(
@@ -304,8 +369,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 if (userID.isEmpty) {
                                                   Get.to(const LoginScreen());
                                                 } else {
-                                                  await downloadAndSaveImage(
-                                                      BaseApi.imgUrl + image);
+                                                  downloadAndSaveImageToGallery(
+                                                      imageUrl: BaseApi.imgUrl +
+                                                          image);
                                                   BlocProvider.of<
                                                               CollectionBlocBloc>(
                                                           context)
@@ -375,13 +441,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 }
                                               },
                                               child: Icon(
-                                                likedWallpaper.contains(
-                                                        data?.id ?? "")
+                                                likedWallpaper
+                                                        .contains(data?.id)
                                                     ? Icons.favorite_rounded
                                                     : Icons
                                                         .favorite_border_rounded,
-                                                color: likedWallpaper.contains(
-                                                        data?.id ?? "")
+                                                color: likedWallpaper
+                                                        .contains(data?.id)
                                                     ? ColorManager.red
                                                     : ColorManager.white,
                                               ),
@@ -467,12 +533,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 MainAxisAlignment.end,
                                             children: [
                                               GestureDetector(
-                                                onTap: () async {
+                                                onTap: () {
                                                   if (userID.isEmpty) {
                                                     Get.to(const LoginScreen());
                                                   } else {
-                                                    await downloadAndSaveImage(
-                                                        BaseApi.imgUrl + image);
+                                                    downloadAndSaveImageToGallery(
+                                                        imageUrl:
+                                                            BaseApi.imgUrl +
+                                                                image);
 
                                                     BlocProvider.of<
                                                                 CollectionBlocBloc>(

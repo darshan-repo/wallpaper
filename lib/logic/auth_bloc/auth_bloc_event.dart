@@ -14,18 +14,29 @@ class UserSignUp extends AuthBlocEvent {
 class LoginWithOtp extends AuthBlocEvent {
   final String email;
   final String passWord;
+  final String fcmToken;
   final BuildContext context;
 
-  LoginWithOtp(
-      {required this.email, required this.passWord, required this.context});
+  LoginWithOtp({
+    required this.email,
+    required this.passWord,
+    required this.fcmToken,
+    required this.context,
+  });
 }
 
 class VerifyOtp extends AuthBlocEvent {
   final String email;
   final String passWord;
   final int otp;
+  final String fcmToken;
 
-  VerifyOtp({required this.email, required this.passWord, required this.otp});
+  VerifyOtp({
+    required this.email,
+    required this.passWord,
+    required this.otp,
+    required this.fcmToken,
+  });
 }
 
 class ForgotOtpSend extends AuthBlocEvent {
@@ -56,6 +67,7 @@ class ResetPassWord extends AuthBlocEvent {
 class ResendOtp extends AuthBlocEvent {
   final String email;
   final String password;
+
   ResendOtp({
     required this.email,
     required this.password,

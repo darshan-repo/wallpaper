@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:walper/libs.dart';
 import 'package:walper/models/get_all_wallpaper.dart';
+import 'package:http/http.dart' as http;
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -16,12 +20,37 @@ class _SearchScreenState extends State<SearchScreen>
 
   TabController? tabController;
 
+  List<String> likedWallpaper = [];
+  final String userId = UserPreferences.getUserId();
+
   @override
   void initState() {
-    super.initState();
     BlocProvider.of<CollectionBlocBloc>(context).add(GetAllWallpaper());
     BlocProvider.of<CollectionBlocBloc>(context).add(GetWallpaper());
     tabController = TabController(length: 2, vsync: this, initialIndex: 0);
+    if (userId.isNotEmpty) {
+      if (BlocProvider.of<CollectionBlocBloc>(context)
+              .getLikedModel
+              ?.likesData !=
+          null) {
+        for (int i = 0;
+            i <
+                BlocProvider.of<CollectionBlocBloc>(context)
+                    .getLikedModel!
+                    .likesData!
+                    .length;
+            i++) {
+          setState(() {
+            likedWallpaper.add(BlocProvider.of<CollectionBlocBloc>(context)
+                    .getLikedModel
+                    ?.likesData?[i]
+                    .wallpaperId ??
+                "");
+          });
+        }
+      }
+    }
+    super.initState();
   }
 
   int tabIndex = 0;
@@ -30,6 +59,20 @@ class _SearchScreenState extends State<SearchScreen>
 
   List<Wallpaper> searchWallpaperModel = [];
   List<Category> searchCategoryWallpaperModel = [];
+
+  downloadAndSaveImageToGallery({required String imageUrl}) async {
+    var response = await http.get(Uri.parse(imageUrl));
+    if (response.statusCode == 200) {
+      var imageData = Uint8List.fromList(response.bodyBytes);
+      await ImageGallerySaver.saveImage(
+        imageData,
+        quality: 60,
+        name: DateTime.now().toString(),
+      );
+    } else {
+      log("Failed to load image: ${response.statusCode}");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,6 +260,10 @@ class _SearchScreenState extends State<SearchScreen>
                                                       Get.to(
                                                           const LoginScreen());
                                                     } else {
+                                                      downloadAndSaveImageToGallery(
+                                                          imageUrl:
+                                                              BaseApi.imgUrl +
+                                                                  image);
                                                       BlocProvider.of<
                                                                   CollectionBlocBloc>(
                                                               context)
@@ -235,8 +282,6 @@ class _SearchScreenState extends State<SearchScreen>
                                                                   "",
                                                         ),
                                                       );
-                                                      successSnackbar(
-                                                          'wallpaper successfully downloaded!');
                                                     }
                                                   },
                                                   child: Icon(
@@ -253,32 +298,57 @@ class _SearchScreenState extends State<SearchScreen>
                                                       Get.to(
                                                           const LoginScreen());
                                                     } else {
-                                                      BlocProvider.of<
-                                                                  CollectionBlocBloc>(
-                                                              context)
-                                                          .add(
-                                                        SendLikedWallpaper(
-                                                          id: data.id ?? "",
-                                                          userId:
-                                                              UserPreferences
-                                                                  .getUserId(),
-                                                          name: data.name ?? "",
-                                                          category:
-                                                              data.category ??
-                                                                  "",
-                                                          wallpaper:
-                                                              data.wallpaper ??
-                                                                  "",
-                                                        ),
-                                                      );
+                                                      if (!likedWallpaper
+                                                          .contains(
+                                                              data.id ?? "")) {
+                                                        likedWallpaper
+                                                            .add(data.id ?? "");
+                                                        BlocProvider.of<
+                                                                    CollectionBlocBloc>(
+                                                                context)
+                                                            .add(
+                                                          SendLikedWallpaper(
+                                                            id: data.id ?? "",
+                                                            userId:
+                                                                UserPreferences
+                                                                    .getUserId(),
+                                                            name:
+                                                                data.name ?? "",
+                                                            category:
+                                                                data.category ??
+                                                                    "",
+                                                            wallpaper:
+                                                                data.wallpaper ??
+                                                                    "",
+                                                          ),
+                                                        );
+                                                        setState(() {});
+                                                      } else {
+                                                        likedWallpaper.remove(
+                                                            data.id ?? "");
+                                                        BlocProvider.of<
+                                                                    CollectionBlocBloc>(
+                                                                context)
+                                                            .add(
+                                                          SendDissLikeWallpaper(
+                                                            id: data.id ?? "",
+                                                            userId:
+                                                                UserPreferences
+                                                                    .getUserId(),
+                                                          ),
+                                                        );
+                                                        setState(() {});
+                                                      }
                                                     }
                                                   },
                                                   child: Icon(
-                                                    isSelect
+                                                    likedWallpaper
+                                                            .contains(data.id)
                                                         ? Icons.favorite_rounded
                                                         : Icons
                                                             .favorite_border_rounded,
-                                                    color: isSelect
+                                                    color: likedWallpaper
+                                                            .contains(data.id)
                                                         ? ColorManager.red
                                                         : ColorManager.white,
                                                   ),
@@ -333,8 +403,7 @@ class _SearchScreenState extends State<SearchScreen>
                                             color: Colors.white,
                                             image: DecorationImage(
                                               fit: BoxFit.fill,
-                                              image: NetworkImage(
-                                                  BaseApi.imgUrl + image),
+                                              image: imageProvider,
                                             ),
                                           ),
                                           child: Container(
@@ -360,6 +429,10 @@ class _SearchScreenState extends State<SearchScreen>
                                                         Get.to(
                                                             const LoginScreen());
                                                       } else {
+                                                        downloadAndSaveImageToGallery(
+                                                            imageUrl:
+                                                                BaseApi.imgUrl +
+                                                                    image);
                                                         BlocProvider.of<
                                                                     CollectionBlocBloc>(
                                                                 context)
@@ -405,42 +478,81 @@ class _SearchScreenState extends State<SearchScreen>
                                                         Get.to(
                                                             const LoginScreen());
                                                       } else {
-                                                        BlocProvider.of<
-                                                                    CollectionBlocBloc>(
-                                                                context)
-                                                            .add(
-                                                          SendLikedWallpaper(
-                                                            id: searchWallpaperModel[
+                                                        if (!likedWallpaper.contains(
+                                                            searchWallpaperModel[
                                                                         index]
                                                                     .id ??
-                                                                "",
-                                                            userId:
-                                                                UserPreferences
-                                                                    .getUserId(),
-                                                            name: searchWallpaperModel[
-                                                                        index]
-                                                                    .name ??
-                                                                "",
-                                                            category: searchWallpaperModel[
-                                                                        index]
-                                                                    .category ??
-                                                                "",
-                                                            wallpaper:
-                                                                searchWallpaperModel[
-                                                                            index]
-                                                                        .wallpaper ??
-                                                                    "",
-                                                          ),
-                                                        );
+                                                                "")) {
+                                                          likedWallpaper.add(
+                                                              searchWallpaperModel[
+                                                                          index]
+                                                                      .id ??
+                                                                  "");
+                                                          BlocProvider.of<
+                                                                      CollectionBlocBloc>(
+                                                                  context)
+                                                              .add(
+                                                            SendLikedWallpaper(
+                                                              id: searchWallpaperModel[
+                                                                          index]
+                                                                      .id ??
+                                                                  "",
+                                                              userId:
+                                                                  UserPreferences
+                                                                      .getUserId(),
+                                                              name: searchWallpaperModel[
+                                                                          index]
+                                                                      .name ??
+                                                                  "",
+                                                              category: searchWallpaperModel[
+                                                                          index]
+                                                                      .category ??
+                                                                  "",
+                                                              wallpaper: searchWallpaperModel[
+                                                                          index]
+                                                                      .wallpaper ??
+                                                                  "",
+                                                            ),
+                                                          );
+                                                          setState(() {});
+                                                        } else {
+                                                          likedWallpaper.remove(
+                                                              searchWallpaperModel[
+                                                                          index]
+                                                                      .id ??
+                                                                  "");
+                                                          BlocProvider.of<
+                                                                      CollectionBlocBloc>(
+                                                                  context)
+                                                              .add(
+                                                            SendDissLikeWallpaper(
+                                                              id: searchWallpaperModel[
+                                                                          index]
+                                                                      .id ??
+                                                                  "",
+                                                              userId:
+                                                                  UserPreferences
+                                                                      .getUserId(),
+                                                            ),
+                                                          );
+                                                          setState(() {});
+                                                        }
                                                       }
                                                     },
                                                     child: Icon(
-                                                      isSelect
+                                                      likedWallpaper.contains(
+                                                              searchWallpaperModel[
+                                                                      index]
+                                                                  .id)
                                                           ? Icons
                                                               .favorite_rounded
                                                           : Icons
                                                               .favorite_border_rounded,
-                                                      color: isSelect
+                                                      color: likedWallpaper
+                                                              .contains(
+                                                                  searchWallpaperModel[
+                                                                          index]
+                                                                      .id)
                                                           ? ColorManager.red
                                                           : ColorManager.white,
                                                     ),
@@ -474,58 +586,84 @@ class _SearchScreenState extends State<SearchScreen>
                                         .getWallpaperModel
                                         ?.categories
                                         ?.length,
-                                itemBuilder: (context, index) =>
-                                    GestureDetector(
-                                  onTap: () {},
-                                  child: Container(
-                                    margin: margin(
-                                        marginType: MarginType.bottom,
-                                        marginValue: 0.01.sh),
-                                    height: 0.19.sh,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(25),
-                                      image: const DecorationImage(
-                                        image: AssetImage(
-                                          ImageJPGManager.abstractCollection,
+                                itemBuilder: (context, index) {
+                                  final image =
+                                      BlocProvider.of<CollectionBlocBloc>(
+                                              context)
+                                          .getWallpaperModel!
+                                          .categories![index]
+                                          .background!
+                                          .split("/")
+                                          .last;
+                                  return GestureDetector(
+                                    onTap: () {},
+                                    child: SizedBox(
+                                      height: 0.19.sh,
+                                      child: CachedNetworkImage(
+                                        imageUrl: BaseApi.imgUrl + image,
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          margin: margin(
+                                              marginType: MarginType.bottom,
+                                              marginValue: 0.01.sh),
+                                          height: 0.19.sh,
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                          child: Container(
+                                            padding: padding(
+                                                paddingType: PaddingType.left,
+                                                paddingValue: 0.08.sw),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  BlocProvider.of<CollectionBlocBloc>(
+                                                              context)
+                                                          .getWallpaperModel!
+                                                          .categories![index]
+                                                          .name ??
+                                                      "",
+                                                  style: myTheme
+                                                      .textTheme.titleLarge,
+                                                ),
+                                                verticalSpace(0.02.sh),
+                                                Text(
+                                                  '${BlocProvider.of<CollectionBlocBloc>(context).getWallpaperModel!.categories![index].categoryDatas!.length} walpapers',
+                                                  style: myTheme
+                                                      .textTheme.labelMedium,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ),
-                                        fit: BoxFit.fill,
+                                        placeholder: (context, url) =>
+                                            const Center(
+                                          child: SpinKitCircle(
+                                              color: ColorManager.white),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
                                       ),
                                     ),
-                                    child: Container(
-                                      padding: padding(
-                                          paddingType: PaddingType.left,
-                                          paddingValue: 0.08.sw),
-                                      decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.2),
-                                        borderRadius: BorderRadius.circular(25),
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            BlocProvider.of<CollectionBlocBloc>(
-                                                        context)
-                                                    .getWallpaperModel!
-                                                    .categories![index]
-                                                    .name ??
-                                                "",
-                                            style: myTheme.textTheme.titleLarge,
-                                          ),
-                                          verticalSpace(0.02.sh),
-                                          Text(
-                                            '00 Wallpapers',
-                                            style:
-                                                myTheme.textTheme.labelMedium,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                  );
+                                },
                               )
                             : searchCategoryWallpaperModel.isEmpty &&
                                     txtSearchController.text.isNotEmpty
@@ -539,61 +677,81 @@ class _SearchScreenState extends State<SearchScreen>
                                 : ListView.builder(
                                     itemCount:
                                         searchCategoryWallpaperModel.length,
-                                    itemBuilder: (context, index) =>
-                                        GestureDetector(
-                                      onTap: () {},
-                                      child: Container(
-                                        margin: margin(
-                                            marginType: MarginType.bottom,
-                                            marginValue: 0.01.sh),
-                                        height: 0.19.sh,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                          image: const DecorationImage(
-                                            image: AssetImage(
-                                              ImageJPGManager
-                                                  .abstractCollection,
+                                    itemBuilder: (context, index) {
+                                      final image =
+                                          searchCategoryWallpaperModel[index]
+                                              .background!
+                                              .split("/")
+                                              .last;
+                                      return GestureDetector(
+                                        onTap: () {},
+                                        child: SizedBox(
+                                          height: 0.19.sh,
+                                          child: CachedNetworkImage(
+                                            imageUrl: BaseApi.imgUrl + image,
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    Container(
+                                              margin: margin(
+                                                  marginType: MarginType.bottom,
+                                                  marginValue: 0.01.sh),
+                                              height: 0.19.sh,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(25),
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
+                                              child: Container(
+                                                padding: padding(
+                                                    paddingType:
+                                                        PaddingType.left,
+                                                    paddingValue: 0.08.sw),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black
+                                                      .withOpacity(0.2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(25),
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      searchCategoryWallpaperModel[
+                                                                  index]
+                                                              .name ??
+                                                          "",
+                                                      style: myTheme
+                                                          .textTheme.titleLarge,
+                                                    ),
+                                                    verticalSpace(0.02.sh),
+                                                    Text(
+                                                      '${searchCategoryWallpaperModel[index].categoryDatas!.length} wallpapers',
+                                                      style: myTheme.textTheme
+                                                          .labelMedium,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                            fit: BoxFit.fill,
+                                            placeholder: (context, url) =>
+                                                const Center(
+                                              child: SpinKitCircle(
+                                                  color: ColorManager.white),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
                                           ),
                                         ),
-                                        child: Container(
-                                          padding: padding(
-                                              paddingType: PaddingType.left,
-                                              paddingValue: 0.08.sw),
-                                          decoration: BoxDecoration(
-                                            color:
-                                                Colors.black.withOpacity(0.2),
-                                            borderRadius:
-                                                BorderRadius.circular(25),
-                                          ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                searchCategoryWallpaperModel[
-                                                            index]
-                                                        .name ??
-                                                    "",
-                                                style: myTheme
-                                                    .textTheme.titleLarge,
-                                              ),
-                                              verticalSpace(0.02.sh),
-                                              Text(
-                                                '00 Wallpapers',
-                                                style: myTheme
-                                                    .textTheme.labelMedium,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                      );
+                                    },
                                   ),
                       ),
                     ],

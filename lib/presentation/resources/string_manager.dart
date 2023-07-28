@@ -25,7 +25,7 @@ class AppString {
       'Or Continue With Social Account';
   static const String signInWithFacebook = 'Sign In With Facebook';
   static const String signInWithGoogle = 'Sign In With Google';
-  static const String donttHaveAnAccount = 'Dont\'t Have An Account? ';
+  static const String dontHaveAnAccount = 'Don\'t Have An Account? ';
   static const String signUp = ' Sign Up';
 
   //* Register Screen

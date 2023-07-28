@@ -11,6 +11,36 @@ class DownloadScreen extends StatefulWidget {
 }
 
 class _DownloadScreenState extends State<DownloadScreen> {
+  List<String> likedWallpaper = [];
+  final String userId = UserPreferences.getUserId();
+
+  @override
+  void initState() {
+    if (userId.isNotEmpty) {
+      if (BlocProvider.of<CollectionBlocBloc>(context)
+              .getLikedModel
+              ?.likesData !=
+          null) {
+        for (int i = 0;
+            i <
+                BlocProvider.of<CollectionBlocBloc>(context)
+                    .getLikedModel!
+                    .likesData!
+                    .length;
+            i++) {
+          setState(() {
+            likedWallpaper.add(BlocProvider.of<CollectionBlocBloc>(context)
+                    .getLikedModel
+                    ?.likesData?[i]
+                    .wallpaperId ??
+                "");
+          });
+        }
+      }
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -46,8 +76,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                 builder: (context, state) {
                   if (state is CollectionLoading) {
                     return const Center(
-                      child: SpinKitCircle(color: ColorManager.white),
-                    );
+                        child: SpinKitCircle(color: ColorManager.white));
                   } else if (state is CollectionLoaded) {
                     return BlocProvider.of<CollectionBlocBloc>(context)
                             .getDownloadModel!
@@ -392,10 +421,114 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                                 paddingType: PaddingType.LTRB,
                                                 right: 0.01.sw,
                                                 bottom: 0.01.sh),
-                                            child: Icon(
-                                              Icons.favorite_outline_rounded,
-                                              size: 0.035.sh,
-                                              color: ColorManager.white,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                if (!likedWallpaper.contains(
+                                                    BlocProvider.of<CollectionBlocBloc>(
+                                                                context)
+                                                            .getDownloadModel!
+                                                            .downloadData![
+                                                                index]
+                                                            .id ??
+                                                        "")) {
+                                                  likedWallpaper.add(BlocProvider
+                                                              .of<CollectionBlocBloc>(
+                                                                  context)
+                                                          .getDownloadModel!
+                                                          .downloadData![index]
+                                                          .id ??
+                                                      "");
+                                                  BlocProvider.of<
+                                                              CollectionBlocBloc>(
+                                                          context)
+                                                      .add(
+                                                    SendLikedWallpaper(
+                                                      id: BlocProvider.of<
+                                                                      CollectionBlocBloc>(
+                                                                  context)
+                                                              .getDownloadModel!
+                                                              .downloadData![
+                                                                  index]
+                                                              .id ??
+                                                          "",
+                                                      userId: UserPreferences
+                                                          .getUserId(),
+                                                      name: BlocProvider.of<
+                                                                      CollectionBlocBloc>(
+                                                                  context)
+                                                              .getDownloadModel!
+                                                              .downloadData![
+                                                                  index]
+                                                              .name ??
+                                                          "",
+                                                      category: BlocProvider.of<
+                                                                      CollectionBlocBloc>(
+                                                                  context)
+                                                              .getDownloadModel!
+                                                              .downloadData![
+                                                                  index]
+                                                              .category ??
+                                                          "",
+                                                      wallpaper: BlocProvider
+                                                                  .of<CollectionBlocBloc>(
+                                                                      context)
+                                                              .getDownloadModel!
+                                                              .downloadData![
+                                                                  index]
+                                                              .wallpaper ??
+                                                          "",
+                                                    ),
+                                                  );
+                                                  setState(() {});
+                                                } else {
+                                                  likedWallpaper.remove(BlocProvider
+                                                              .of<CollectionBlocBloc>(
+                                                                  context)
+                                                          .getDownloadModel!
+                                                          .downloadData![index]
+                                                          .id ??
+                                                      "");
+                                                  BlocProvider.of<
+                                                              CollectionBlocBloc>(
+                                                          context)
+                                                      .add(
+                                                    SendDissLikeWallpaper(
+                                                      id: BlocProvider.of<
+                                                                      CollectionBlocBloc>(
+                                                                  context)
+                                                              .getDownloadModel!
+                                                              .downloadData![
+                                                                  index]
+                                                              .id ??
+                                                          "",
+                                                      userId: UserPreferences
+                                                          .getUserId(),
+                                                    ),
+                                                  );
+                                                  setState(() {});
+                                                }
+                                              },
+                                              child: Icon(
+                                                likedWallpaper.contains(BlocProvider
+                                                            .of<CollectionBlocBloc>(
+                                                                context)
+                                                        .getDownloadModel!
+                                                        .downloadData![index]
+                                                        .id)
+                                                    ? Icons.favorite_rounded
+                                                    : Icons
+                                                        .favorite_border_rounded,
+                                                color: likedWallpaper.contains(
+                                                        BlocProvider.of<
+                                                                    CollectionBlocBloc>(
+                                                                context)
+                                                            .getDownloadModel!
+                                                            .downloadData![
+                                                                index]
+                                                            .id)
+                                                    ? ColorManager.red
+                                                    : ColorManager.white,
+                                              ),
                                             ),
                                           ),
                                         ),

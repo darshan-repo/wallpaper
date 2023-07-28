@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
       const Duration(seconds: 3),
       () async {
         SharedPreferences pref = await SharedPreferences.getInstance();
-        if (pref.getBool('user') == true) {
+        if (pref.getBool("user") == true) {
           Get.to(const BottomNavigationBarScreen());
         } else {
           Get.to(const OnBoarding1Screen());

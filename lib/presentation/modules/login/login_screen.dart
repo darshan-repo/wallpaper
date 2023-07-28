@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:walper/libs.dart';
@@ -107,7 +110,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         verticalSpace(0.05.sh),
                         materialButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            final fcmToken = await FirebaseMessaging.instance
+                                .getToken(
+                                    vapidKey:
+                                        "BMddJ7CcjA7Or2PPl-TwHRW_hWheRqnyxdzRvkRH3u7uxEjIqJvDCmDuWJpV5B-GGCvJfdqpmvC-yUS5qVXF1WE");
                             final FormState? form = loginFormKey.currentState;
                             if (form!.validate()) {
                               BlocProvider.of<AuthBlocBloc>(context).add(
@@ -115,6 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   email: txtEmailIdController.text,
                                   context: context,
                                   passWord: txtPasswordController.text,
+                                  fcmToken: fcmToken!,
                                 ),
                               );
                             }
@@ -150,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              AppString.donttHaveAnAccount,
+                              AppString.dontHaveAnAccount,
                               style: myTheme.textTheme.labelMedium,
                             ),
                             GestureDetector(

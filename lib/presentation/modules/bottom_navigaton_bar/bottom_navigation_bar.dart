@@ -57,6 +57,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String userID = UserPreferences.getUserId();
     return AdvancedDrawer(
       backdrop: Container(
         width: double.infinity,

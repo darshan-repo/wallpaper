@@ -62,3 +62,13 @@ class DeleteDownloadWallpaper extends CollectionBlocEvent {
     required this.userId,
   });
 }
+
+class ReportAndIssue extends CollectionBlocEvent {
+  final String email, subject, message;
+
+  ReportAndIssue({
+    required this.email,
+    required this.subject,
+    required this.message,
+  });
+}
