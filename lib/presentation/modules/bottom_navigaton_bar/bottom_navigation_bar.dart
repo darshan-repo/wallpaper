@@ -107,7 +107,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
               ),
               ListTile(
                 onTap: () {
-                  Get.off(const BottomNavigationBarScreen());
+                  Get.offAll(const BottomNavigationBarScreen());
                 },
                 splashColor: ColorManager.transparentColor,
                 leading: SvgPicture.asset(
@@ -139,6 +139,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                     BlocProvider.of<CollectionBlocBloc>(context).add(
                       GetDownloadWallpaper(id: UserPreferences.getUserId()),
                     );
+                    Get.to(const DownloadScreen());
                   }
                 },
                 splashColor: ColorManager.transparentColor,

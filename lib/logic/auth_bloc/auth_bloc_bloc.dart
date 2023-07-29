@@ -45,18 +45,23 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
   _loginWithOtp(LoginWithOtp event, Emitter<AuthBlocState> emit) async {
     emit(AuthBlocLoading());
     try {
-      Map<String, dynamic> data = await BaseApi.postRequest("sentotp", data: {
+      Map<String, dynamic> data = await BaseApi.postRequest("signin", data: {
         "email": event.email,
         "password": event.passWord,
         "deviceId": event.fcmToken
       });
       log("REASONABLE ::$data");
-      if (data["message"] == "otp sent successfully") {
-        Get.to(OTPVarificationScreen(
-          isForgot: false,
-          email: event.email,
-          passWord: event.passWord,
-        ));
+      if (data["message"] != null) {
+        UserPreferences.setUserId(data["user"]["id"]);
+        if (data["user"]["isverified"] == true) {
+          Get.to(() => const BottomNavigationBarScreen());
+        } else {
+          Get.to(OTPVarificationScreen(
+            isForgot: false,
+            email: event.email,
+            passWord: event.passWord,
+          ));
+        }
         emit(AuthBlocLoaded());
       } else {
         errorSnackbar(data["message"]);
@@ -72,14 +77,13 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
   _verifyOtp(VerifyOtp event, Emitter<AuthBlocState> emit) async {
     emit(AuthBlocLoading());
     try {
-      Map<String, dynamic> data = await BaseApi.postRequest("signin", data: {
+      Map<String, dynamic> data = await BaseApi.postRequest("otpSignin", data: {
         "email": event.email,
-        "password": event.passWord,
         "Otp": event.otp,
         "deviceId": event.fcmToken
       });
       log("REASONABLE ::$data");
-      if (data["message"] == "login successfully") {
+      if (data["message"] == "user login successfully") {
         log("USER ID::: ${data["user"]["id"]}");
         log("TOKEN::::${data["token"]}");
         UserPreferences.setUserId(data["user"]["id"]);

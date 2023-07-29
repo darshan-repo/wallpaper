@@ -75,3 +75,34 @@ class Wallpaper {
         "updatedAt": updatedAt?.toIso8601String(),
       };
 }
+
+GetTrendingWallpaperModel getTrendingWallpaperModelFromJson(String str) =>
+    GetTrendingWallpaperModel.fromJson(json.decode(str));
+
+String getTrendingWallpaperModelToJson(GetTrendingWallpaperModel data) =>
+    json.encode(data.toJson());
+
+class GetTrendingWallpaperModel {
+  String? message;
+  List<String>? trendinglist;
+
+  GetTrendingWallpaperModel({
+    this.message,
+    this.trendinglist,
+  });
+
+  factory GetTrendingWallpaperModel.fromJson(Map<String, dynamic> json) =>
+      GetTrendingWallpaperModel(
+        message: json["message"],
+        trendinglist: json["trendinglist"] == null
+            ? []
+            : List<String>.from(json["trendinglist"]!.map((x) => x)),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "message": message,
+        "trendinglist": trendinglist == null
+            ? []
+            : List<dynamic>.from(trendinglist!.map((x) => x)),
+      };
+}

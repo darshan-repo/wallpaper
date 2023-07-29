@@ -196,7 +196,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       height: 0.08.sh,
                                       width: 0.18.sw,
                                       child: CachedNetworkImage(
-                                        imageUrl: BaseApi.imgUrl + image!,
+                                        imageUrl: BaseApi.imgUrl + image,
                                         imageBuilder:
                                             (context, imageProvider) =>
                                                 Container(

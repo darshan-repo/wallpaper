@@ -21,6 +21,7 @@ class CollectionBlocBloc
     on<DeleteDownloadWallpaper>(_deleteDownloadWallpaper);
     on<SendDissLikeWallpaper>(_sendDissLikedWallpaper);
     on<ReportAndIssue>(_reportAndIssue);
+    on<GetTrendingWallpaper>(_getTrendingWallpaper);
   }
 
   GetAllWallpaperModel? getAllWallpaperModel;
@@ -29,15 +30,23 @@ class CollectionBlocBloc
   GetWallpaperModel? getWallpaperModel;
   SendLikeModel? sendLikeModelData;
 
+  int page = 1;
+  bool isFetching = false;
+
   _getAllWallPaper(
       GetAllWallpaper event, Emitter<CollectionBlocState> emit) async {
     emit(CollectionLoading());
     try {
-      Map<String, dynamic> data = await BaseApi.getRequest("allWallpapers");
+      Map<String, dynamic> data =
+          await BaseApi.getRequest("allWallpapers?page=$page");
       log("RESPONSE :: $data");
       if (data["message"] != null) {
         getAllWallpaperModel = GetAllWallpaperModel.fromJson(data);
+        Get.to(const BottomNavigationBarScreen());
+        page++;
         emit(CollectionLoaded());
+        emit(
+            CollectionSuccessState(getAllWallpaperModel!.wallpapers!.toList()));
       } else {
         emit(CollectionLoaded());
       }
@@ -168,7 +177,7 @@ class CollectionBlocBloc
       log("RESPONSE :: $data");
       if (data["message"] == "downloads fetched") {
         getDownloadModel = GetDownloadModel.fromJson(data);
-        Get.to(const DownloadScreen());
+        // Get.to(const DownloadScreen());
         emit(CollectionLoaded());
       } else {
         emit(CollectionLoaded());
@@ -210,6 +219,25 @@ class CollectionBlocBloc
       });
       log("RESPONSE :: $data");
       if (data["data"] != null) {
+        emit(CollectionLoaded());
+      } else {
+        emit(CollectionLoaded());
+      }
+    } catch (e) {
+      log(e.toString());
+      emit(CollectionError());
+    }
+  }
+
+  GetTrendingWallpaperModel? getTrendingWallpaperModel;
+
+  _getTrendingWallpaper(
+      GetTrendingWallpaper event, Emitter<CollectionBlocState> emit) async {
+    try {
+      Map<String, dynamic> data = await BaseApi.getRequest("getAllLikesData");
+      log("RESPONSE :: $data");
+      if (data["message"] == "all categories") {
+        getTrendingWallpaperModel = GetTrendingWallpaperModel.fromJson(data);
         emit(CollectionLoaded());
       } else {
         emit(CollectionLoaded());

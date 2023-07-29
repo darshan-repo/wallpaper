@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:share_plus/share_plus.dart';
@@ -508,16 +510,15 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                                   setState(() {});
                                                 }
                                               },
-                                              child: Icon(
+                                              child: SvgPicture.asset(
                                                 likedWallpaper.contains(BlocProvider
                                                             .of<CollectionBlocBloc>(
                                                                 context)
                                                         .getDownloadModel!
                                                         .downloadData![index]
                                                         .id)
-                                                    ? Icons.favorite_rounded
-                                                    : Icons
-                                                        .favorite_border_rounded,
+                                                    ? SVGIconManager.liked
+                                                    : SVGIconManager.favorite,
                                                 color: likedWallpaper.contains(
                                                         BlocProvider.of<
                                                                     CollectionBlocBloc>(

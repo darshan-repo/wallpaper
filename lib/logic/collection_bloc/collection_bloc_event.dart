@@ -72,3 +72,5 @@ class ReportAndIssue extends CollectionBlocEvent {
     required this.message,
   });
 }
+
+class GetTrendingWallpaper extends CollectionBlocEvent {}

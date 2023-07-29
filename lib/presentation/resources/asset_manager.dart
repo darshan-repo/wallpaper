@@ -73,4 +73,7 @@ class SVGIconManager {
   static const autoChangeWallpaper = "$imagePath/auto_change_wallpaper.svg";
   static const settingNotification = "$imagePath/setting_notification.svg";
   static const rateThisApp = "$imagePath/rate_this_app.svg";
+  static const downloadWallpaper = "$imagePath/download_wallpaper.svg";
+  static const done = "$imagePath/done.svg";
+  static const liked = "$imagePath/liked.svg";
 }

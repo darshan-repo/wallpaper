@@ -63,6 +63,10 @@ class _CollectionScreenState extends State<CollectionScreen> {
                                 "";
                         return GestureDetector(
                           onTap: () {
+                            BlocProvider.of<CollectionBlocBloc>(context).add(
+                              GetDownloadWallpaper(
+                                  id: UserPreferences.getUserId()),
+                            );
                             Get.to(
                               CollectionViewScreen(
                                 categoriesData:

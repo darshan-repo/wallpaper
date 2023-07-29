@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -341,12 +343,12 @@ class _SearchScreenState extends State<SearchScreen>
                                                       }
                                                     }
                                                   },
-                                                  child: Icon(
+                                                  child: SvgPicture.asset(
                                                     likedWallpaper
                                                             .contains(data.id)
-                                                        ? Icons.favorite_rounded
-                                                        : Icons
-                                                            .favorite_border_rounded,
+                                                        ? SVGIconManager.liked
+                                                        : SVGIconManager
+                                                            .favorite,
                                                     color: likedWallpaper
                                                             .contains(data.id)
                                                         ? ColorManager.red
@@ -539,15 +541,14 @@ class _SearchScreenState extends State<SearchScreen>
                                                         }
                                                       }
                                                     },
-                                                    child: Icon(
+                                                    child: SvgPicture.asset(
                                                       likedWallpaper.contains(
                                                               searchWallpaperModel[
                                                                       index]
                                                                   .id)
-                                                          ? Icons
-                                                              .favorite_rounded
-                                                          : Icons
-                                                              .favorite_border_rounded,
+                                                          ? SVGIconManager.liked
+                                                          : SVGIconManager
+                                                              .favorite,
                                                       color: likedWallpaper
                                                               .contains(
                                                                   searchWallpaperModel[

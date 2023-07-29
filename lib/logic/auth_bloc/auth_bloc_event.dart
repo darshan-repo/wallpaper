@@ -27,13 +27,11 @@ class LoginWithOtp extends AuthBlocEvent {
 
 class VerifyOtp extends AuthBlocEvent {
   final String email;
-  final String passWord;
   final int otp;
   final String fcmToken;
 
   VerifyOtp({
     required this.email,
-    required this.passWord,
     required this.otp,
     required this.fcmToken,
   });

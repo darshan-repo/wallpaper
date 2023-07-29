@@ -162,7 +162,6 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                               BlocProvider.of<AuthBlocBloc>(context).add(
                                 VerifyOtp(
                                   email: widget.email ?? "",
-                                  passWord: widget.passWord ?? "",
                                   otp: int.parse(txtEnterCodeController.text),
                                   fcmToken: fcmToken!,
                                 ),
