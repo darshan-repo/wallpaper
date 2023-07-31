@@ -16,10 +16,12 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(
       const Duration(seconds: 3),
-          () async {
+      () async {
         SharedPreferences pref = await SharedPreferences.getInstance();
         if (pref.getBool("user") == true) {
-          BlocProvider.of<CollectionBlocBloc>(context).add(GetAllWallpaper());
+          //BlocProvider.of<CollectionBlocBloc>(context).add(GetAllWallpaper());
+          BlocProvider.of<CollectionBlocBloc>(context)
+              .add(GetHomeFeatured(context));
         } else {
           Get.to(const OnBoarding1Screen());
         }

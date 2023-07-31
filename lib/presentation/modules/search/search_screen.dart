@@ -3,10 +3,7 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:walper/libs.dart';
-import 'package:walper/models/get_all_wallpaper.dart';
 import 'package:http/http.dart' as http;
 
 class SearchScreen extends StatefulWidget {

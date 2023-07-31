@@ -49,4 +49,13 @@ class UserPreferences {
   static getUserEnter() {
     return _prefs.getBool('id');
   }
+
+  static setUserEmail(String userEmail) {
+    _prefs.setString("userEmail", userEmail);
+    print("=======>> userEmail set <<=======");
+  }
+
+  static getUserEmail() {
+    return _prefs.getString("userEmail") ?? "";
+  }
 }

@@ -1,5 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:developer';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -10,17 +13,37 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  ValueNotifier<bool> themeController = ValueNotifier<bool>(false);
-  ValueNotifier<bool> enableNotificationController = ValueNotifier<bool>(false);
+  ValueNotifier<bool> enableNotificationController = ValueNotifier<bool>(true);
   ValueNotifier<bool> autoChangeWallpaperController =
       ValueNotifier<bool>(false);
+  bool isEnabledNotification = false;
+
   @override
   void dispose() {
-    themeController.dispose();
-    enableNotificationController.dispose();
+    // enableNotificationController.dispose();
     autoChangeWallpaperController.dispose();
-
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    enableNotificationController.addListener(() {
+      setState(() {
+        if (enableNotificationController.value) {
+          BlocProvider.of<CollectionBlocBloc>(context).add(
+            EnabledNotification(
+              email: UserPreferences.getUserEmail(),
+              deviceId: UserPreferences.getDeviceToken(),
+            ),
+          );
+          isEnabledNotification = true;
+        } else {
+          isEnabledNotification = false;
+        }
+      });
+      log('=====isEnabledNotification========>> $isEnabledNotification');
+    });
+    super.initState();
   }
 
   @override
@@ -36,7 +59,7 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
           verticalSpace(0.02.sh),
           ListTile(
-            leading:  SvgPicture.asset(
+            leading: SvgPicture.asset(
               SVGIconManager.autoChangeWallpaper,
               color: ColorManager.white,
             ),
@@ -125,7 +148,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
               );
             },
-            leading:  SvgPicture.asset(
+            leading: SvgPicture.asset(
               SVGIconManager.rateThisApp,
               color: ColorManager.white,
             ),

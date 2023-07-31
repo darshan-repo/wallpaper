@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:walper/libs.dart';
 
 class CollectionScreen extends StatefulWidget {
@@ -63,10 +62,6 @@ class _CollectionScreenState extends State<CollectionScreen> {
                                 "";
                         return GestureDetector(
                           onTap: () {
-                            BlocProvider.of<CollectionBlocBloc>(context).add(
-                              GetDownloadWallpaper(
-                                  id: UserPreferences.getUserId()),
-                            );
                             Get.to(
                               CollectionViewScreen(
                                 categoriesData:

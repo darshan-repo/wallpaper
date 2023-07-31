@@ -1,8 +1,6 @@
 import 'package:walper/libs.dart';
 
-Widget
-
-dropDownButton({
+Widget dropDownButton({
   String? selectedValue,
   required List<DropdownMenuItem<String>>? items,
   void Function(String?)? onChanged,
@@ -12,7 +10,7 @@ dropDownButton({
       isExpanded: true,
       hint: Text(
         selectedValue!,
-        style: myTheme.textTheme.titleMedium,
+        style: myTheme.textTheme.labelLarge,
         overflow: TextOverflow.ellipsis,
       ),
       items: items,
@@ -51,16 +49,24 @@ Widget conatiner({
   required String assetName,
   Widget? child,
 }) {
-  return Container(
+  return SizedBox(
     height: height.sh,
     width: width.sw,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(15),
-      image: DecorationImage(
-        image: AssetImage(assetName),
-        fit: BoxFit.fill,
+    child: CachedNetworkImage(
+      imageUrl: assetName,
+      imageBuilder: (context, imageProvider) => Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          image: DecorationImage(
+            image: imageProvider,
+            fit: BoxFit.fill,
+          ),
+        ),
+        child: child,
       ),
+      placeholder: (context, url) =>
+          const Center(child: SpinKitCircle(color: ColorManager.white)),
+      errorWidget: (context, url, error) => const Icon(Icons.error),
     ),
-    child: child,
   );
 }

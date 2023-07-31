@@ -1,7 +1,6 @@
 import 'dart:io';
-import 'package:external_path/external_path.dart';
 import 'package:http/http.dart' as http;
-import 'package:walper/presentation/common/comman_snackbar.dart';
+import 'package:walper/libs.dart';
 
 Future<void> downloadAndSaveImage(String imageUrl) async {
   try {

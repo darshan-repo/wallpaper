@@ -36,7 +36,7 @@ warningSnackbar(String description) {
     colorText: Colors.white,
     backgroundColor: Colors.orange,
     icon: const Icon(
-      Icons.login,
+      Icons.warning_amber_rounded,
       color: Colors.white,
     ),
   );

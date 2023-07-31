@@ -1,9 +1,7 @@
 import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:walper/libs.dart';
 import 'package:walper/logic/notification_bloc/notification_bloc.dart';
 import 'package:walper/presentation/common/notification_services.dart';

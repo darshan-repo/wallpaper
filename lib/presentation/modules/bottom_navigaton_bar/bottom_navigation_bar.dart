@@ -179,6 +179,11 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                   setState(() {
                     if (userID.isNotEmpty) {
                       UserPreferences().reset();
+                      BlocProvider.of<AuthBlocBloc>(context).add(
+                        Logout(
+                          email: UserPreferences.getUserEmail(),
+                        ),
+                      );
                     } else {
                       Get.offAll(const LoginScreen());
                     }

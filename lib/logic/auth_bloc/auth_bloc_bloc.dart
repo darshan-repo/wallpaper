@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 
@@ -15,6 +16,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     on<ForgotOtpVerify>(_verifyForgotOtp);
     on<ResetPassWord>(_resetPassword);
     on<ResendOtp>(_resendOtp);
+    on<Logout>(_logout);
   }
 
   _userSignUp(UserSignUp event, Emitter<AuthBlocState> emit) async {
@@ -53,6 +55,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
       log("REASONABLE ::$data");
       if (data["message"] != null) {
         UserPreferences.setUserId(data["user"]["id"]);
+        UserPreferences.setUserEmail(data["user"]["email"]);
         if (data["user"]["isverified"] == true) {
           Get.to(() => const BottomNavigationBarScreen());
         } else {
@@ -184,6 +187,25 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
       log("REASONABLE ::$data");
       if (data["message"] == "otp sent successfully") {
         successSnackbar('OTP Resend Successfully.');
+        emit(AuthBlocLoaded());
+      } else {
+        errorSnackbar(data["message"]);
+        emit(AuthBlocLoaded());
+      }
+    } catch (e) {
+      errorSnackbar(e.toString());
+      log(e.toString());
+      emit(AuthBlocError());
+    }
+  }
+
+  _logout(Logout event, Emitter<AuthBlocState> emit) async {
+    emit(AuthBlocLoading());
+    try {
+      Map<String, dynamic> data =
+          await BaseApi.postRequest("singout", data: {"email": event.email});
+      log("REASONABLE ::$data");
+      if (data["message"] == "user logout successfully") {
         emit(AuthBlocLoaded());
       } else {
         errorSnackbar(data["message"]);

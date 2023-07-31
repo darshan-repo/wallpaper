@@ -7,6 +7,12 @@ class GetAllWallpaper extends CollectionBlocEvent {}
 
 class GetWallpaper extends CollectionBlocEvent {}
 
+class GetHomeFeatured extends CollectionBlocEvent {
+  final BuildContext context;
+
+  GetHomeFeatured(this.context);
+}
+
 class SendLikedWallpaper extends CollectionBlocEvent {
   final String id;
   final String userId;
@@ -74,3 +80,9 @@ class ReportAndIssue extends CollectionBlocEvent {
 }
 
 class GetTrendingWallpaper extends CollectionBlocEvent {}
+
+class EnabledNotification extends CollectionBlocEvent {
+  final String email, deviceId;
+
+  EnabledNotification({required this.email, required this.deviceId});
+}

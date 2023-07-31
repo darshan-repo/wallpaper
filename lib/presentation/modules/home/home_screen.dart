@@ -3,11 +3,8 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:walper/libs.dart';
 import 'package:http/http.dart' as http;
-import 'package:walper/models/get_all_wallpaper.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,36 +26,39 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<String> likedWallpaper = [];
   final String userId = UserPreferences.getUserId();
+
   List<Wallpaper> trendingWallpaper = [];
   List<Wallpaper> recentWallpaper = [];
   List<Wallpaper> exclusiveWallpaper = [];
 
-  Future<void> sortingWallpaper(String values) async {
-    log('wallpaper =======>>> ${wallpaper.length}');
+  sortingWallpaper(String values) async {
     trendingWallpaper.clear();
     recentWallpaper.clear();
-    exclusiveWallpaper.clear();
     if (values == 'Recent') {
       setState(() {
         for (int i = wallpaper.length - 1; i > 0; i--) {
-          recentWallpaper.add(wallpaper[i]);
+          setState(() {
+            recentWallpaper.add(wallpaper[i]);
+          });
         }
-        log('Recent==============>>$recentWallpaper');
       });
     } else if (values == "Trending") {
-      log('Trending==============>>$trendingWallpaper');
-    } else if (selectedValue == "Exclusive") {
+    } else if (values == "Exclusive") {
+      log("CALLED EXCLUSIVE");
+      log(wallpaper.length.toString());
+      exclusiveWallpaper.clear();
+
       for (int i = 0; i < wallpaper.length; i++) {
         exclusiveWallpaper.add(wallpaper[i]);
       }
-      log('Exclusive==============>>$exclusiveWallpaper');
     }
+
     setState(() {});
   }
 
   @override
   void initState() {
-    sortingWallpaper("Exclusive");
+    //sortingWallpaper("Exclusive");
     if (userId.isNotEmpty) {
       if (BlocProvider.of<CollectionBlocBloc>(context)
               .getLikedModel
@@ -105,6 +105,35 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     String userID = UserPreferences.getUserId();
+    final image1 = BlocProvider.of<CollectionBlocBloc>(context)
+            .getFeaturedWallpaperModel
+            ?.categories![0]
+            .background!
+            .split("/")
+            .last ??
+        "";
+    final image2 = BlocProvider.of<CollectionBlocBloc>(context)
+            .getFeaturedWallpaperModel
+            ?.categories![1]
+            .background!
+            .split("/")
+            .last ??
+        "";
+    final image3 = BlocProvider.of<CollectionBlocBloc>(context)
+            .getFeaturedWallpaperModel
+            ?.categories![2]
+            .background!
+            .split("/")
+            .last ??
+        "";
+    final image4 = BlocProvider.of<CollectionBlocBloc>(context)
+            .getFeaturedWallpaperModel
+            ?.categories![3]
+            .background!
+            .split("/")
+            .last ??
+        "";
+
     return Padding(
       padding: padding(paddingType: PaddingType.all, paddingValue: 0.01.sh),
       child: NotificationListener<OverscrollIndicatorNotification>(
@@ -125,16 +154,19 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           return;
         }, builder: (context, state) {
+          log("IN BUILDER");
+          log('state ::::::: $state');
           if (state is CollectionInitialState ||
               state is CollectionLoadingState && wallpaper.isEmpty) {
             return const Center(
               child: SpinKitCircle(color: ColorManager.white),
             );
           } else if (state is CollectionSuccessState) {
+            log("WALLPAPER ADDDEDDD");
+            log("state.allWallpaper :::::::::::::: ${state.allWallpaper}");
             wallpaper.addAll(state.allWallpaper);
             BlocProvider.of<CollectionBlocBloc>(context).isFetching = false;
           }
-
           return CustomScrollView(
             controller: _scrollController
               ..addListener(() {
@@ -144,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   BlocProvider.of<CollectionBlocBloc>(context)
                     ..isFetching = true
                     ..add(GetAllWallpaper());
+                  sortingWallpaper("Exclusive");
                 }
               }),
             slivers: [
@@ -168,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       conatiner(
                         height: 0.2,
                         width: double.infinity,
-                        assetName: ImageJPGManager.seaSky,
+                        assetName: BaseApi.imgUrl + image1,
                       ),
                       verticalSpace(0.009.sh),
                       Row(
@@ -177,12 +210,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           conatiner(
                             height: 0.1,
                             width: 0.30,
-                            assetName: ImageJPGManager.bananas,
+                            assetName: BaseApi.imgUrl + image2,
                           ),
                           conatiner(
                             height: 0.1,
                             width: 0.30,
-                            assetName: ImageJPGManager.yellowPinkColor,
+                            assetName: BaseApi.imgUrl + image3,
                           ),
                           GestureDetector(
                             onTap: () {
@@ -191,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: conatiner(
                               height: 0.1,
                               width: 0.30,
-                              assetName: ImageJPGManager.bananas,
+                              assetName: BaseApi.imgUrl + image4,
                               child: Container(
                                 height: 0.1.sh,
                                 width: 0.30.sh,
@@ -201,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.black.withOpacity(0.5),
                                 ),
                                 child: Text(
-                                  '+99',
+                                  '+ ${BlocProvider.of<CollectionBlocBloc>(context).getFeaturedWallpaperModel?.categories!.length}',
                                   style: myTheme.textTheme.titleLarge,
                                 ),
                               ),
@@ -257,6 +290,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               GestureDetector(
                                 onTap: () {
                                   setState(() {
+                                    BlocProvider.of<CollectionBlocBloc>(context)
+                                      ..isFetching = true
+                                      ..add(GetAllWallpaper());
                                     isSelectGrid = true;
                                   });
                                 },
@@ -650,10 +686,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
             ],
           );
-        }
-            // return Container();
-            // },
-            ),
+        }),
       ),
     );
   }

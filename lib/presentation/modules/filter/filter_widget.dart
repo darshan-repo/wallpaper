@@ -13,6 +13,7 @@ Widget filterRow({
       ),
       AdvancedSwitch(
         width: 56,
+
         height: 32,
         controller: controller,
         borderRadius: BorderRadius.circular(18),
