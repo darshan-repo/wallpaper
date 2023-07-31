@@ -13,6 +13,7 @@ class _FilterScreenState extends State<FilterScreen> {
   ValueNotifier<bool> controller03 = ValueNotifier<bool>(false);
   ValueNotifier<bool> controller04 = ValueNotifier<bool>(false);
   ValueNotifier<bool> controller05 = ValueNotifier<bool>(false);
+
   @override
   void dispose() {
     controller01.dispose();
@@ -21,6 +22,26 @@ class _FilterScreenState extends State<FilterScreen> {
     controller04.dispose();
     controller05.dispose();
     super.dispose();
+  }
+
+  bool isLetest = false;
+  bool isNewest = false;
+  bool isDownloaded = false;
+  bool isExclusive = false;
+  bool isSized = false;
+
+  @override
+  void initState() {
+    controller01.addListener(() {
+      setState(() {
+        if (controller01.value) {
+          isLetest = true;
+        } else {
+          isLetest = false;
+        }
+      });
+    });
+    super.initState();
   }
 
   @override
