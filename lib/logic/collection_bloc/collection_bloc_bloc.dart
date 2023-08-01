@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 import 'package:walper/models/get_home_featured_wallpaper.dart';
 
-
 part 'collection_bloc_event.dart';
 
 part 'collection_bloc_state.dart';
@@ -29,30 +28,21 @@ class CollectionBlocBloc
   }
 
   GetAllWallpaperModel? getAllWallpaperModel;
-  GetCollectionModel? getCollectionModel;
-  GetLikeModel? getLikedModel;
-  GetWallpaperModel? getWallpaperModel;
-  SendLikeModel? sendLikeModelData;
-  GetFeaturedWallpaperModel? getFeaturedWallpaperModel;
 
   int page = 1;
-  bool isFetching = false;
 
   _getAllWallPaper(
       GetAllWallpaper event, Emitter<CollectionBlocState> emit) async {
     emit(CollectionLoading());
     try {
-      log("pageeeeeeeeeeee $page");
       Map<String, dynamic> data =
           await BaseApi.getRequest("allWallpapers?page=$page");
       log("RESPONSE :: $data");
       if (data["message"] != null) {
         getAllWallpaperModel = GetAllWallpaperModel.fromJson(data);
-        Get.to(const BottomNavigationBarScreen());
-        page++;
+        Get.to(() => const BottomNavigationBarScreen());
+
         emit(CollectionLoaded());
-        emit(
-            CollectionSuccessState(getAllWallpaperModel!.wallpapers!.toList()));
       } else {
         emit(CollectionLoaded());
       }
@@ -61,6 +51,8 @@ class CollectionBlocBloc
       emit(CollectionError());
     }
   }
+
+  GetWallpaperModel? getWallpaperModel;
 
   _getWallPaper(GetWallpaper event, Emitter<CollectionBlocState> emit) async {
     emit(CollectionLoading());
@@ -79,6 +71,8 @@ class CollectionBlocBloc
     }
   }
 
+  GetFeaturedWallpaperModel? getFeaturedWallpaperModel;
+
   _getHomeFeatured(
       GetHomeFeatured event, Emitter<CollectionBlocState> emit) async {
     emit(CollectionLoading());
@@ -87,8 +81,6 @@ class CollectionBlocBloc
       log("RESPONSE :: $data");
       if (data["message"] == "all categories") {
         getFeaturedWallpaperModel = GetFeaturedWallpaperModel.fromJson(data);
-        BlocProvider.of<CollectionBlocBloc>(event.context)
-            .add(GetAllWallpaper());
         emit(CollectionLoaded());
       } else {
         emit(CollectionLoaded());
@@ -98,6 +90,8 @@ class CollectionBlocBloc
       emit(CollectionError());
     }
   }
+
+  SendLikeModel? sendLikeModelData;
 
   _sendLikedWallpaper(
       SendLikedWallpaper event, Emitter<CollectionBlocState> emit) async {
@@ -125,6 +119,8 @@ class CollectionBlocBloc
       emit(CollectionError());
     }
   }
+
+  GetLikeModel? getLikedModel;
 
   _getLikedWallpaper(
       GetLikedWallpaper event, Emitter<CollectionBlocState> emit) async {
@@ -203,7 +199,6 @@ class CollectionBlocBloc
       log("RESPONSE :: $data");
       if (data["message"] == "downloads fetched") {
         getDownloadModel = GetDownloadModel.fromJson(data);
-        // Get.to(const DownloadScreen());
         emit(CollectionLoaded());
       } else {
         emit(CollectionLoaded());

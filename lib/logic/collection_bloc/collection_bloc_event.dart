@@ -7,11 +7,7 @@ class GetAllWallpaper extends CollectionBlocEvent {}
 
 class GetWallpaper extends CollectionBlocEvent {}
 
-class GetHomeFeatured extends CollectionBlocEvent {
-  final BuildContext context;
-
-  GetHomeFeatured(this.context);
-}
+class GetHomeFeatured extends CollectionBlocEvent {}
 
 class SendLikedWallpaper extends CollectionBlocEvent {
   final String id;

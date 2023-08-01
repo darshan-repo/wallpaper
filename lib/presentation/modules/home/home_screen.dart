@@ -5,6 +5,21 @@ import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 import 'package:http/http.dart' as http;
+import 'package:walper/logic/pagination/pagination_bloc.dart';
+import 'package:walper/logic/pagination/pagination_event.dart';
+import 'package:walper/logic/pagination/pagination_state.dart';
+
+class HomeScreenInit extends StatelessWidget {
+  const HomeScreenInit({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<PaginationBloc>(
+      create: (context) => PaginationBloc()..add(PaginationInitialEvent()),
+      child: const HomeScreen(),
+    );
+  }
+}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,45 +35,74 @@ class _HomeScreenState extends State<HomeScreen> {
     'Exclusive',
   ];
 
-  String? selectedValue = 'Exclusive';
+  String selectedValue = 'Exclusive';
   bool isSelectGrid = true;
-  ScrollController scrollController = ScrollController();
 
   List<String> likedWallpaper = [];
   final String userId = UserPreferences.getUserId();
 
-  List<Wallpaper> trendingWallpaper = [];
-  List<Wallpaper> recentWallpaper = [];
-  List<Wallpaper> exclusiveWallpaper = [];
+  //
+  // List<Wallpaper> trendingWallpaper = [];
+  // List<Wallpaper> recentWallpaper = [];
+  // List<Wallpaper> exclusiveWallpaper = [];
 
-  sortingWallpaper(String values) async {
-    trendingWallpaper.clear();
-    recentWallpaper.clear();
-    if (values == 'Recent') {
-      setState(() {
-        for (int i = wallpaper.length - 1; i > 0; i--) {
-          setState(() {
-            recentWallpaper.add(wallpaper[i]);
-          });
-        }
-      });
-    } else if (values == "Trending") {
-    } else if (values == "Exclusive") {
-      log("CALLED EXCLUSIVE");
-      log(wallpaper.length.toString());
-      exclusiveWallpaper.clear();
+  // sortingWallpaper(String values) async {
+  //   if (values == 'Recent') {
+  //     setState(() {
+  //       for (int i =
+  //               BlocProvider.of<PaginationBloc>(context).allWallpaper!.length -
+  //                   1;
+  //           i > 0;
+  //           i--) {
+  //         setState(() {
+  //           recentWallpaper
+  //               .add(BlocProvider.of<PaginationBloc>(context).allWallpaper![i]);
+  //         });
+  //       }
+  //     });
+  //   } else if (values == "Trending") {
+  //     trendingWallpaper.clear();
+  //     recentWallpaper.clear();
+  //   } else if (values == "Exclusive") {
+  //     log(" ::::::::::::::::::     CALLED EXCLUSIVE        ::::::::::::::::: ");
+  //     exclusiveWallpaper.clear();
+  //     for (int i = 0;
+  //         i <
+  //             (BlocProvider.of<PaginationBloc>(context).allWallpaper?.length ??
+  //                 0);
+  //         i++) {
+  //       setState(() {
+  //         exclusiveWallpaper
+  //             .add(BlocProvider.of<PaginationBloc>(context).allWallpaper![i]);
+  //       });
+  //     }
+  //     // log('wallpaper.length :::::::: ${BlocProvider.of<PaginationBloc>(context).allWallpaper!.length}');
+  //     setState(() {});
+  //   }
+  // }
 
-      for (int i = 0; i < wallpaper.length; i++) {
-        exclusiveWallpaper.add(wallpaper[i]);
-      }
-    }
-
-    setState(() {});
-  }
+  late final PaginationBloc paginationBloc;
 
   @override
   void initState() {
-    //sortingWallpaper("Exclusive");
+    BlocProvider.of<PaginationBloc>(context).add(GetPaginationDataEvent());
+    // BlocProvider.of<CollectionBlocBloc>(context).add(GetHomeFeatured());
+    paginationBloc = BlocProvider.of<PaginationBloc>(context);
+    try {
+      scrollController = ScrollController();
+      scrollController?.addListener(() async {
+        if (scrollController!.offset >=
+                scrollController!.position.maxScrollExtent &&
+            !scrollController!.position.outOfRange) {
+          paginationBloc.add(GetPaginationDataEvent());
+        }
+      });
+    } catch (e, s) {
+      debugPrint("ERROR :: $e");
+      debugPrint("STACK :: $s");
+    }
+
+    // sortingWallpaper("Exclusive");
     if (userId.isNotEmpty) {
       if (BlocProvider.of<CollectionBlocBloc>(context)
               .getLikedModel
@@ -95,12 +139,9 @@ class _HomeScreenState extends State<HomeScreen> {
         name: DateTime.now().toString(),
       );
     } else {
-      log("Failed to load image: ${response.statusCode}");
+      log("Failed to load image : ${response.statusCode}");
     }
   }
-
-  final ScrollController _scrollController = ScrollController();
-  List<Wallpaper> wallpaper = [];
 
   @override
   Widget build(BuildContext context) {
@@ -141,44 +182,16 @@ class _HomeScreenState extends State<HomeScreen> {
           notification.disallowIndicator();
           return true;
         },
-        child: BlocConsumer<CollectionBlocBloc, CollectionBlocState>(
-            listener: (context, state) {
-          if (state is CollectionLoadingState) {
-            warningSnackbar(state.message);
-          } else if (state is CollectionSuccessState &&
-              state.allWallpaper.isEmpty) {
-            warningSnackbar('No More Data');
-          } else if (state is CollectionErrorState) {
-            warningSnackbar(state.error);
-            BlocProvider.of<CollectionBlocBloc>(context).isFetching = false;
-          }
-          return;
-        }, builder: (context, state) {
-          log("IN BUILDER");
-          log('state ::::::: $state');
-          if (state is CollectionInitialState ||
-              state is CollectionLoadingState && wallpaper.isEmpty) {
-            return const Center(
-              child: SpinKitCircle(color: ColorManager.white),
-            );
-          } else if (state is CollectionSuccessState) {
-            log("WALLPAPER ADDDEDDD");
-            log("state.allWallpaper :::::::::::::: ${state.allWallpaper}");
-            wallpaper.addAll(state.allWallpaper);
-            BlocProvider.of<CollectionBlocBloc>(context).isFetching = false;
-          }
-          return CustomScrollView(
-            controller: _scrollController
-              ..addListener(() {
-                if (_scrollController.offset ==
-                        _scrollController.position.maxScrollExtent &&
-                    !BlocProvider.of<CollectionBlocBloc>(context).isFetching) {
-                  BlocProvider.of<CollectionBlocBloc>(context)
-                    ..isFetching = true
-                    ..add(GetAllWallpaper());
-                  sortingWallpaper("Exclusive");
-                }
-              }),
+        child: BlocConsumer<PaginationBloc, PaginationState>(
+          bloc: paginationBloc,
+          listener: (BuildContext context, PaginationState state) {
+            if (state is SnackbarEvent) {
+              errorSnackbar(state.message);
+            }
+          },
+          buildWhen: (previous, current) => current is UserListRefreshState,
+          builder: (context, state) => CustomScrollView(
+            controller: scrollController,
             slivers: [
               SliverAppBar(
                 leadingWidth: 0.0,
@@ -270,7 +283,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onChanged: (value) {
                             setState(() {
                               selectedValue = value as String;
-                              sortingWallpaper(selectedValue!);
+                              // sortingWallpaper(selectedValue);
                             });
                           },
                         ),
@@ -290,9 +303,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    BlocProvider.of<CollectionBlocBloc>(context)
-                                      ..isFetching = true
-                                      ..add(GetAllWallpaper());
                                     isSelectGrid = true;
                                   });
                                 },
@@ -356,24 +366,27 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisCount: 2,
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10,
-                      // childCount: wallpaper.length,
-                      childCount: selectedValue == "Recent"
-                          ? recentWallpaper.length
-                          : selectedValue == "Trending"
-                              ? trendingWallpaper.length
-                              : exclusiveWallpaper.length,
+
+                      childCount: BlocProvider.of<PaginationBloc>(context)
+                          .allWallpaper
+                          ?.length,
+                      // childCount: selectedValue == "Recent"
+                      //     ? recentWallpaper.length
+                      //     : selectedValue == "Trending"
+                      //         ? trendingWallpaper.length
+                      //         : exclusiveWallpaper.length,
                       itemBuilder: (context, index) {
-                        final data;
-                        if (selectedValue == "Recent") {
-                          data = recentWallpaper[index];
-                        } else if (selectedValue == "Trending") {
-                          data = trendingWallpaper[index];
-                        } else {
-                          data = exclusiveWallpaper[index];
-                        }
-                        final image = data.wallpaper!.split("/").last;
-                        // final image =
-                        //     wallpaper[index].wallpaper!.split("/").last;
+                        final data = BlocProvider.of<PaginationBloc>(context)
+                            .allWallpaper?[index];
+                        // if (selectedValue == "Recent") {
+                        //   data = recentWallpaper[index];
+                        // } else if (selectedValue == "Trending") {
+                        //   data = trendingWallpaper[index];
+                        // } else {
+                        //   data = exclusiveWallpaper[index];
+                        // }
+                        final image = data?.wallpaper!.split("/").last;
+
                         return GestureDetector(
                           onTap: () {
                             Get.to(
@@ -387,7 +400,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: SizedBox(
                             height: (index % 5 + 1) * 100,
                             child: CachedNetworkImage(
-                              imageUrl: BaseApi.imgUrl + image!,
+                              imageUrl: BaseApi.imgUrl + image.toString(),
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 decoration: BoxDecoration(
@@ -420,7 +433,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             } else {
                                               downloadAndSaveImageToGallery(
                                                   imageUrl:
-                                                      BaseApi.imgUrl + image);
+                                                      BaseApi.imgUrl + image!);
                                               BlocProvider.of<
                                                           CollectionBlocBloc>(
                                                       context)
@@ -438,9 +451,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               );
                                             }
                                           },
-                                          child: Icon(
-                                            size: 0.035.sh,
-                                            Icons.file_download_outlined,
+                                          child: SvgPicture.asset(
+                                            SVGIconManager.downloadWallpaper,
                                             color: ColorManager.white,
                                           ),
                                         ),
@@ -488,12 +500,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                             }
                                           },
                                           child: SvgPicture.asset(
-                                            likedWallpaper.contains(
-                                                    wallpaper[index].id)
+                                            likedWallpaper.contains(data?.id)
                                                 ? SVGIconManager.liked
                                                 : SVGIconManager.favorite,
-                                            color: likedWallpaper.contains(
-                                                    wallpaper[index].id)
+                                            color: likedWallpaper
+                                                    .contains(data?.id)
                                                 ? ColorManager.red
                                                 : ColorManager.white,
                                           ),
@@ -527,20 +538,26 @@ class _HomeScreenState extends State<HomeScreen> {
                           childAspectRatio: 0.6,
                         ),
                         delegate: SliverChildBuilderDelegate(
-                          childCount: selectedValue == "Recent"
-                              ? recentWallpaper.length
-                              : selectedValue == "Trending"
-                                  ? trendingWallpaper.length
-                                  : exclusiveWallpaper.length,
+                          childCount: BlocProvider.of<PaginationBloc>(context)
+                              .allWallpaper
+                              ?.length,
+
+                          // childCount: selectedValue == "Recent"
+                          //     ? recentWallpaper.length
+                          //     : selectedValue == "Trending"
+                          //         ? trendingWallpaper.length
+                          //         : exclusiveWallpaper.length,
                           (context, index) {
-                            final data;
-                            if (selectedValue == "Recent") {
-                              data = recentWallpaper[index];
-                            } else if (selectedValue == "Trending") {
-                              data = trendingWallpaper[index];
-                            } else {
-                              data = exclusiveWallpaper[index];
-                            }
+                            final data =
+                                BlocProvider.of<PaginationBloc>(context)
+                                    .allWallpaper?[index];
+                            // if (selectedValue == "Recent") {
+                            //   data = recentWallpaper[index];
+                            // } else if (selectedValue == "Trending") {
+                            //   data = trendingWallpaper[index];
+                            // } else {
+                            //   data = exclusiveWallpaper[index];
+                            // }
                             final image = data?.wallpaper?.split("/").last;
                             return GestureDetector(
                               onTap: () {
@@ -608,9 +625,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     'wallpaper successfully downloaded!');
                                               }
                                             },
-                                            child: Icon(
-                                              size: 0.035.sh,
-                                              Icons.file_download_outlined,
+                                            child: SvgPicture.asset(
+                                              SVGIconManager.downloadWallpaper,
                                               color: ColorManager.white,
                                             ),
                                           ),
@@ -685,8 +701,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
             ],
-          );
-        }),
+          ),
+        ),
       ),
     );
   }

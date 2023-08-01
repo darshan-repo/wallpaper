@@ -48,7 +48,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
   ];
   int activeIndex = 0;
   List<Widget> screensList = [
-    const HomeScreen(),
+    const HomeScreenInit(),
     const CollectionScreen(),
     const SearchScreen(),
     const SettingScreen(),

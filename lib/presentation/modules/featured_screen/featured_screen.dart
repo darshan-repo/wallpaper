@@ -21,7 +21,7 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
 
   @override
   void initState() {
-    BlocProvider.of<CollectionBlocBloc>(context).add(GetHomeFeatured(context));
+    BlocProvider.of<CollectionBlocBloc>(context).add(GetHomeFeatured());
     if (userId.isNotEmpty) {
       if (BlocProvider.of<CollectionBlocBloc>(context)
               .getLikedModel
