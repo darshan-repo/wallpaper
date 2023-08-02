@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:walper/base_api/base_api.dart';
 import 'package:walper/logic/pagination/pagination_event.dart';
 import 'package:walper/logic/pagination/pagination_state.dart';
 import 'package:walper/models/get_all_wallpaper.dart';
-import 'package:walper/presentation/modules/bottom_navigaton_bar/bottom_navigation_bar.dart';
 
 ScrollController? scrollController;
 

@@ -76,4 +76,5 @@ class SVGIconManager {
   static const downloadWallpaper = "$imagePath/download_wallpaper.svg";
   static const done = "$imagePath/done.svg";
   static const liked = "$imagePath/liked.svg";
+  static const filter = "$imagePath/filter.svg";
 }

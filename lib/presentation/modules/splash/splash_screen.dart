@@ -2,8 +2,6 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
-import 'package:walper/logic/pagination/pagination_bloc.dart';
-import 'package:walper/logic/pagination/pagination_event.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,13 +13,14 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   initState() {
+    BlocProvider.of<CollectionBlocBloc>(context).add(GetHomeFeatured());
+    // BlocProvider.of<PaginationBloc>(context).add(GetPaginationDataEvent());
     Timer(
       const Duration(seconds: 3),
       () async {
         SharedPreferences pref = await SharedPreferences.getInstance();
         if (pref.getBool("user") == true) {
-          BlocProvider.of<CollectionBlocBloc>(context).add(GetHomeFeatured());
-          Get.to(() => const BottomNavigationBarScreen());
+          Get.to(const BottomNavigationBarScreen());
         } else {
           Get.to(() => const OnBoarding1Screen());
         }

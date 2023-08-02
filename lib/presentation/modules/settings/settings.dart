@@ -37,11 +37,17 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
           );
           isEnabledNotification = true;
+          log('=====isEnabledNotification========>> $isEnabledNotification');
         } else {
+          BlocProvider.of<CollectionBlocBloc>(context).add(
+            DisableNotification(
+              email: UserPreferences.getUserEmail(),
+            ),
+          );
           isEnabledNotification = false;
         }
+        log('=====isEnabledNotification========>> $isEnabledNotification');
       });
-      log('=====isEnabledNotification========>> $isEnabledNotification');
     });
     super.initState();
   }

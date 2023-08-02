@@ -69,7 +69,9 @@ export 'package:walper/models/get_all_wallpaper.dart';
 export 'package:flutter_spinkit/flutter_spinkit.dart';
 export 'package:image_gallery_saver/image_gallery_saver.dart';
 export 'package:external_path/external_path.dart';
-
 export 'package:firebase_messaging/firebase_messaging.dart';
 export 'package:flutter_local_notifications/flutter_local_notifications.dart';
 export 'package:permission_handler/permission_handler.dart';
+export 'package:walper/logic/pagination/pagination_bloc.dart';
+export 'package:walper/logic/pagination/pagination_event.dart';
+export 'package:walper/logic/pagination/pagination_state.dart';

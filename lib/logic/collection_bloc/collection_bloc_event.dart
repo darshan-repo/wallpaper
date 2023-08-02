@@ -3,7 +3,7 @@ part of 'collection_bloc_bloc.dart';
 @immutable
 abstract class CollectionBlocEvent {}
 
-class GetAllWallpaper extends CollectionBlocEvent {}
+class GetSearchWallpaper extends CollectionBlocEvent {}
 
 class GetWallpaper extends CollectionBlocEvent {}
 
@@ -81,4 +81,10 @@ class EnabledNotification extends CollectionBlocEvent {
   final String email, deviceId;
 
   EnabledNotification({required this.email, required this.deviceId});
+}
+
+class DisableNotification extends CollectionBlocEvent {
+  final String email;
+
+  DisableNotification({required this.email});
 }

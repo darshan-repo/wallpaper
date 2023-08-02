@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 import 'package:http/http.dart' as http;
+import 'package:walper/models/search_wallpaper_model.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -24,7 +25,7 @@ class _SearchScreenState extends State<SearchScreen>
 
   @override
   void initState() {
-    BlocProvider.of<CollectionBlocBloc>(context).add(GetAllWallpaper());
+    BlocProvider.of<CollectionBlocBloc>(context).add(GetSearchWallpaper());
     BlocProvider.of<CollectionBlocBloc>(context).add(GetWallpaper());
     tabController = TabController(length: 2, vsync: this, initialIndex: 0);
     if (userId.isNotEmpty) {
@@ -56,7 +57,7 @@ class _SearchScreenState extends State<SearchScreen>
   bool isShowColor = true;
   bool isSelect = false;
 
-  List<Wallpaper> searchWallpaperModel = [];
+  List<WallpaperList> searchWallpaperModel = [];
   List<Category> searchCategoryWallpaperModel = [];
 
   downloadAndSaveImageToGallery({required String imageUrl}) async {
@@ -100,8 +101,8 @@ class _SearchScreenState extends State<SearchScreen>
                 tabIndex == 0
                     ? searchWallpaperModel =
                         BlocProvider.of<CollectionBlocBloc>(context)
-                            .getAllWallpaperModel!
-                            .wallpapers!
+                            .searchWallpaperModel!
+                            .wallpaperList!
                             .where((item) => item.name!
                                 .toLowerCase()
                                 .contains(value.toLowerCase()))
@@ -201,15 +202,15 @@ class _SearchScreenState extends State<SearchScreen>
                                 ),
                                 itemCount:
                                     BlocProvider.of<CollectionBlocBloc>(context)
-                                        .getAllWallpaperModel
-                                        ?.wallpapers!
+                                        .searchWallpaperModel
+                                        ?.wallpaperList!
                                         .length,
                                 itemBuilder: (context, index) {
                                   var data =
                                       BlocProvider.of<CollectionBlocBloc>(
                                               context)
-                                          .getAllWallpaperModel!
-                                          .wallpapers?[index];
+                                          .searchWallpaperModel!
+                                          .wallpaperList?[index];
                                   final image =
                                       data!.wallpaper!.split("/").last;
                                   return GestureDetector(

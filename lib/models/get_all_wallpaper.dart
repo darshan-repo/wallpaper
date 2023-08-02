@@ -84,25 +84,74 @@ String getTrendingWallpaperModelToJson(GetTrendingWallpaperModel data) =>
 
 class GetTrendingWallpaperModel {
   String? message;
-  List<String>? trendinglist;
+  List<Trending>? trending;
 
   GetTrendingWallpaperModel({
     this.message,
-    this.trendinglist,
+    this.trending,
   });
 
   factory GetTrendingWallpaperModel.fromJson(Map<String, dynamic> json) =>
       GetTrendingWallpaperModel(
         message: json["message"],
-        trendinglist: json["trendinglist"] == null
+        trending: json["trending"] == null
             ? []
-            : List<String>.from(json["trendinglist"]!.map((x) => x)),
+            : List<Trending>.from(
+                json["trending"]!.map((x) => Trending.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "message": message,
-        "trendinglist": trendinglist == null
+        "trending": trending == null
             ? []
-            : List<dynamic>.from(trendinglist!.map((x) => x)),
+            : List<dynamic>.from(trending!.map((x) => x.toJson())),
+      };
+}
+
+class Trending {
+  String? id;
+  String? categoryId;
+  String? name;
+  String? category;
+  String? wallpaper;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  int? likesCount;
+
+  Trending({
+    this.id,
+    this.categoryId,
+    this.name,
+    this.category,
+    this.wallpaper,
+    this.createdAt,
+    this.updatedAt,
+    this.likesCount,
+  });
+
+  factory Trending.fromJson(Map<String, dynamic> json) => Trending(
+        id: json["id"],
+        categoryId: json["categoryId"],
+        name: json["name"],
+        category: json["category"],
+        wallpaper: json["wallpaper"],
+        createdAt: json["createdAt"] == null
+            ? null
+            : DateTime.parse(json["createdAt"]),
+        updatedAt: json["updatedAt"] == null
+            ? null
+            : DateTime.parse(json["updatedAt"]),
+        likesCount: json["likesCount"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "categoryId": categoryId,
+        "name": name,
+        "category": category,
+        "wallpaper": wallpaper,
+        "createdAt": createdAt?.toIso8601String(),
+        "updatedAt": updatedAt?.toIso8601String(),
+        "likesCount": likesCount,
       };
 }

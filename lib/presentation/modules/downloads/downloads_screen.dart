@@ -53,10 +53,10 @@ class _DownloadScreenState extends State<DownloadScreen> {
           leadingOnTap: () {
             Get.off(const BottomNavigationBarScreen());
           },
-          actionIcon: Icons.filter_alt_outlined,
-          actionOnTap: () {
-            Get.to(const FilterScreen());
-          },
+          // actionIcon: Icons.filter_alt_outlined,
+          // actionOnTap: () {
+          //   Get.to(const FilterScreen());
+          // },
         ),
         body: Padding(
           padding: padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),

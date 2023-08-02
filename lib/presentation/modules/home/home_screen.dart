@@ -1,13 +1,10 @@
-// ignore_for_file: deprecated_member_use, use_build_context_synchronously, prefer_typing_uninitialized_variables
+// ignore_for_file: deprecated_member_use, prefer_typing_uninitialized_variables
 
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 import 'package:http/http.dart' as http;
-import 'package:walper/logic/pagination/pagination_bloc.dart';
-import 'package:walper/logic/pagination/pagination_event.dart';
-import 'package:walper/logic/pagination/pagination_state.dart';
 
 class HomeScreenInit extends StatelessWidget {
   const HomeScreenInit({super.key});
@@ -41,52 +38,70 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> likedWallpaper = [];
   final String userId = UserPreferences.getUserId();
 
-  //
-  // List<Wallpaper> trendingWallpaper = [];
+  late final PaginationBloc paginationBloc;
+
+  // List<Trending> trendingWallpaper = [];
   // List<Wallpaper> recentWallpaper = [];
   // List<Wallpaper> exclusiveWallpaper = [];
-
-  // sortingWallpaper(String values) async {
+  //
+  // void sortingWallpaper(String values) async {
+  //   debugPrint('======== Sorting Wallpaper Called ========');
   //   if (values == 'Recent') {
-  //     setState(() {
-  //       for (int i =
-  //               BlocProvider.of<PaginationBloc>(context).allWallpaper!.length -
-  //                   1;
-  //           i > 0;
-  //           i--) {
-  //         setState(() {
-  //           recentWallpaper
-  //               .add(BlocProvider.of<PaginationBloc>(context).allWallpaper![i]);
-  //         });
-  //       }
-  //     });
-  //   } else if (values == "Trending") {
-  //     trendingWallpaper.clear();
   //     recentWallpaper.clear();
-  //   } else if (values == "Exclusive") {
-  //     log(" ::::::::::::::::::     CALLED EXCLUSIVE        ::::::::::::::::: ");
-  //     exclusiveWallpaper.clear();
-  //     for (int i = 0;
-  //         i <
-  //             (BlocProvider.of<PaginationBloc>(context).allWallpaper?.length ??
-  //                 0);
-  //         i++) {
+  //     for (int i =
+  //             BlocProvider.of<PaginationBloc>(context).allWallpaper!.length - 1;
+  //         i >= 0;
+  //         i--) {
   //       setState(() {
-  //         exclusiveWallpaper
+  //         recentWallpaper
   //             .add(BlocProvider.of<PaginationBloc>(context).allWallpaper![i]);
   //       });
   //     }
-  //     // log('wallpaper.length :::::::: ${BlocProvider.of<PaginationBloc>(context).allWallpaper!.length}');
-  //     setState(() {});
+  //     log('=================>> Recent ${recentWallpaper.length}');
+  //   } else if (values == "Trending") {
+  //     trendingWallpaper.clear();
+  //     for (int i = 0;
+  //         i <
+  //             (BlocProvider.of<CollectionBlocBloc>(context)
+  //                     .getTrendingWallpaperModel
+  //                     ?.trending
+  //                     ?.length ??
+  //                 0);
+  //         i++) {
+  //       setState(() {
+  //         trendingWallpaper.add(BlocProvider.of<CollectionBlocBloc>(context)
+  //             .getTrendingWallpaperModel!
+  //             .trending![i]);
+  //       });
+  //     }
+  //
+  //     log('=================>> Trending ${trendingWallpaper.length}');
+  //   } else if (values == "Exclusive") {
+  //     exclusiveWallpaper.clear();
+  //     setState(() {
+  //       for (int i = 0;
+  //           i <
+  //               (BlocProvider.of<PaginationBloc>(context)
+  //                       .allWallpaper
+  //                       ?.length ??
+  //                   0);
+  //           i++) {
+  //         setState(() {
+  //           exclusiveWallpaper
+  //               .add(BlocProvider.of<PaginationBloc>(context).allWallpaper![i]);
+  //         });
+  //       }
+  //       log('=================>> Exclusive ${exclusiveWallpaper.length}');
+  //     });
   //   }
   // }
 
-  late final PaginationBloc paginationBloc;
-
   @override
   void initState() {
+    BlocProvider.of<CollectionBlocBloc>(context).add(GetHomeFeatured());
     BlocProvider.of<PaginationBloc>(context).add(GetPaginationDataEvent());
-    // BlocProvider.of<CollectionBlocBloc>(context).add(GetHomeFeatured());
+    // BlocProvider.of<CollectionBlocBloc>(context).add(GetTrendingWallpaper());
+    // sortingWallpaper('Exclusive');
     paginationBloc = BlocProvider.of<PaginationBloc>(context);
     try {
       scrollController = ScrollController();
@@ -101,8 +116,6 @@ class _HomeScreenState extends State<HomeScreen> {
       debugPrint("ERROR :: $e");
       debugPrint("STACK :: $s");
     }
-
-    // sortingWallpaper("Exclusive");
     if (userId.isNotEmpty) {
       if (BlocProvider.of<CollectionBlocBloc>(context)
               .getLikedModel
@@ -203,59 +216,67 @@ class _HomeScreenState extends State<HomeScreen> {
                 elevation: 0,
                 scrolledUnderElevation: 0,
                 flexibleSpace: FlexibleSpaceBar(
-                  background: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Featured.',
-                        style: myTheme.textTheme.titleLarge,
-                      ),
-                      verticalSpace(0.01.sh),
-                      conatiner(
-                        height: 0.2,
-                        width: double.infinity,
-                        assetName: BaseApi.imgUrl + image1,
-                      ),
-                      verticalSpace(0.009.sh),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          conatiner(
-                            height: 0.1,
-                            width: 0.30,
-                            assetName: BaseApi.imgUrl + image2,
-                          ),
-                          conatiner(
-                            height: 0.1,
-                            width: 0.30,
-                            assetName: BaseApi.imgUrl + image3,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Get.to(const FeaturedScreen());
-                            },
-                            child: conatiner(
-                              height: 0.1,
-                              width: 0.30,
-                              assetName: BaseApi.imgUrl + image4,
-                              child: Container(
-                                height: 0.1.sh,
-                                width: 0.30.sh,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: Colors.black.withOpacity(0.5),
-                                ),
-                                child: Text(
-                                  '+ ${BlocProvider.of<CollectionBlocBloc>(context).getFeaturedWallpaperModel?.categories!.length}',
-                                  style: myTheme.textTheme.titleLarge,
-                                ),
-                              ),
+                  background:
+                      BlocBuilder<CollectionBlocBloc, CollectionBlocState>(
+                    builder: (BuildContext context, CollectionBlocState state) {
+                      if (state is CollectionLoaded) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Featured.',
+                              style: myTheme.textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.normal),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            verticalSpace(0.01.sh),
+                            conatiner(
+                              context,
+                              height: 0.2,
+                              width: double.infinity,
+                              assetName: BaseApi.imgUrl + image1.toString(),
+                            ),
+                            verticalSpace(0.009.sh),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                conatiner(
+                                  context,
+                                  assetName: BaseApi.imgUrl + image2.toString(),
+                                ),
+                                conatiner(
+                                  context,
+                                  assetName: BaseApi.imgUrl + image3.toString(),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.to(const FeaturedScreen());
+                                  },
+                                  child: conatiner(
+                                    context,
+                                    assetName:
+                                        BaseApi.imgUrl + image4.toString(),
+                                    child: Container(
+                                      height: 0.1.sh,
+                                      width: 0.30.sh,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: Colors.black.withOpacity(0.5),
+                                      ),
+                                      child: Text(
+                                        '+ ${BlocProvider.of<CollectionBlocBloc>(context).getFeaturedWallpaperModel?.categories!.length}',
+                                        style: myTheme.textTheme.titleMedium,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      }
+                      return Container();
+                    },
                   ),
                   title: Container(
                     width: double.infinity,
@@ -274,7 +295,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   value: item,
                                   child: Text(
                                     item,
-                                    style: myTheme.textTheme.titleMedium,
+                                    style: myTheme.textTheme.titleMedium
+                                        ?.copyWith(
+                                            fontWeight: FontWeight.normal),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -287,6 +310,29 @@ class _HomeScreenState extends State<HomeScreen> {
                             });
                           },
                         ),
+                        // const Spacer(),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     Get.to(() => const FilterScreen());
+                        //   },
+                        //   child: Container(
+                        //     height: 0.05.sh,
+                        //     width: 0.115.sw,
+                        //     margin: margin(
+                        //       marginType: MarginType.LTRB,
+                        //       right: 0.04.sw,
+                        //     ),
+                        //     alignment: Alignment.center,
+                        //     decoration: BoxDecoration(
+                        //       color: ColorManager.secondaryColor,
+                        //       borderRadius: BorderRadius.circular(10),
+                        //     ),
+                        //     child: SvgPicture.asset(
+                        //       SVGIconManager.filter,
+                        //       color: ColorManager.white,
+                        //     ),
+                        //   ),
+                        // ),
                         Container(
                           padding: padding(
                             paddingType: PaddingType.LTRB,
@@ -370,7 +416,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       childCount: BlocProvider.of<PaginationBloc>(context)
                           .allWallpaper
                           ?.length,
-                      // childCount: selectedValue == "Recent"
+                      // childCount:
+                      // selectedValue == "Recent"
                       //     ? recentWallpaper.length
                       //     : selectedValue == "Trending"
                       //         ? trendingWallpaper.length
@@ -378,6 +425,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (context, index) {
                         final data = BlocProvider.of<PaginationBloc>(context)
                             .allWallpaper?[index];
+                        // final data;
                         // if (selectedValue == "Recent") {
                         //   data = recentWallpaper[index];
                         // } else if (selectedValue == "Trending") {
@@ -400,7 +448,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: SizedBox(
                             height: (index % 5 + 1) * 100,
                             child: CachedNetworkImage(
+                              cacheKey: BaseApi.imgUrl + image.toString(),
                               imageUrl: BaseApi.imgUrl + image.toString(),
+                              memCacheHeight: 10,
+                              memCacheWidth: 10,
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 decoration: BoxDecoration(
@@ -500,10 +551,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             }
                                           },
                                           child: SvgPicture.asset(
-                                            likedWallpaper.contains(data?.id)
+                                            !likedWallpaper.contains(data?.id)
                                                 ? SVGIconManager.liked
                                                 : SVGIconManager.favorite,
-                                            color: likedWallpaper
+                                            color: !likedWallpaper
                                                     .contains(data?.id)
                                                 ? ColorManager.red
                                                 : ColorManager.white,
@@ -515,8 +566,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               placeholder: (context, url) => const Center(
-                                  child:
-                                      SpinKitCircle(color: ColorManager.white)),
+                                child: SpinKitCircle(color: ColorManager.white),
+                              ),
                               errorWidget: (context, url, error) =>
                                   const Icon(Icons.error),
                             ),
@@ -545,8 +596,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           // childCount: selectedValue == "Recent"
                           //     ? recentWallpaper.length
                           //     : selectedValue == "Trending"
-                          //         ? trendingWallpaper.length
-                          //         : exclusiveWallpaper.length,
+                          //     ? trendingWallpaper.length
+                          //     : selectedValue == "Exclusive"
+                          //     ? exclusiveWallpaper.length
+                          //     : 0,
                           (context, index) {
                             final data =
                                 BlocProvider.of<PaginationBloc>(context)
@@ -558,6 +611,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             // } else {
                             //   data = exclusiveWallpaper[index];
                             // }
+
                             final image = data?.wallpaper?.split("/").last;
                             return GestureDetector(
                               onTap: () {
@@ -674,11 +728,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                               }
                                             },
                                             child: SvgPicture.asset(
-                                              likedWallpaper
+                                              !likedWallpaper
                                                       .contains(data?.id ?? "")
                                                   ? SVGIconManager.liked
                                                   : SVGIconManager.favorite,
-                                              color: likedWallpaper
+                                              color: !likedWallpaper
                                                       .contains(data?.id ?? "")
                                                   ? ColorManager.red
                                                   : ColorManager.white,
@@ -690,8 +744,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                                 placeholder: (context, url) => const Center(
-                                    child: SpinKitCircle(
-                                        color: ColorManager.white)),
+                                  child:
+                                      SpinKitCircle(color: ColorManager.white),
+                                ),
                                 errorWidget: (context, url, error) =>
                                     const Icon(Icons.error),
                               ),

@@ -8,6 +8,7 @@ Widget dropDownButton({
   return DropdownButtonHideUnderline(
     child: DropdownButton2<String>(
       isExpanded: true,
+
       hint: Text(
         selectedValue!,
         style: myTheme.textTheme.labelLarge,
@@ -25,16 +26,20 @@ Widget dropDownButton({
         ),
       ),
       iconStyleData: IconStyleData(
+
         icon: const Icon(
-          Icons.keyboard_arrow_down,
+          Icons.keyboard_arrow_down_rounded,
         ),
         iconSize: 0.05.sh,
         iconEnabledColor: ColorManager.white,
         iconDisabledColor: ColorManager.white,
       ),
+      style: const TextStyle(fontSize: 10, color: Colors.red),
       dropdownStyleData: DropdownStyleData(
         elevation: 0,
+
         decoration: BoxDecoration(
+
           color: ColorManager.secondaryColor,
           borderRadius: BorderRadius.circular(10),
         ),
@@ -43,9 +48,9 @@ Widget dropDownButton({
   );
 }
 
-Widget conatiner({
+Widget conatiner(BuildContext context, {
   double height = 0.1,
-  double width = 0.29,
+  double width = 0.30,
   required String assetName,
   Widget? child,
 }) {
@@ -54,18 +59,21 @@ Widget conatiner({
     width: width.sw,
     child: CachedNetworkImage(
       imageUrl: assetName,
-      imageBuilder: (context, imageProvider) => Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          image: DecorationImage(
-            image: imageProvider,
-            fit: BoxFit.fill,
+      imageBuilder: (context, imageProvider) =>
+          Container(
+            height: height.sh,
+            width: width.sw,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.fill,
+              ),
+            ),
+            child: child,
           ),
-        ),
-        child: child,
-      ),
       placeholder: (context, url) =>
-          const Center(child: SpinKitCircle(color: ColorManager.white)),
+      const Center(child: SpinKitCircle(color: ColorManager.white)),
       errorWidget: (context, url, error) => const Icon(Icons.error),
     ),
   );
