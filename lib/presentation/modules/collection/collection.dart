@@ -92,7 +92,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
                                   borderRadius: BorderRadius.circular(25),
                                   image: DecorationImage(
                                     image: imageProvider,
-                                    fit: BoxFit.fill,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                                 child: Container(

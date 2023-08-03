@@ -5,9 +5,8 @@ abstract class PaginationEvent {}
 
 class PaginationInitialEvent extends PaginationEvent {}
 
-class GetPaginationDataEvent extends PaginationEvent {
-  @override
-  String toString() {
-    return 'GetPaginationDataEvent';
-  }
-}
+class GetRecentPaginationDataEvent extends PaginationEvent {}
+
+class GetTrendingPaginationDataEvent extends PaginationEvent {}
+
+class GetExclusivePaginationDataEvent extends PaginationEvent {}

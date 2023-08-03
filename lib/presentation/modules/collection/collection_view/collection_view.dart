@@ -23,22 +23,25 @@ class _CollectionViewScreenState extends State<CollectionViewScreen> {
   @override
   void initState() {
     if (userId.isNotEmpty) {
-      if (BlocProvider.of<CollectionBlocBloc>(context)
-              .getLikedModel
-              ?.likesData !=
+      if (BlocProvider
+          .of<CollectionBlocBloc>(context)
+          .getLikedModel
+          ?.likesData !=
           null) {
         for (int i = 0;
-            i <
-                BlocProvider.of<CollectionBlocBloc>(context)
-                    .getLikedModel!
-                    .likesData!
-                    .length;
-            i++) {
+        i <
+            BlocProvider
+                .of<CollectionBlocBloc>(context)
+                .getLikedModel!
+                .likesData!
+                .length;
+        i++) {
           setState(() {
-            likedWallpaper.add(BlocProvider.of<CollectionBlocBloc>(context)
-                    .getLikedModel
-                    ?.likesData?[i]
-                    .wallpaperId ??
+            likedWallpaper.add(BlocProvider
+                .of<CollectionBlocBloc>(context)
+                .getLikedModel
+                ?.likesData?[i]
+                .wallpaperId ??
                 "");
           });
         }
@@ -67,10 +70,7 @@ class _CollectionViewScreenState extends State<CollectionViewScreen> {
     String userID = UserPreferences.getUserId();
     return Scaffold(
       backgroundColor: ColorManager.primaryColor,
-      appBar: appbar(context, actionIcon: Icons.filter_alt_outlined,
-          actionOnTap: () {
-        Get.to(const FilterScreen());
-      }),
+      appBar: appbar(context),
       body: Padding(
         padding: padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),
         child: Column(
@@ -86,6 +86,40 @@ class _CollectionViewScreenState extends State<CollectionViewScreen> {
               style: myTheme.textTheme.labelMedium,
             ),
             verticalSpace(0.01.sh),
+
+            widget.categoriesData!.isEmpty ?
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset(
+                    ImageSVGManager.noDataFound,
+                    height: 0.5.sh,
+                    width: 0.5.sw,
+                  ),
+                  Text(
+                    'Oops ! No Wallpaper found!',
+                    style: TextStyle(
+                      fontSize: FontSize.s18,
+                      fontFamily: FontFamily.roboto,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeightManager.semiBold,
+                      foreground: Paint()
+                        ..shader = const LinearGradient(
+                          colors: <Color>[
+                            Color.fromRGBO(160, 152, 250, 1),
+                            Color.fromRGBO(141, 82, 77, 1),
+                            Colors.yellow
+                          ],
+                        ).createShader(
+                          const Rect.fromLTWH(100.0, 0.0, 180.0, 70.0),
+                        ),
+                    ),
+                  )
+                ],
+              ),
+            )
+                :
             Expanded(
               child: NotificationListener<OverscrollIndicatorNotification>(
                 onNotification: (notification) {
@@ -110,149 +144,164 @@ class _CollectionViewScreenState extends State<CollectionViewScreen> {
                           SetWallpaperScreen(
                             imgURL: BaseApi.imgUrl + image.toString(),
                             uploaded:
-                                '${widget.categoriesData?[index].createdAt!.day.toString()}/${widget.categoriesData?[index].createdAt!.month.toString()}/${widget.categoriesData?[index].createdAt!.year.toString()}',
+                            '${widget.categoriesData?[index].createdAt!.day
+                                .toString()}/${widget.categoriesData?[index]
+                                .createdAt!.month.toString()}/${widget
+                                .categoriesData?[index]
+                                .createdAt!.year.toString()}',
                           ),
                         );
                       },
                       child: CachedNetworkImage(
                         imageUrl: BaseApi.imgUrl + image!,
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: ColorManager.secondaryColor,
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.black.withOpacity(0.05),
-                            ),
-                            alignment: Alignment.bottomRight,
-                            child: Padding(
-                              padding: padding(
-                                paddingType: PaddingType.LTRB,
-                                right: 0.01.sw,
-                                bottom: 0.005.sh,
+                        imageBuilder: (context, imageProvider) =>
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: ColorManager.secondaryColor,
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (userID.isEmpty) {
-                                        Get.to(const LoginScreen());
-                                      } else {
-                                        downloadAndSaveImageToGallery(
-                                            imageUrl: BaseApi.imgUrl + image);
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.black.withOpacity(0.05),
+                                ),
+                                alignment: Alignment.bottomRight,
+                                child: Padding(
+                                  padding: padding(
+                                    paddingType: PaddingType.LTRB,
+                                    right: 0.01.sw,
+                                    bottom: 0.005.sh,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (userID.isEmpty) {
+                                            Get.to(const LoginScreen());
+                                          } else {
+                                            downloadAndSaveImageToGallery(
+                                                imageUrl: BaseApi.imgUrl +
+                                                    image);
 
-                                        BlocProvider.of<CollectionBlocBloc>(
+                                            BlocProvider.of<CollectionBlocBloc>(
                                                 context)
-                                            .add(
-                                          SendDownloadWallpaper(
-                                            id: widget.categoriesData?[index]
+                                                .add(
+                                              SendDownloadWallpaper(
+                                                id: widget
+                                                    .categoriesData?[index]
                                                     .id ??
-                                                "",
-                                            userId: UserPreferences.getUserId(),
-                                            name: widget.categoriesData?[index]
+                                                    "",
+                                                userId: UserPreferences
+                                                    .getUserId(),
+                                                name: widget
+                                                    .categoriesData?[index]
                                                     .name ??
-                                                "",
-                                            category: widget
+                                                    "",
+                                                category: widget
                                                     .categoriesData?[index]
                                                     .category ??
-                                                "",
-                                            wallpaper: widget
+                                                    "",
+                                                wallpaper: widget
                                                     .categoriesData?[index]
                                                     .wallpaper ??
-                                                "",
-                                          ),
-                                        );
-                                        setState(() {});
-                                      }
-                                    },
-                                    child: SvgPicture.asset(
-                                      SVGIconManager.downloadWallpaper,
-                                      color: ColorManager.white,
-                                    ),
-                                  ),
-                                  verticalSpace(0.02.sh),
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (userID.isEmpty) {
-                                        Get.to(const LoginScreen());
-                                      } else {
-                                        if (!likedWallpaper.contains(
-                                            widget.categoriesData?[index].id ??
-                                                "")) {
-                                          likedWallpaper.add(widget
+                                                    "",
+                                              ),
+                                            );
+                                            setState(() {});
+                                          }
+                                        },
+                                        child: SvgPicture.asset(
+                                          SVGIconManager.downloadWallpaper,
+                                          color: ColorManager.white,
+                                        ),
+                                      ),
+                                      verticalSpace(0.02.sh),
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (userID.isEmpty) {
+                                            Get.to(const LoginScreen());
+                                          } else {
+                                            if (!likedWallpaper.contains(
+                                                widget.categoriesData?[index]
+                                                    .id ??
+                                                    "")) {
+                                              likedWallpaper.add(widget
                                                   .categoriesData?[index].id ??
-                                              "");
-                                          BlocProvider.of<CollectionBlocBloc>(
+                                                  "");
+                                              BlocProvider.of<
+                                                  CollectionBlocBloc>(
                                                   context)
-                                              .add(
-                                            SendLikedWallpaper(
-                                              id: widget.categoriesData?[index]
+                                                  .add(
+                                                SendLikedWallpaper(
+                                                  id: widget
+                                                      .categoriesData?[index]
                                                       .id ??
-                                                  "",
-                                              userId:
+                                                      "",
+                                                  userId:
                                                   UserPreferences.getUserId(),
-                                              name: widget
+                                                  name: widget
                                                       .categoriesData?[index]
                                                       .name ??
-                                                  "",
-                                              category: widget
+                                                      "",
+                                                  category: widget
                                                       .categoriesData?[index]
                                                       .category ??
-                                                  "",
-                                              wallpaper: widget
+                                                      "",
+                                                  wallpaper: widget
                                                       .categoriesData?[index]
                                                       .wallpaper ??
-                                                  "",
-                                            ),
-                                          );
-                                          setState(() {});
-                                        } else {
-                                          likedWallpaper.remove(widget
+                                                      "",
+                                                ),
+                                              );
+                                              setState(() {});
+                                            } else {
+                                              likedWallpaper.remove(widget
                                                   .categoriesData?[index].id ??
-                                              "");
-                                          BlocProvider.of<CollectionBlocBloc>(
+                                                  "");
+                                              BlocProvider.of<
+                                                  CollectionBlocBloc>(
                                                   context)
-                                              .add(
-                                            SendDissLikeWallpaper(
-                                              id: widget.categoriesData?[index]
+                                                  .add(
+                                                SendDissLikeWallpaper(
+                                                  id: widget
+                                                      .categoriesData?[index]
                                                       .id ??
-                                                  "",
-                                              userId:
+                                                      "",
+                                                  userId:
                                                   UserPreferences.getUserId(),
-                                            ),
-                                          );
-                                          setState(() {});
-                                        }
-                                      }
-                                    },
-                                    child: SvgPicture.asset(
-                                      likedWallpaper.contains(
+                                                ),
+                                              );
+                                              setState(() {});
+                                            }
+                                          }
+                                        },
+                                        child: SvgPicture.asset(
+                                          likedWallpaper.contains(
                                               widget.categoriesData?[index].id)
-                                          ? SVGIconManager.liked
-                                          : SVGIconManager.favorite,
-                                      color: likedWallpaper.contains(
+                                              ? SVGIconManager.liked
+                                              : SVGIconManager.favorite,
+                                          color: likedWallpaper.contains(
                                               widget.categoriesData?[index].id)
-                                          ? ColorManager.red
-                                          : ColorManager.white,
-                                    ),
+                                              ? ColorManager.red
+                                              : ColorManager.white,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        placeholder: (context, url) => const Center(
+                        placeholder: (context, url) =>
+                        const Center(
                           child: SpinKitCircle(color: ColorManager.white),
                         ),
                         errorWidget: (context, url, error) =>
-                            const Icon(Icons.error, color: ColorManager.white),
+                        const Icon(Icons.error, color: ColorManager.white),
                       ),
                     );
                   },

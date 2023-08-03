@@ -53,10 +53,6 @@ class _DownloadScreenState extends State<DownloadScreen> {
           leadingOnTap: () {
             Get.off(const BottomNavigationBarScreen());
           },
-          // actionIcon: Icons.filter_alt_outlined,
-          // actionOnTap: () {
-          //   Get.to(const FilterScreen());
-          // },
         ),
         body: Padding(
           padding: padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),
@@ -76,8 +72,14 @@ class _DownloadScreenState extends State<DownloadScreen> {
               BlocBuilder<CollectionBlocBloc, CollectionBlocState>(
                 builder: (context, state) {
                   if (state is CollectionLoading) {
-                    return const Center(
-                        child: SpinKitCircle(color: ColorManager.white));
+                    return Column(
+                      children: [
+                        verticalSpace(0.3.sh),
+                        const Center(
+                          child: SpinKitCircle(color: ColorManager.white),
+                        ),
+                      ],
+                    );
                   } else if (state is CollectionLoaded) {
                     return BlocProvider.of<CollectionBlocBloc>(context)
                             .getDownloadModel!

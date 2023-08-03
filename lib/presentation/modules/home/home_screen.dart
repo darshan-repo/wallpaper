@@ -1,7 +1,6 @@
 // ignore_for_file: deprecated_member_use, prefer_typing_uninitialized_variables
 
 import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 import 'package:http/http.dart' as http;
@@ -26,82 +25,110 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String selectedValue = 'Exclusive';
   final List items = [
     'Recent',
     'Trending',
     'Exclusive',
   ];
 
-  String selectedValue = 'Exclusive';
   bool isSelectGrid = true;
 
   List<String> likedWallpaper = [];
   final String userId = UserPreferences.getUserId();
 
-  late final PaginationBloc paginationBloc;
+  PaginationBloc? paginationBloc;
 
-  // List<Trending> trendingWallpaper = [];
-  // List<Wallpaper> recentWallpaper = [];
-  // List<Wallpaper> exclusiveWallpaper = [];
-  //
-  // void sortingWallpaper(String values) async {
-  //   debugPrint('======== Sorting Wallpaper Called ========');
-  //   if (values == 'Recent') {
-  //     recentWallpaper.clear();
-  //     for (int i =
-  //             BlocProvider.of<PaginationBloc>(context).allWallpaper!.length - 1;
-  //         i >= 0;
-  //         i--) {
-  //       setState(() {
-  //         recentWallpaper
-  //             .add(BlocProvider.of<PaginationBloc>(context).allWallpaper![i]);
-  //       });
-  //     }
-  //     log('=================>> Recent ${recentWallpaper.length}');
-  //   } else if (values == "Trending") {
-  //     trendingWallpaper.clear();
-  //     for (int i = 0;
-  //         i <
-  //             (BlocProvider.of<CollectionBlocBloc>(context)
-  //                     .getTrendingWallpaperModel
-  //                     ?.trending
-  //                     ?.length ??
-  //                 0);
-  //         i++) {
-  //       setState(() {
-  //         trendingWallpaper.add(BlocProvider.of<CollectionBlocBloc>(context)
-  //             .getTrendingWallpaperModel!
-  //             .trending![i]);
-  //       });
-  //     }
-  //
-  //     log('=================>> Trending ${trendingWallpaper.length}');
-  //   } else if (values == "Exclusive") {
-  //     exclusiveWallpaper.clear();
-  //     setState(() {
-  //       for (int i = 0;
-  //           i <
-  //               (BlocProvider.of<PaginationBloc>(context)
-  //                       .allWallpaper
-  //                       ?.length ??
-  //                   0);
-  //           i++) {
-  //         setState(() {
-  //           exclusiveWallpaper
-  //               .add(BlocProvider.of<PaginationBloc>(context).allWallpaper![i]);
-  //         });
-  //       }
-  //       log('=================>> Exclusive ${exclusiveWallpaper.length}');
-  //     });
-  //   }
-  // }
+  void dropdowndata() {
+    BlocProvider.of<PaginationBloc>(context).page = 1;
+    BlocProvider.of<PaginationBloc>(context).allWallpaper = [];
+
+    paginationBloc = BlocProvider.of<PaginationBloc>(context);
+    try {
+      if (selectedValue == "Exclusive") {
+        try {
+          paginationBloc!.add(GetExclusivePaginationDataEvent());
+          scrollController = ScrollController();
+          scrollController?.addListener(() async {
+            if (scrollController!.offset >=
+                    scrollController!.position.maxScrollExtent &&
+                !scrollController!.position.outOfRange) {
+              paginationBloc!.add(GetExclusivePaginationDataEvent());
+            }
+          });
+        } catch (e, s) {
+          debugPrint("ERROR :: $e");
+          debugPrint("STACK :: $s");
+        }
+        setState(() {});
+      } else if (selectedValue == "Trending") {
+        try {
+          paginationBloc!.add(GetTrendingPaginationDataEvent());
+          scrollController = ScrollController();
+          scrollController?.addListener(() async {
+            if (scrollController!.offset >=
+                    scrollController!.position.maxScrollExtent &&
+                !scrollController!.position.outOfRange) {
+              paginationBloc!.add(GetTrendingPaginationDataEvent());
+            }
+          });
+        } catch (e, s) {
+          debugPrint("ERROR :: $e");
+          debugPrint("STACK :: $s");
+        }
+        setState(() {});
+      } else {
+        try {
+          paginationBloc!.add(GetRecentPaginationDataEvent());
+          scrollController = ScrollController();
+          scrollController?.addListener(() async {
+            if (scrollController!.offset >=
+                    scrollController!.position.maxScrollExtent &&
+                !scrollController!.position.outOfRange) {
+              paginationBloc!.add(GetRecentPaginationDataEvent());
+            }
+          });
+        } catch (e, s) {
+          debugPrint("ERROR :: $e");
+          debugPrint("STACK :: $s");
+        }
+        setState(() {});
+      }
+    } catch (e, s) {
+      debugPrint("ERROR :: $e");
+      debugPrint("STACK :: $s");
+    }
+    if (userId.isNotEmpty) {
+      if (BlocProvider.of<CollectionBlocBloc>(context)
+              .getLikedModel
+              ?.likesData !=
+          null) {
+        for (int i = 0;
+            i <
+                BlocProvider.of<CollectionBlocBloc>(context)
+                    .getLikedModel!
+                    .likesData!
+                    .length;
+            i++) {
+          setState(() {
+            likedWallpaper.add(BlocProvider.of<CollectionBlocBloc>(context)
+                    .getLikedModel
+                    ?.likesData?[i]
+                    .wallpaperId ??
+                "");
+          });
+        }
+      }
+      setState(() {});
+    }
+  }
 
   @override
   void initState() {
-    BlocProvider.of<CollectionBlocBloc>(context).add(GetHomeFeatured());
-    BlocProvider.of<PaginationBloc>(context).add(GetPaginationDataEvent());
-    // BlocProvider.of<CollectionBlocBloc>(context).add(GetTrendingWallpaper());
-    // sortingWallpaper('Exclusive');
+    // BlocProvider.of<CollectionBlocBloc>(context).add(GetHomeFeatured());
+    featuredImages();
+    BlocProvider.of<PaginationBloc>(context)
+        .add(GetExclusivePaginationDataEvent());
     paginationBloc = BlocProvider.of<PaginationBloc>(context);
     try {
       scrollController = ScrollController();
@@ -109,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
         if (scrollController!.offset >=
                 scrollController!.position.maxScrollExtent &&
             !scrollController!.position.outOfRange) {
-          paginationBloc.add(GetPaginationDataEvent());
+          paginationBloc!.add(GetExclusivePaginationDataEvent());
         }
       });
     } catch (e, s) {
@@ -156,38 +183,44 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  late final String image1, image2, image3, image4;
+
+  featuredImages() {
+    setState(() {
+      image1 = BlocProvider.of<CollectionBlocBloc>(context)
+              .getFeaturedWallpaperModel
+              ?.categories![0]
+              .background!
+              .split("/")
+              .last ??
+          "";
+      image2 = BlocProvider.of<CollectionBlocBloc>(context)
+              .getFeaturedWallpaperModel
+              ?.categories![1]
+              .background!
+              .split("/")
+              .last ??
+          "";
+      image3 = BlocProvider.of<CollectionBlocBloc>(context)
+              .getFeaturedWallpaperModel
+              ?.categories![2]
+              .background!
+              .split("/")
+              .last ??
+          "";
+      image4 = BlocProvider.of<CollectionBlocBloc>(context)
+              .getFeaturedWallpaperModel
+              ?.categories![3]
+              .background!
+              .split("/")
+              .last ??
+          "";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     String userID = UserPreferences.getUserId();
-    final image1 = BlocProvider.of<CollectionBlocBloc>(context)
-            .getFeaturedWallpaperModel
-            ?.categories![0]
-            .background!
-            .split("/")
-            .last ??
-        "";
-    final image2 = BlocProvider.of<CollectionBlocBloc>(context)
-            .getFeaturedWallpaperModel
-            ?.categories![1]
-            .background!
-            .split("/")
-            .last ??
-        "";
-    final image3 = BlocProvider.of<CollectionBlocBloc>(context)
-            .getFeaturedWallpaperModel
-            ?.categories![2]
-            .background!
-            .split("/")
-            .last ??
-        "";
-    final image4 = BlocProvider.of<CollectionBlocBloc>(context)
-            .getFeaturedWallpaperModel
-            ?.categories![3]
-            .background!
-            .split("/")
-            .last ??
-        "";
-
     return Padding(
       padding: padding(paddingType: PaddingType.all, paddingValue: 0.01.sh),
       child: NotificationListener<OverscrollIndicatorNotification>(
@@ -241,11 +274,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 conatiner(
                                   context,
-                                  assetName: BaseApi.imgUrl + image2.toString(),
+                                  assetName: BaseApi.imgUrl + image2,
                                 ),
                                 conatiner(
                                   context,
-                                  assetName: BaseApi.imgUrl + image3.toString(),
+                                  assetName: BaseApi.imgUrl + image3,
                                 ),
                                 GestureDetector(
                                   onTap: () {
@@ -253,8 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   child: conatiner(
                                     context,
-                                    assetName:
-                                        BaseApi.imgUrl + image4.toString(),
+                                    assetName: BaseApi.imgUrl + image4,
                                     child: Container(
                                       height: 0.1.sh,
                                       width: 0.30.sh,
@@ -306,33 +338,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           onChanged: (value) {
                             setState(() {
                               selectedValue = value as String;
-                              // sortingWallpaper(selectedValue);
+                              dropdowndata();
                             });
                           },
                         ),
-                        // const Spacer(),
-                        // GestureDetector(
-                        //   onTap: () {
-                        //     Get.to(() => const FilterScreen());
-                        //   },
-                        //   child: Container(
-                        //     height: 0.05.sh,
-                        //     width: 0.115.sw,
-                        //     margin: margin(
-                        //       marginType: MarginType.LTRB,
-                        //       right: 0.04.sw,
-                        //     ),
-                        //     alignment: Alignment.center,
-                        //     decoration: BoxDecoration(
-                        //       color: ColorManager.secondaryColor,
-                        //       borderRadius: BorderRadius.circular(10),
-                        //     ),
-                        //     child: SvgPicture.asset(
-                        //       SVGIconManager.filter,
-                        //       color: ColorManager.white,
-                        //     ),
-                        //   ),
-                        // ),
                         Container(
                           padding: padding(
                             paddingType: PaddingType.LTRB,
@@ -408,353 +417,501 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               isSelectGrid
-                  ? SliverMasonryGrid.count(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-
-                      childCount: BlocProvider.of<PaginationBloc>(context)
-                          .allWallpaper
-                          ?.length,
-                      // childCount:
-                      // selectedValue == "Recent"
-                      //     ? recentWallpaper.length
-                      //     : selectedValue == "Trending"
-                      //         ? trendingWallpaper.length
-                      //         : exclusiveWallpaper.length,
-                      itemBuilder: (context, index) {
-                        final data = BlocProvider.of<PaginationBloc>(context)
-                            .allWallpaper?[index];
-                        // final data;
-                        // if (selectedValue == "Recent") {
-                        //   data = recentWallpaper[index];
-                        // } else if (selectedValue == "Trending") {
-                        //   data = trendingWallpaper[index];
-                        // } else {
-                        //   data = exclusiveWallpaper[index];
-                        // }
-                        final image = data?.wallpaper!.split("/").last;
-
-                        return GestureDetector(
-                          onTap: () {
-                            Get.to(
-                              SetWallpaperScreen(
-                                imgURL: BaseApi.imgUrl + image.toString(),
-                                uploaded:
-                                    '${data?.createdAt!.day.toString()}/${data?.createdAt!.month.toString()}/${data?.createdAt!.year.toString()}',
-                              ),
-                            );
-                          },
-                          child: SizedBox(
-                            height: (index % 5 + 1) * 100,
-                            child: CachedNetworkImage(
-                              cacheKey: BaseApi.imgUrl + image.toString(),
-                              imageUrl: BaseApi.imgUrl + image.toString(),
-                              memCacheHeight: 10,
-                              memCacheWidth: 10,
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: ColorManager.secondaryColor,
-                                  image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: imageProvider,
-                                  ),
-                                ),
-                                alignment: Alignment.bottomRight,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.black.withOpacity(0.05),
-                                  ),
-                                  alignment: Alignment.bottomRight,
-                                  child: Padding(
-                                    padding: padding(
-                                        paddingType: PaddingType.LTRB,
-                                        right: 0.01.sw,
-                                        bottom: 0.005.sh),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () async {
-                                            if (userID.isEmpty) {
-                                              Get.to(const LoginScreen());
-                                            } else {
-                                              downloadAndSaveImageToGallery(
-                                                  imageUrl:
-                                                      BaseApi.imgUrl + image!);
-                                              BlocProvider.of<
-                                                          CollectionBlocBloc>(
-                                                      context)
-                                                  .add(
-                                                SendDownloadWallpaper(
-                                                  id: data?.id ?? "",
-                                                  userId: UserPreferences
-                                                      .getUserId(),
-                                                  name: data?.name ?? "",
-                                                  category:
-                                                      data?.category ?? "",
-                                                  wallpaper:
-                                                      data?.wallpaper ?? "",
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          child: SvgPicture.asset(
-                                            SVGIconManager.downloadWallpaper,
-                                            color: ColorManager.white,
-                                          ),
-                                        ),
-                                        verticalSpace(0.02.sh),
-                                        GestureDetector(
-                                          onTap: () {
-                                            if (userID.isEmpty) {
-                                              Get.to(const LoginScreen());
-                                            } else {
-                                              if (!likedWallpaper
-                                                  .contains(data?.id ?? "")) {
-                                                likedWallpaper
-                                                    .add(data?.id ?? "");
-                                                BlocProvider.of<
-                                                            CollectionBlocBloc>(
-                                                        context)
-                                                    .add(
-                                                  SendLikedWallpaper(
-                                                    id: data?.id ?? "",
-                                                    userId: UserPreferences
-                                                        .getUserId(),
-                                                    name: data?.name ?? "",
-                                                    category:
-                                                        data?.category ?? "",
-                                                    wallpaper:
-                                                        data?.wallpaper ?? "",
-                                                  ),
-                                                );
-                                                setState(() {});
-                                              } else {
-                                                likedWallpaper
-                                                    .remove(data?.id ?? "");
-                                                BlocProvider.of<
-                                                            CollectionBlocBloc>(
-                                                        context)
-                                                    .add(
-                                                  SendDissLikeWallpaper(
-                                                    id: data?.id ?? "",
-                                                    userId: UserPreferences
-                                                        .getUserId(),
-                                                  ),
-                                                );
-                                                setState(() {});
-                                              }
-                                            }
-                                          },
-                                          child: SvgPicture.asset(
-                                            !likedWallpaper.contains(data?.id)
-                                                ? SVGIconManager.liked
-                                                : SVGIconManager.favorite,
-                                            color: !likedWallpaper
-                                                    .contains(data?.id)
-                                                ? ColorManager.red
-                                                : ColorManager.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              placeholder: (context, url) => const Center(
-                                child: SpinKitCircle(color: ColorManager.white),
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                            ),
+                  ? BlocProvider.of<PaginationBloc>(context).allWallpaper == []
+                      ? const Center(
+                          child: SpinKitCircle(
+                            color: ColorManager.white,
                           ),
-                        );
-                      },
-                    )
-                  : NotificationListener<OverscrollIndicatorNotification>(
-                      onNotification: (notification) {
-                        notification.disallowIndicator();
-                        return true;
-                      },
-                      child: SliverGrid(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                        )
+                      : SliverMasonryGrid.count(
                           crossAxisCount: 2,
                           mainAxisSpacing: 10,
                           crossAxisSpacing: 10,
-                          childAspectRatio: 0.6,
-                        ),
-                        delegate: SliverChildBuilderDelegate(
                           childCount: BlocProvider.of<PaginationBloc>(context)
                               .allWallpaper
                               ?.length,
-
-                          // childCount: selectedValue == "Recent"
-                          //     ? recentWallpaper.length
-                          //     : selectedValue == "Trending"
-                          //     ? trendingWallpaper.length
-                          //     : selectedValue == "Exclusive"
-                          //     ? exclusiveWallpaper.length
-                          //     : 0,
-                          (context, index) {
-                            final data =
+                          itemBuilder: (context, index) {
+                            final image =
                                 BlocProvider.of<PaginationBloc>(context)
-                                    .allWallpaper?[index];
-                            // if (selectedValue == "Recent") {
-                            //   data = recentWallpaper[index];
-                            // } else if (selectedValue == "Trending") {
-                            //   data = trendingWallpaper[index];
-                            // } else {
-                            //   data = exclusiveWallpaper[index];
-                            // }
-
-                            final image = data?.wallpaper?.split("/").last;
+                                    .allWallpaper?[index]
+                                    .wallpaper!
+                                    .split("/")
+                                    .last;
                             return GestureDetector(
                               onTap: () {
                                 Get.to(
                                   SetWallpaperScreen(
                                     imgURL: BaseApi.imgUrl + image.toString(),
                                     uploaded:
-                                        '${data?.createdAt!.day.toString()}/${data?.createdAt!.month.toString()}/${data?.createdAt!.year.toString()}',
+                                        '${BlocProvider.of<PaginationBloc>(context).allWallpaper?[index].createdAt!.day.toString()}/${BlocProvider.of<PaginationBloc>(context).allWallpaper?[index].createdAt!.month.toString()}/${BlocProvider.of<PaginationBloc>(context).allWallpaper?[index].createdAt!.year.toString()}',
                                   ),
                                 );
                               },
-                              child: CachedNetworkImage(
-                                imageUrl: BaseApi.imgUrl + image!,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white,
-                                    image: DecorationImage(
-                                      fit: BoxFit.fill,
-                                      image: imageProvider,
-                                    ),
-                                  ),
-                                  alignment: Alignment.bottomRight,
-                                  child: Container(
+                              child: SizedBox(
+                                height: (index % 4 + 1) * 100,
+                                child: CachedNetworkImage(
+                                  // cacheKey: BaseApi.imgUrl + image.toString(),
+
+                                  imageUrl: BaseApi.imgUrl + image.toString(),
+                                  memCacheWidth: 10,
+                                  memCacheHeight: 10,
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      color: Colors.black.withOpacity(0.05),
+                                      color: ColorManager.secondaryColor,
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: imageProvider,
+                                      ),
                                     ),
                                     alignment: Alignment.bottomRight,
-                                    child: Padding(
-                                      padding: padding(
-                                          paddingType: PaddingType.LTRB,
-                                          right: 0.01.sw,
-                                          bottom: 0.005.sh),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              if (userID.isEmpty) {
-                                                Get.to(const LoginScreen());
-                                              } else {
-                                                downloadAndSaveImageToGallery(
-                                                    imageUrl:
-                                                        BaseApi.imgUrl + image);
-
-                                                BlocProvider.of<
-                                                            CollectionBlocBloc>(
-                                                        context)
-                                                    .add(
-                                                  SendDownloadWallpaper(
-                                                    id: data?.id ?? "",
-                                                    userId: UserPreferences
-                                                        .getUserId(),
-                                                    name: data?.name ?? "",
-                                                    category:
-                                                        data?.category ?? "",
-                                                    wallpaper:
-                                                        data?.wallpaper ?? "",
-                                                  ),
-                                                );
-                                                successSnackbar(
-                                                    'wallpaper successfully downloaded!');
-                                              }
-                                            },
-                                            child: SvgPicture.asset(
-                                              SVGIconManager.downloadWallpaper,
-                                              color: ColorManager.white,
-                                            ),
-                                          ),
-                                          verticalSpace(0.02.sh),
-                                          GestureDetector(
-                                            onTap: () {
-                                              if (userID.isEmpty) {
-                                                Get.to(const LoginScreen());
-                                              } else {
-                                                if (!likedWallpaper
-                                                    .contains(data?.id ?? "")) {
-                                                  likedWallpaper
-                                                      .add(data?.id ?? "");
-                                                  BlocProvider.of<
-                                                              CollectionBlocBloc>(
-                                                          context)
-                                                      .add(
-                                                    SendLikedWallpaper(
-                                                      id: data?.id ?? "",
-                                                      userId: UserPreferences
-                                                          .getUserId(),
-                                                      name: data?.name ?? "",
-                                                      category:
-                                                          data?.category ?? "",
-                                                      wallpaper:
-                                                          data?.wallpaper ?? "",
-                                                    ),
-                                                  );
-                                                  setState(() {});
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.black.withOpacity(0.05),
+                                      ),
+                                      alignment: Alignment.bottomRight,
+                                      child: Padding(
+                                        padding: padding(
+                                            paddingType: PaddingType.LTRB,
+                                            right: 0.01.sw,
+                                            bottom: 0.005.sh),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () async {
+                                                if (userID.isEmpty) {
+                                                  Get.to(const LoginScreen());
                                                 } else {
-                                                  likedWallpaper
-                                                      .remove(data?.id ?? "");
+                                                  downloadAndSaveImageToGallery(
+                                                      imageUrl: BaseApi.imgUrl +
+                                                          image!);
                                                   BlocProvider.of<
                                                               CollectionBlocBloc>(
                                                           context)
                                                       .add(
-                                                    SendDissLikeWallpaper(
-                                                      id: data?.id ?? "",
+                                                    SendDownloadWallpaper(
+                                                      id: BlocProvider.of<
+                                                                      PaginationBloc>(
+                                                                  context)
+                                                              .allWallpaper?[
+                                                                  index]
+                                                              .id ??
+                                                          "",
                                                       userId: UserPreferences
                                                           .getUserId(),
+                                                      name: BlocProvider.of<
+                                                                      PaginationBloc>(
+                                                                  context)
+                                                              .allWallpaper?[
+                                                                  index]
+                                                              .name ??
+                                                          "",
+                                                      category: BlocProvider.of<
+                                                                      PaginationBloc>(
+                                                                  context)
+                                                              .allWallpaper?[
+                                                                  index]
+                                                              .category ??
+                                                          "",
+                                                      wallpaper: BlocProvider
+                                                                  .of<PaginationBloc>(
+                                                                      context)
+                                                              .allWallpaper?[
+                                                                  index]
+                                                              .wallpaper ??
+                                                          "",
                                                     ),
                                                   );
-                                                  setState(() {});
                                                 }
-                                              }
-                                            },
-                                            child: SvgPicture.asset(
-                                              !likedWallpaper
-                                                      .contains(data?.id ?? "")
-                                                  ? SVGIconManager.liked
-                                                  : SVGIconManager.favorite,
-                                              color: !likedWallpaper
-                                                      .contains(data?.id ?? "")
-                                                  ? ColorManager.red
-                                                  : ColorManager.white,
+                                              },
+                                              child: SvgPicture.asset(
+                                                SVGIconManager
+                                                    .downloadWallpaper,
+                                                color: ColorManager.white,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                            verticalSpace(0.02.sh),
+                                            GestureDetector(
+                                              onTap: () {
+                                                if (userID.isEmpty) {
+                                                  Get.to(const LoginScreen());
+                                                } else {
+                                                  if (!likedWallpaper.contains(
+                                                      BlocProvider.of<PaginationBloc>(
+                                                                  context)
+                                                              .allWallpaper?[
+                                                                  index]
+                                                              .id ??
+                                                          "")) {
+                                                    likedWallpaper.add(BlocProvider
+                                                                .of<PaginationBloc>(
+                                                                    context)
+                                                            .allWallpaper?[
+                                                                index]
+                                                            .id ??
+                                                        "");
+                                                    BlocProvider.of<
+                                                                CollectionBlocBloc>(
+                                                            context)
+                                                        .add(
+                                                      SendLikedWallpaper(
+                                                        id: BlocProvider.of<
+                                                                        PaginationBloc>(
+                                                                    context)
+                                                                .allWallpaper?[
+                                                                    index]
+                                                                .id ??
+                                                            "",
+                                                        userId: UserPreferences
+                                                            .getUserId(),
+                                                        name: BlocProvider.of<
+                                                                        PaginationBloc>(
+                                                                    context)
+                                                                .allWallpaper?[
+                                                                    index]
+                                                                .name ??
+                                                            "",
+                                                        category: BlocProvider
+                                                                    .of<PaginationBloc>(
+                                                                        context)
+                                                                .allWallpaper?[
+                                                                    index]
+                                                                .category ??
+                                                            "",
+                                                        wallpaper: BlocProvider
+                                                                    .of<PaginationBloc>(
+                                                                        context)
+                                                                .allWallpaper?[
+                                                                    index]
+                                                                .wallpaper ??
+                                                            "",
+                                                      ),
+                                                    );
+                                                    setState(() {});
+                                                  } else {
+                                                    likedWallpaper.remove(
+                                                        BlocProvider.of<PaginationBloc>(
+                                                                    context)
+                                                                .allWallpaper![
+                                                                    index]
+                                                                .id ??
+                                                            "");
+                                                    BlocProvider.of<
+                                                                CollectionBlocBloc>(
+                                                            context)
+                                                        .add(
+                                                      SendDissLikeWallpaper(
+                                                        id: BlocProvider.of<
+                                                                        PaginationBloc>(
+                                                                    context)
+                                                                .allWallpaper?[
+                                                                    index]
+                                                                .id ??
+                                                            "",
+                                                        userId: UserPreferences
+                                                            .getUserId(),
+                                                      ),
+                                                    );
+                                                    setState(() {});
+                                                  }
+                                                }
+                                              },
+                                              child: SvgPicture.asset(
+                                                !likedWallpaper.contains(
+                                                        BlocProvider.of<
+                                                                    PaginationBloc>(
+                                                                context)
+                                                            .allWallpaper![
+                                                                index]
+                                                            .id)
+                                                    ? SVGIconManager.liked
+                                                    : SVGIconManager.favorite,
+                                                color: !likedWallpaper.contains(
+                                                        BlocProvider.of<
+                                                                    PaginationBloc>(
+                                                                context)
+                                                            .allWallpaper![
+                                                                index]
+                                                            .id)
+                                                    ? ColorManager.red
+                                                    : ColorManager.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
+                                  placeholder: (context, url) => const Center(
+                                    child: SpinKitCircle(
+                                        color: ColorManager.white),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
                                 ),
-                                placeholder: (context, url) => const Center(
-                                  child:
-                                      SpinKitCircle(color: ColorManager.white),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
                               ),
                             );
                           },
+                        )
+                  : BlocProvider.of<PaginationBloc>(context).allWallpaper == []
+                      ? const Center(
+                          child: SpinKitCircle(
+                            color: ColorManager.white,
+                          ),
+                        )
+                      : NotificationListener<OverscrollIndicatorNotification>(
+                          onNotification: (notification) {
+                            notification.disallowIndicator();
+                            return true;
+                          },
+                          child: SliverGrid(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                              childAspectRatio: 0.6,
+                            ),
+                            delegate: SliverChildBuilderDelegate(
+                              childCount:
+                                  BlocProvider.of<PaginationBloc>(context)
+                                      .allWallpaper
+                                      ?.length,
+                              (context, index) {
+                                final image =
+                                    BlocProvider.of<PaginationBloc>(context)
+                                        .allWallpaper?[index]
+                                        .wallpaper
+                                        ?.split("/")
+                                        .last;
+                                return GestureDetector(
+                                  onTap: () {
+                                    Get.to(
+                                      SetWallpaperScreen(
+                                        imgURL:
+                                            BaseApi.imgUrl + image.toString(),
+                                        uploaded:
+                                            '${BlocProvider.of<PaginationBloc>(context).allWallpaper?[index].createdAt!.day.toString()}/${BlocProvider.of<PaginationBloc>(context).allWallpaper?[index].createdAt!.month.toString()}/${BlocProvider.of<PaginationBloc>(context).allWallpaper?[index].createdAt!.year.toString()}',
+                                      ),
+                                    );
+                                  },
+                                  child: CachedNetworkImage(
+                                    imageUrl: BaseApi.imgUrl + image!,
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white,
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: imageProvider,
+                                        ),
+                                      ),
+                                      alignment: Alignment.bottomRight,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Colors.black.withOpacity(0.05),
+                                        ),
+                                        alignment: Alignment.bottomRight,
+                                        child: Padding(
+                                          padding: padding(
+                                              paddingType: PaddingType.LTRB,
+                                              right: 0.02.sw,
+                                              bottom: 0.007.sh),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  if (userID.isEmpty) {
+                                                    Get.to(const LoginScreen());
+                                                  } else {
+                                                    downloadAndSaveImageToGallery(
+                                                        imageUrl:
+                                                            BaseApi.imgUrl +
+                                                                image);
+
+                                                    BlocProvider.of<
+                                                                CollectionBlocBloc>(
+                                                            context)
+                                                        .add(
+                                                      SendDownloadWallpaper(
+                                                        id: BlocProvider.of<
+                                                                        PaginationBloc>(
+                                                                    context)
+                                                                .allWallpaper?[
+                                                                    index]
+                                                                .id ??
+                                                            "",
+                                                        userId: UserPreferences
+                                                            .getUserId(),
+                                                        name: BlocProvider.of<
+                                                                        PaginationBloc>(
+                                                                    context)
+                                                                .allWallpaper?[
+                                                                    index]
+                                                                .name ??
+                                                            "",
+                                                        category: BlocProvider
+                                                                    .of<PaginationBloc>(
+                                                                        context)
+                                                                .allWallpaper?[
+                                                                    index]
+                                                                .category ??
+                                                            "",
+                                                        wallpaper: BlocProvider
+                                                                    .of<PaginationBloc>(
+                                                                        context)
+                                                                .allWallpaper?[
+                                                                    index]
+                                                                .wallpaper ??
+                                                            "",
+                                                      ),
+                                                    );
+                                                    successSnackbar(
+                                                        'wallpaper successfully downloaded!');
+                                                  }
+                                                },
+                                                child: SvgPicture.asset(
+                                                  SVGIconManager
+                                                      .downloadWallpaper,
+                                                  color: ColorManager.white,
+                                                ),
+                                              ),
+                                              verticalSpace(0.02.sh),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  if (userID.isEmpty) {
+                                                    Get.to(const LoginScreen());
+                                                  } else {
+                                                    if (!likedWallpaper
+                                                        .contains(BlocProvider
+                                                                    .of<PaginationBloc>(
+                                                                        context)
+                                                                .allWallpaper?[
+                                                                    index]
+                                                                .id ??
+                                                            "")) {
+                                                      likedWallpaper.add(
+                                                          BlocProvider.of<PaginationBloc>(
+                                                                      context)
+                                                                  .allWallpaper?[
+                                                                      index]
+                                                                  .id ??
+                                                              "");
+                                                      BlocProvider.of<
+                                                                  CollectionBlocBloc>(
+                                                              context)
+                                                          .add(
+                                                        SendLikedWallpaper(
+                                                          id: BlocProvider.of<
+                                                                          PaginationBloc>(
+                                                                      context)
+                                                                  .allWallpaper?[
+                                                                      index]
+                                                                  .id ??
+                                                              "",
+                                                          userId:
+                                                              UserPreferences
+                                                                  .getUserId(),
+                                                          name: BlocProvider.of<
+                                                                          PaginationBloc>(
+                                                                      context)
+                                                                  .allWallpaper?[
+                                                                      index]
+                                                                  .name ??
+                                                              "",
+                                                          category: BlocProvider
+                                                                      .of<PaginationBloc>(
+                                                                          context)
+                                                                  .allWallpaper?[
+                                                                      index]
+                                                                  .category ??
+                                                              "",
+                                                          wallpaper: BlocProvider
+                                                                      .of<PaginationBloc>(
+                                                                          context)
+                                                                  .allWallpaper?[
+                                                                      index]
+                                                                  .wallpaper ??
+                                                              "",
+                                                        ),
+                                                      );
+                                                      setState(() {});
+                                                    } else {
+                                                      likedWallpaper.remove(
+                                                          BlocProvider.of<PaginationBloc>(
+                                                                      context)
+                                                                  .allWallpaper?[
+                                                                      index]
+                                                                  .id ??
+                                                              "");
+                                                      BlocProvider.of<
+                                                                  CollectionBlocBloc>(
+                                                              context)
+                                                          .add(
+                                                        SendDissLikeWallpaper(
+                                                          id: BlocProvider.of<
+                                                                          PaginationBloc>(
+                                                                      context)
+                                                                  .allWallpaper?[
+                                                                      index]
+                                                                  .id ??
+                                                              "",
+                                                          userId:
+                                                              UserPreferences
+                                                                  .getUserId(),
+                                                        ),
+                                                      );
+                                                      setState(() {});
+                                                    }
+                                                  }
+                                                },
+                                                child: SvgPicture.asset(
+                                                  !likedWallpaper.contains(
+                                                          BlocProvider.of<PaginationBloc>(
+                                                                      context)
+                                                                  .allWallpaper?[
+                                                                      index]
+                                                                  .id ??
+                                                              "")
+                                                      ? SVGIconManager.liked
+                                                      : SVGIconManager.favorite,
+                                                  color: !likedWallpaper.contains(
+                                                          BlocProvider.of<PaginationBloc>(
+                                                                      context)
+                                                                  .allWallpaper?[
+                                                                      index]
+                                                                  .id ??
+                                                              "")
+                                                      ? ColorManager.red
+                                                      : ColorManager.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    placeholder: (context, url) => const Center(
+                                      child: SpinKitCircle(
+                                          color: ColorManager.white),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
             ],
           ),
         ),

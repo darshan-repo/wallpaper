@@ -24,7 +24,6 @@ class CollectionBlocBloc
     on<DeleteDownloadWallpaper>(_deleteDownloadWallpaper);
     on<SendDissLikeWallpaper>(_sendDissLikedWallpaper);
     on<ReportAndIssue>(_reportAndIssue);
-    on<GetTrendingWallpaper>(_getTrendingWallpaper);
     on<EnabledNotification>(_postEnabledNotification);
     on<DisableNotification>(_postDisableNotification);
   }
@@ -239,25 +238,6 @@ class CollectionBlocBloc
       });
       log("RESPONSE :: $data");
       if (data["data"] != null) {
-        emit(CollectionLoaded());
-      } else {
-        emit(CollectionLoaded());
-      }
-    } catch (e) {
-      log(e.toString());
-      emit(CollectionError());
-    }
-  }
-
-  GetTrendingWallpaperModel? getTrendingWallpaperModel;
-
-  _getTrendingWallpaper(
-      GetTrendingWallpaper event, Emitter<CollectionBlocState> emit) async {
-    try {
-      Map<String, dynamic> data = await BaseApi.getRequest("getAllLikesData");
-      log("RESPONSE :: $data");
-      if (data["message"] == "all categories") {
-        getTrendingWallpaperModel = GetTrendingWallpaperModel.fromJson(data);
         emit(CollectionLoaded());
       } else {
         emit(CollectionLoaded());

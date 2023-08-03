@@ -4,6 +4,7 @@ import 'package:walper/libs.dart';
 
 class SetWallpaperScreen extends StatefulWidget {
   final String imgURL, uploaded;
+
   const SetWallpaperScreen(
       {super.key, required this.imgURL, required this.uploaded});
 
@@ -14,6 +15,7 @@ class SetWallpaperScreen extends StatefulWidget {
 class _SetWallpaperScreenState extends State<SetWallpaperScreen> {
   bool isSelect = false;
   bool isLiked = false;
+
   @override
   void initState() {
     initPlatformState();
@@ -124,7 +126,7 @@ class _SetWallpaperScreenState extends State<SetWallpaperScreen> {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: imageProvider,
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -325,47 +327,46 @@ class _SetWallpaperScreenState extends State<SetWallpaperScreen> {
   }
 }
 
-
-   // Align(
-          //   alignment: Alignment.bottomRight,
-          //   child: Padding(
-          //     padding: padding(
-          //       paddingType: PaddingType.LTRB,
-          //       left: 0.02.sw,
-          //       right: 0.03.sw,
-          //       bottom: 0.18.sh,
-          //     ),
-          //     child: Column(
-          //       mainAxisAlignment: MainAxisAlignment.end,
-          //       children: [
-          //         GestureDetector(
-          //           onTap: () {
-          //             setState(() {
-          //               isLiked = !isLiked;
-          //             });
-          //           },
-          //           child: isLiked
-          //               ? Icon(
-          //                   Icons.favorite_rounded,
-          //                   size: 0.04.sh,
-          //                   color: ColorManager.red,
-          //                 )
-          //               : Icon(
-          //                   Icons.favorite_border_rounded,
-          //                   size: 0.04.sh,
-          //                   color: ColorManager.white,
-          //                 ),
-          //         ),
-          //         verticalSpace(0.03.sh),
-          //         GestureDetector(
-          //           onTap: () {},
-          //           child: Icon(
-          //             Icons.file_download_outlined,
-          //             size: 0.04.sh,
-          //             color: ColorManager.white,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
+// Align(
+//   alignment: Alignment.bottomRight,
+//   child: Padding(
+//     padding: padding(
+//       paddingType: PaddingType.LTRB,
+//       left: 0.02.sw,
+//       right: 0.03.sw,
+//       bottom: 0.18.sh,
+//     ),
+//     child: Column(
+//       mainAxisAlignment: MainAxisAlignment.end,
+//       children: [
+//         GestureDetector(
+//           onTap: () {
+//             setState(() {
+//               isLiked = !isLiked;
+//             });
+//           },
+//           child: isLiked
+//               ? Icon(
+//                   Icons.favorite_rounded,
+//                   size: 0.04.sh,
+//                   color: ColorManager.red,
+//                 )
+//               : Icon(
+//                   Icons.favorite_border_rounded,
+//                   size: 0.04.sh,
+//                   color: ColorManager.white,
+//                 ),
+//         ),
+//         verticalSpace(0.03.sh),
+//         GestureDetector(
+//           onTap: () {},
+//           child: Icon(
+//             Icons.file_download_outlined,
+//             size: 0.04.sh,
+//             color: ColorManager.white,
+//           ),
+//         ),
+//       ],
+//     ),
+//   ),
+// ),

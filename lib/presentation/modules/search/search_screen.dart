@@ -203,8 +203,8 @@ class _SearchScreenState extends State<SearchScreen>
                                 itemCount:
                                     BlocProvider.of<CollectionBlocBloc>(context)
                                         .searchWallpaperModel
-                                        ?.wallpaperList!
-                                        .length,
+                                        ?.wallpaperList
+                                        ?.length,
                                 itemBuilder: (context, index) {
                                   var data =
                                       BlocProvider.of<CollectionBlocBloc>(
@@ -233,7 +233,7 @@ class _SearchScreenState extends State<SearchScreen>
                                               BorderRadius.circular(10),
                                           color: Colors.white,
                                           image: DecorationImage(
-                                            fit: BoxFit.fill,
+                                            fit: BoxFit.cover,
                                             image: imageProvider,
                                           ),
                                         ),
@@ -402,7 +402,7 @@ class _SearchScreenState extends State<SearchScreen>
                                                 BorderRadius.circular(10),
                                             color: Colors.white,
                                             image: DecorationImage(
-                                              fit: BoxFit.fill,
+                                              fit: BoxFit.cover,
                                               image: imageProvider,
                                             ),
                                           ),
@@ -613,7 +613,7 @@ class _SearchScreenState extends State<SearchScreen>
                                                 BorderRadius.circular(25),
                                             image: DecorationImage(
                                               image: imageProvider,
-                                              fit: BoxFit.fill,
+                                              fit: BoxFit.cover,
                                             ),
                                           ),
                                           child: Container(
@@ -687,6 +687,8 @@ class _SearchScreenState extends State<SearchScreen>
                                         child: SizedBox(
                                           height: 0.19.sh,
                                           child: CachedNetworkImage(
+                                            memCacheWidth: 10,
+                                            memCacheHeight: 10,
                                             imageUrl: BaseApi.imgUrl + image,
                                             imageBuilder:
                                                 (context, imageProvider) =>
@@ -701,7 +703,7 @@ class _SearchScreenState extends State<SearchScreen>
                                                     BorderRadius.circular(25),
                                                 image: DecorationImage(
                                                   image: imageProvider,
-                                                  fit: BoxFit.fill,
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
                                               child: Container(
