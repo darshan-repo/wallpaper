@@ -29,6 +29,7 @@ class ImageAssetManager {
   static const notification = "$imagePath/notification.png";
   static const setWallpaperDone = "$imagePath/set_wallpaper_done.png";
   static const deleteDownloads = "$imagePath/delete_downloads.png";
+  static const mobile = "$imagePath/mobile.png";
 }
 
 class ImageJPGManager {

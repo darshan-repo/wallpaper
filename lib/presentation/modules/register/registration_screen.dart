@@ -153,26 +153,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           ),
                         ),
                         verticalSpace(0.025.sh),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            materialButton(
-                              onPressed: () {},
-                              minWidth: 0.05.sw,
-                              buttonColor:
-                                  const Color.fromRGBO(59, 130, 246, 1),
-                              assetName: ImageAssetManager.facebook,
-                              imageColor: ColorManager.white,
-                              buttonText: AppString.facebook,
-                            ),
-                            materialButton(
-                              onPressed: () {},
-                              minWidth: 70,
-                              buttonColor: ColorManager.primaryColor,
-                              assetName: ImageAssetManager.google,
-                              buttonText: AppString.google,
-                            ),
-                          ],
+                        materialButton(
+                          onPressed: () {},
+                          buttonColor: ColorManager.primaryColor,
+                          assetName: ImageAssetManager.google,
+                          buttonText: AppString.signInWithGoogle,
                         ),
                         verticalSpace(0.035.sh),
                         Row(

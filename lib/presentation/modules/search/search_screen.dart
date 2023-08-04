@@ -69,6 +69,7 @@ class _SearchScreenState extends State<SearchScreen>
         quality: 60,
         name: DateTime.now().toString(),
       );
+      successSnackbar("Wallpaper successfully downloaded!");
     } else {
       log("Failed to load image: ${response.statusCode}");
     }
@@ -209,10 +210,10 @@ class _SearchScreenState extends State<SearchScreen>
                                   var data =
                                       BlocProvider.of<CollectionBlocBloc>(
                                               context)
-                                          .searchWallpaperModel!
-                                          .wallpaperList?[index];
+                                          .searchWallpaperModel
+                                          ?.wallpaperList?[index];
                                   final image =
-                                      data!.wallpaper!.split("/").last;
+                                      data?.wallpaper!.split("/").last;
                                   return GestureDetector(
                                     onTap: () {
                                       Get.to(
@@ -220,12 +221,13 @@ class _SearchScreenState extends State<SearchScreen>
                                           imgURL:
                                               BaseApi.imgUrl + image.toString(),
                                           uploaded:
-                                              '${data.createdAt!.day.toString()}/${data.createdAt!.month.toString()}/${data.createdAt!.year.toString()}',
+                                              '${data?.createdAt!.day.toString()}/${data?.createdAt!.month.toString()}/${data?.createdAt!.year.toString()}',
                                         ),
                                       );
                                     },
                                     child: CachedNetworkImage(
-                                      imageUrl: BaseApi.imgUrl + image,
+                                      imageUrl:
+                                          BaseApi.imgUrl + image.toString(),
                                       imageBuilder: (context, imageProvider) =>
                                           Container(
                                         decoration: BoxDecoration(
@@ -261,24 +263,25 @@ class _SearchScreenState extends State<SearchScreen>
                                                           const LoginScreen());
                                                     } else {
                                                       downloadAndSaveImageToGallery(
-                                                          imageUrl:
-                                                              BaseApi.imgUrl +
-                                                                  image);
+                                                          imageUrl: BaseApi
+                                                                  .imgUrl +
+                                                              image.toString());
                                                       BlocProvider.of<
                                                                   CollectionBlocBloc>(
                                                               context)
                                                           .add(
                                                         SendDownloadWallpaper(
-                                                          id: data.id ?? "",
+                                                          id: data?.id ?? "",
                                                           userId:
                                                               UserPreferences
                                                                   .getUserId(),
-                                                          name: data.name ?? "",
+                                                          name:
+                                                              data?.name ?? "",
                                                           category:
-                                                              data.category ??
+                                                              data?.category ??
                                                                   "",
                                                           wallpaper:
-                                                              data.wallpaper ??
+                                                              data?.wallpaper ??
                                                                   "",
                                                         ),
                                                       );
@@ -300,38 +303,38 @@ class _SearchScreenState extends State<SearchScreen>
                                                     } else {
                                                       if (!likedWallpaper
                                                           .contains(
-                                                              data.id ?? "")) {
-                                                        likedWallpaper
-                                                            .add(data.id ?? "");
+                                                              data?.id ?? "")) {
+                                                        likedWallpaper.add(
+                                                            data?.id ?? "");
                                                         BlocProvider.of<
                                                                     CollectionBlocBloc>(
                                                                 context)
                                                             .add(
                                                           SendLikedWallpaper(
-                                                            id: data.id ?? "",
+                                                            id: data?.id ?? "",
                                                             userId:
                                                                 UserPreferences
                                                                     .getUserId(),
-                                                            name:
-                                                                data.name ?? "",
+                                                            name: data?.name ??
+                                                                "",
                                                             category:
-                                                                data.category ??
+                                                                data?.category ??
                                                                     "",
                                                             wallpaper:
-                                                                data.wallpaper ??
+                                                                data?.wallpaper ??
                                                                     "",
                                                           ),
                                                         );
                                                         setState(() {});
                                                       } else {
                                                         likedWallpaper.remove(
-                                                            data.id ?? "");
+                                                            data?.id ?? "");
                                                         BlocProvider.of<
                                                                     CollectionBlocBloc>(
                                                                 context)
                                                             .add(
                                                           SendDissLikeWallpaper(
-                                                            id: data.id ?? "",
+                                                            id: data?.id ?? "",
                                                             userId:
                                                                 UserPreferences
                                                                     .getUserId(),
@@ -343,12 +346,12 @@ class _SearchScreenState extends State<SearchScreen>
                                                   },
                                                   child: SvgPicture.asset(
                                                     likedWallpaper
-                                                            .contains(data.id)
+                                                            .contains(data?.id)
                                                         ? SVGIconManager.liked
                                                         : SVGIconManager
                                                             .favorite,
                                                     color: likedWallpaper
-                                                            .contains(data.id)
+                                                            .contains(data?.id)
                                                         ? ColorManager.red
                                                         : ColorManager.white,
                                                   ),
@@ -595,7 +598,23 @@ class _SearchScreenState extends State<SearchScreen>
                                           .split("/")
                                           .last;
                                   return GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      Get.to(
+                                        () => CollectionViewScreen(
+                                            categoriesData: BlocProvider.of<
+                                                    CollectionBlocBloc>(context)
+                                                .getWallpaperModel
+                                                ?.categories?[index]
+                                                .categoryDatas,
+                                            categoryName: BlocProvider.of<
+                                                            CollectionBlocBloc>(
+                                                        context)
+                                                    .getWallpaperModel
+                                                    ?.categories?[index]
+                                                    .name ??
+                                                ""),
+                                      );
+                                    },
                                     child: SizedBox(
                                       height: 0.19.sh,
                                       child: CachedNetworkImage(
@@ -683,7 +702,20 @@ class _SearchScreenState extends State<SearchScreen>
                                               .split("/")
                                               .last;
                                       return GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          Get.to(
+                                            () => CollectionViewScreen(
+                                                categoriesData:
+                                                    searchCategoryWallpaperModel[
+                                                            index]
+                                                        .categoryDatas,
+                                                categoryName:
+                                                    searchCategoryWallpaperModel[
+                                                                index]
+                                                            .name ??
+                                                        ""),
+                                          );
+                                        },
                                         child: SizedBox(
                                           height: 0.19.sh,
                                           child: CachedNetworkImage(

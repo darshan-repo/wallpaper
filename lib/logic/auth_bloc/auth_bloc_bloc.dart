@@ -17,6 +17,9 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     on<ResetPassWord>(_resetPassword);
     on<ResendOtp>(_resendOtp);
     on<Logout>(_logout);
+    on<LoginWithGoogle>(_loginWithGoogle);
+    on<LoginWithGoogleOtpSend>(_loginWithGoogleOtpVerify);
+    on<LoginWithGoogleResendOtp>(_loginWithGoogleResendOtp);
   }
 
   _userSignUp(UserSignUp event, Emitter<AuthBlocState> emit) async {
@@ -27,19 +30,14 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         "email": event.email,
         "password": event.passWord
       });
-      log("REASONABLE ::$data");
       if (data["message"] == "User created") {
         Get.to(const LoginScreen());
-
         emit(AuthBlocLoaded());
       } else {
         errorSnackbar(data["message"]);
         emit(AuthBlocLoaded());
       }
     } catch (e) {
-      errorSnackbar(e.toString());
-
-      log(e.toString());
       emit(AuthBlocError());
     }
   }
@@ -52,12 +50,11 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         "password": event.passWord,
         "deviceId": event.fcmToken
       });
-      log("REASONABLE ::$data");
       if (data["message"] != null) {
         UserPreferences.setUserId(data["user"]["id"]);
         UserPreferences.setUserEmail(data["user"]["email"]);
         if (data["user"]["isverified"] == true) {
-          Get.to(() => const BottomNavigationBarScreen());
+          Get.offAll(() => const BottomNavigationBarScreen());
         } else {
           Get.to(OTPVarificationScreen(
             isForgot: false,
@@ -67,12 +64,9 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         }
         emit(AuthBlocLoaded());
       } else {
-        errorSnackbar(data["message"]);
         emit(AuthBlocLoaded());
       }
     } catch (e) {
-      errorSnackbar(e.toString());
-      log(e.toString());
       emit(AuthBlocError());
     }
   }
@@ -85,20 +79,14 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         "Otp": event.otp,
         "deviceId": event.fcmToken
       });
-      log("REASONABLE ::$data");
       if (data["message"] == "user login successfully") {
-        log("USER ID::: ${data["user"]["id"]}");
-        log("TOKEN::::${data["token"]}");
         UserPreferences.setUserId(data["user"]["id"]);
         Get.off(const BottomNavigationBarScreen());
         emit(AuthBlocLoaded());
       } else {
-        errorSnackbar(data["message"]);
         emit(AuthBlocLoaded());
       }
     } catch (e) {
-      errorSnackbar(e.toString());
-      log(e.toString());
       emit(AuthBlocError());
     }
   }
@@ -108,7 +96,6 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     try {
       Map<String, dynamic> data = await BaseApi.postRequest("forgetotpsent",
           data: {"email": event.email});
-      log("REASONABLE ::$data");
       if (data["message"] == "otp sent successfully") {
         Get.to(OTPVarificationScreen(isForgot: true, email: event.email));
         emit(AuthBlocLoaded());
@@ -117,19 +104,74 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         showDialog(
           context: event.context,
           barrierDismissible: false,
-          builder: (context) => alertDialog(
-            context,
-            onPressed: () {
-              Navigator.pop(context);
-              Get.to(const RegistrationScreen());
-            },
+          builder: (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            backgroundColor: ColorManager.primaryColor,
+            iconPadding: padding(
+              paddingType: PaddingType.LTRB,
+              left: 0.04.sw,
+              right: 0.04.sw,
+            ),
+            icon: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.asset(
+                  ImageAssetManager.emailError,
+                  scale: 0.009.sh,
+                ),
+                horizontalSpace(0.16.sw),
+                Container(
+                  height: 0.05.sh,
+                  width: 0.1.sw,
+                  margin: margin(
+                    marginType: MarginType.top,
+                    marginValue: 0.01.sh,
+                  ),
+                  decoration: BoxDecoration(
+                    color: ColorManager.secondaryColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Icon(
+                      Icons.close,
+                      color: ColorManager.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            actionsPadding: padding(
+              paddingType: PaddingType.all,
+              paddingValue: 0.02.sh,
+            ),
+            content: Text(
+              'No Account found registered with your email address',
+              textAlign: TextAlign.center,
+              style: myTheme.textTheme.labelMedium,
+            ),
+            elevation: 2,
+            shadowColor: ColorManager.white,
+            actions: [
+              materialButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Get.to(() => const RegistrationScreen());
+                },
+                buttonColor: const Color.fromRGBO(160, 152, 250, 1),
+                buttonText: AppString.signUp,
+              ),
+            ],
           ),
         );
         emit(AuthBlocLoaded());
       }
     } catch (e) {
-      errorSnackbar(e.toString());
-      log(e.toString());
       emit(AuthBlocError());
     }
   }
@@ -139,7 +181,6 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     try {
       Map<String, dynamic> data = await BaseApi.postRequest("forgetotp",
           data: {"email": event.email, "forgetOtp": event.otp});
-      log("REASONABLE ::$data");
       if (data["message"] == "otp match") {
         Get.to(SetPasswordScreen(email: event.email));
         emit(AuthBlocLoaded());
@@ -148,8 +189,6 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         emit(AuthBlocLoaded());
       }
     } catch (e) {
-      errorSnackbar(e.toString());
-      log(e.toString());
       emit(AuthBlocError());
     }
   }
@@ -163,7 +202,6 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         "password": event.password,
         "confirmPassword": event.confirmPassword
       });
-      log("REASONABLE ::$data");
       if (data["message"] == "password change successfully") {
         Get.off(const ChangePasswordScreen());
         emit(AuthBlocLoaded());
@@ -172,8 +210,6 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         emit(AuthBlocLoaded());
       }
     } catch (e) {
-      errorSnackbar(e.toString());
-      log(e.toString());
       emit(AuthBlocError());
     }
   }
@@ -183,8 +219,6 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     try {
       Map<String, dynamic> data = await BaseApi.postRequest("sentotp",
           data: {"email": event.email, 'password': event.password});
-
-      log("REASONABLE ::$data");
       if (data["message"] == "otp sent successfully") {
         successSnackbar('OTP Resend Successfully.');
         emit(AuthBlocLoaded());
@@ -193,8 +227,6 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         emit(AuthBlocLoaded());
       }
     } catch (e) {
-      errorSnackbar(e.toString());
-      log(e.toString());
       emit(AuthBlocError());
     }
   }
@@ -204,7 +236,6 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     try {
       Map<String, dynamic> data =
           await BaseApi.postRequest("singout", data: {"email": event.email});
-      log("REASONABLE ::$data");
       if (data["message"] == "user logout successfully") {
         emit(AuthBlocLoaded());
       } else {
@@ -212,8 +243,88 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         emit(AuthBlocLoaded());
       }
     } catch (e) {
-      errorSnackbar(e.toString());
-      log(e.toString());
+      emit(AuthBlocError());
+    }
+  }
+
+  _loginWithGoogle(LoginWithGoogle event, Emitter<AuthBlocState> emit) async {
+    emit(AuthBlocLoading());
+    try {
+      Map<String, dynamic> data =
+          await BaseApi.postRequest("socialVerification", data: {
+        "email": event.email,
+        "username": event.username,
+        "deviceId": event.deviceId
+      });
+      if (data["message"] != null) {
+        if (data["user"]["isverified"] == true) {
+          UserPreferences.setUserId(data["user"]["id"]);
+          UserPreferences.setUserEmail(data["user"]["email"]);
+          print(
+              '==============User Id : =======>>${UserPreferences.getUserId()}');
+          print(
+              '==============Email Id : =======>>${UserPreferences.getUserEmail()}');
+          Get.offAll(() => const BottomNavigationBarScreen());
+        } else {
+          Get.to(() => OTPVarificationScreen(
+                isGoogle: false,
+                isForgot: false,
+                email: event.email,
+                username: event.username,
+              ));
+        }
+        emit(AuthBlocLoaded());
+      } else {
+        emit(AuthBlocLoaded());
+      }
+    } catch (e, s) {
+      log(s.toString());
+      emit(AuthBlocError());
+    }
+  }
+
+  _loginWithGoogleOtpVerify(
+      LoginWithGoogleOtpSend event, Emitter<AuthBlocState> emit) async {
+    emit(AuthBlocLoading());
+    try {
+      Map<String, dynamic> data = await BaseApi.postRequest("socialLogin",
+          data: {
+            "email": event.email,
+            "Otp": event.otp,
+            "deviceId": event.deviceId
+          });
+      if (data["message"] != null) {
+        UserPreferences.setUserId(data["user"]["id"]);
+        UserPreferences.setUserEmail(data["user"]["email"]);
+        print(
+            '==============User Id : =======>>${UserPreferences.getUserId()}');
+        print(
+            '==============Email Id : =======>>${UserPreferences.getUserEmail()}');
+        Get.offAll(const BottomNavigationBarScreen());
+        emit(AuthBlocLoaded());
+      } else {
+        emit(AuthBlocLoaded());
+      }
+    } catch (e) {
+      emit(AuthBlocError());
+    }
+  }
+
+  _loginWithGoogleResendOtp(
+      LoginWithGoogleResendOtp event, Emitter<AuthBlocState> emit) async {
+    emit(AuthBlocLoading());
+    try {
+      Map<String, dynamic> data =
+          await BaseApi.postRequest("socialVerification", data: {
+        "email": event.email,
+        "username": event.username,
+        "deviceId": event.deviceId
+      });
+      if (data["message"] != null) {
+        successSnackbar('OTP Resend Successfully.');
+      }
+    } catch (e, s) {
+      log(s.toString());
       emit(AuthBlocError());
     }
   }

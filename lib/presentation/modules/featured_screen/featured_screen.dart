@@ -1,10 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
-import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
-import 'package:http/http.dart' as http;
 
 class FeaturedScreen extends StatefulWidget {
   const FeaturedScreen({super.key});
@@ -45,20 +42,6 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
       }
     }
     super.initState();
-  }
-
-  downloadAndSaveImageToGallery({required String imageUrl}) async {
-    var response = await http.get(Uri.parse(imageUrl));
-    if (response.statusCode == 200) {
-      var imageData = Uint8List.fromList(response.bodyBytes);
-      await ImageGallerySaver.saveImage(
-        imageData,
-        quality: 1080,
-        name: DateTime.now().toString(),
-      );
-    } else {
-      log("Failed to load image: ${response.statusCode}");
-    }
   }
 
   @override

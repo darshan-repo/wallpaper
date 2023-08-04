@@ -2,6 +2,7 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
+import 'package:walper/presentation/common/google_auth.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
   const BottomNavigationBarScreen({Key? key}) : super(key: key);
@@ -53,6 +54,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
     const SearchScreen(),
     const SettingScreen(),
   ];
+
   final advancedDrawerController = AdvancedDrawerController();
 
   @override
@@ -121,7 +123,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                   if (userID.isEmpty) {
                     warningSnackbar('User not found. please login to continue');
                   } else {
-                    Get.to(const FavoriteScreen());
+                    Get.offAll(const FavoriteScreen());
                   }
                 },
                 splashColor: ColorManager.transparentColor,
@@ -139,7 +141,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                     BlocProvider.of<CollectionBlocBloc>(context).add(
                       GetDownloadWallpaper(id: UserPreferences.getUserId()),
                     );
-                    Get.to(const DownloadScreen());
+                    Get.offAll(const DownloadScreen());
                   }
                 },
                 splashColor: ColorManager.transparentColor,
@@ -151,7 +153,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
               ),
               ListTile(
                 onTap: () {
-                  Get.to(const PrivacyPolicyScreen());
+                  Get.offAll(const PrivacyPolicyScreen());
                 },
                 splashColor: ColorManager.transparentColor,
                 leading: SvgPicture.asset(
@@ -162,7 +164,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
               ),
               ListTile(
                 onTap: () {
-                  Get.to(const ReportAnIssueScreen());
+                  Get.offAll(const ReportAnIssueScreen());
                 },
                 splashColor: ColorManager.transparentColor,
                 leading: Image.asset(
@@ -179,13 +181,14 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                   setState(() {
                     if (userID.isNotEmpty) {
                       UserPreferences().reset();
+                      Authentication.signOut(context: context);
                       BlocProvider.of<AuthBlocBloc>(context).add(
                         Logout(
                           email: UserPreferences.getUserEmail(),
                         ),
                       );
                     } else {
-                      Get.offAll(const LoginScreen());
+                      Get.offAll(() => const LoginScreen());
                     }
                   });
                 },

@@ -56,9 +56,10 @@ class ResetPassWord extends AuthBlocEvent {
   final String password;
   final String confirmPassword;
 
-  ResetPassWord({required this.email,
-    required this.password,
-    required this.confirmPassword});
+  ResetPassWord(
+      {required this.email,
+      required this.password,
+      required this.confirmPassword});
 }
 
 class ResendOtp extends AuthBlocEvent {
@@ -71,9 +72,39 @@ class ResendOtp extends AuthBlocEvent {
   });
 }
 
-
 class Logout extends AuthBlocEvent {
   final String email;
 
   Logout({required this.email});
+}
+
+class LoginWithGoogle extends AuthBlocEvent {
+  final String email, username, deviceId;
+
+  LoginWithGoogle({
+    required this.email,
+    required this.username,
+    required this.deviceId,
+  });
+}
+
+class LoginWithGoogleOtpSend extends AuthBlocEvent {
+  final String email, deviceId;
+  final int otp;
+
+  LoginWithGoogleOtpSend({
+    required this.email,
+    required this.otp,
+    required this.deviceId,
+  });
+}
+
+class LoginWithGoogleResendOtp extends AuthBlocEvent {
+  final String email, username, deviceId;
+
+  LoginWithGoogleResendOtp({
+    required this.email,
+    required this.username,
+    required this.deviceId,
+  });
 }

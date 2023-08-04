@@ -48,9 +48,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 verticalSpace(0.15.sh),
                 materialButton(
                   onPressed: () {
-                    Get.to(const LoginScreen());
+                    Get.offAll(const LoginScreen());
                   },
-                  buttonColor: const Color(0xFFA098FA),
+                  buttonColor: const Color.fromRGBO(160, 152, 250, 1),
                   buttonText: AppString.login,
                 ),
               ],

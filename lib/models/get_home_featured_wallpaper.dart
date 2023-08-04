@@ -39,15 +39,12 @@ class Category {
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  // List<CategoryData>? categoryDatas;
-
   Category({
     this.id,
     this.name,
     this.background,
     this.createdAt,
     this.updatedAt,
-    // this.categoryDatas,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
@@ -60,10 +57,6 @@ class Category {
         updatedAt: json["updatedAt"] == null
             ? null
             : DateTime.parse(json["updatedAt"]),
-        // categoryDatas: json["categoryDatas"] == null
-        //     ? []
-        //     : List<CategoryData>.from(
-        //         json["categoryDatas"]!.map((x) => CategoryData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -72,52 +65,5 @@ class Category {
         "background": background,
         "createdAt": createdAt?.toIso8601String(),
         "updatedAt": updatedAt?.toIso8601String(),
-        // "categoryDatas": categoryDatas == null
-        //     ? []
-        //     : List<dynamic>.from(categoryDatas!.map((x) => x.toJson())),
       };
 }
-//
-// class CategoryData {
-//   String? id;
-//   String? categoryId;
-//   String? name;
-//   String? category;
-//   String? wallpaper;
-//   DateTime? createdAt;
-//   DateTime? updatedAt;
-//
-//   CategoryData({
-//     this.id,
-//     this.categoryId,
-//     this.name,
-//     this.category,
-//     this.wallpaper,
-//     this.createdAt,
-//     this.updatedAt,
-//   });
-//
-//   factory CategoryData.fromJson(Map<String, dynamic> json) => CategoryData(
-//         id: json["id"],
-//         categoryId: json["categoryId"],
-//         name: json["name"],
-//         category: json["category"],
-//         wallpaper: json["wallpaper"],
-//         createdAt: json["createdAt"] == null
-//             ? null
-//             : DateTime.parse(json["createdAt"]),
-//         updatedAt: json["updatedAt"] == null
-//             ? null
-//             : DateTime.parse(json["updatedAt"]),
-//       );
-//
-//   Map<String, dynamic> toJson() => {
-//         "id": id,
-//         "categoryId": categoryId,
-//         "name": name,
-//         "category": category,
-//         "wallpaper": wallpaper,
-//         "createdAt": createdAt?.toIso8601String(),
-//         "updatedAt": updatedAt?.toIso8601String(),
-//       };
-// }

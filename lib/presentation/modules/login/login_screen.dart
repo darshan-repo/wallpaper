@@ -1,7 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:walper/libs.dart';
+import 'package:walper/presentation/common/google_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -128,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           buttonColor: const Color.fromRGBO(136, 126, 249, 1),
                           buttonText: AppString.login,
                         ),
-                        verticalSpace(0.05.sh),
+                        verticalSpace(0.1.sh),
                         Align(
                           alignment: Alignment.center,
                           child: Text(
@@ -136,22 +141,28 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: myTheme.textTheme.labelSmall,
                           ),
                         ),
-                        verticalSpace(0.025.sh),
+                        verticalSpace(0.035.sh),
                         materialButton(
-                          onPressed: () {},
-                          buttonColor: const Color.fromRGBO(59, 130, 246, 1),
-                          assetName: ImageAssetManager.facebook,
-                          imageColor: ColorManager.white,
-                          buttonText: AppString.signInWithFacebook,
-                        ),
-                        verticalSpace(0.025.sh),
-                        materialButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final fcmToken = await FirebaseMessaging.instance
+                                .getToken(
+                                    vapidKey:
+                                        "BMddJ7CcjA7Or2PPl-TwHRW_hWheRqnyxdzRvkRH3u7uxEjIqJvDCmDuWJpV5B-GGCvJfdqpmvC-yUS5qVXF1WE");
+                            User? user = await Authentication.signInWithGoogle(
+                                context: context);
+                            BlocProvider.of<AuthBlocBloc>(context).add(
+                              LoginWithGoogle(
+                                email: user!.email ?? "",
+                                username: user.displayName.toString(),
+                                deviceId: fcmToken!,
+                              ),
+                            );
+                          },
                           buttonColor: ColorManager.primaryColor,
                           assetName: ImageAssetManager.google,
                           buttonText: AppString.signInWithGoogle,
                         ),
-                        verticalSpace(0.035.sh),
+                        verticalSpace(0.05.sh),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

@@ -30,14 +30,11 @@ class CollectionBlocBloc
 
   SearchWallpaperModel? searchWallpaperModel;
 
-  int page = 1;
-
   _getSearchWallPaper(
       GetSearchWallpaper event, Emitter<CollectionBlocState> emit) async {
     emit(CollectionLoading());
     try {
       Map<String, dynamic> data = await BaseApi.getRequest("wallpaperlist");
-      log("RESPONSE :: $data");
       if (data["message"] != null) {
         searchWallpaperModel = SearchWallpaperModel.fromJson(data);
         emit(CollectionLoaded());
@@ -56,7 +53,6 @@ class CollectionBlocBloc
     emit(CollectionLoading());
     try {
       Map<String, dynamic> data = await BaseApi.getRequest("allcategories");
-      log("RESPONSE :: $data");
       if (data["message"] == "all categories") {
         getWallpaperModel = GetWallpaperModel.fromJson(data);
         emit(CollectionLoaded());
@@ -73,10 +69,9 @@ class CollectionBlocBloc
 
   _getHomeFeatured(
       GetHomeFeatured event, Emitter<CollectionBlocState> emit) async {
-    // emit(CollectionLoading());
+    emit(CollectionLoading());
     try {
       Map<String, dynamic> data = await BaseApi.getRequest("allcategories");
-      log("RESPONSE :: $data");
       if (data["message"] != null) {
         getFeaturedWallpaperModel = GetFeaturedWallpaperModel.fromJson(data);
         emit(CollectionLoaded());
@@ -93,7 +88,6 @@ class CollectionBlocBloc
 
   _sendLikedWallpaper(
       SendLikedWallpaper event, Emitter<CollectionBlocState> emit) async {
-    // emit(CollectionLoading());
     try {
       Map<String, dynamic> data =
           await BaseApi.postRequest("like/${event.id}", data: {
@@ -102,7 +96,6 @@ class CollectionBlocBloc
         "category": event.category,
         "wallpaper": event.wallpaper,
       });
-      log("RESPONSE :: $data");
       if (data["data"] != null) {
         add(GetLikedWallpaper());
         sendLikeModelData = SendLikeModel.fromJson(data);
@@ -122,11 +115,9 @@ class CollectionBlocBloc
 
   _getLikedWallpaper(
       GetLikedWallpaper event, Emitter<CollectionBlocState> emit) async {
-    // emit(CollectionLoading());
     try {
       Map<String, dynamic> data = await BaseApi.getRequest(
           "getLikesByUser/${UserPreferences.getUserId()}");
-      log("RESPONSE :: $data");
       if (data["message"] == "likes fetched") {
         getLikedModel = GetLikeModel.fromJson(data);
         emit(CollectionLoaded());
@@ -146,7 +137,6 @@ class CollectionBlocBloc
       Map<String, dynamic> data = await BaseApi.postRequest(
           "removeLike/${event.id}",
           data: {'userId': event.userId});
-      log("RESPONSE :: $data");
       if (data["data"] != null) {
         add(GetLikedWallpaper());
         emit(CollectionLoaded());
@@ -173,7 +163,6 @@ class CollectionBlocBloc
         "category": event.category,
         "wallpaper": event.wallpaper,
       });
-      log("RESPONSE :: $data");
       if (data["data"] != null) {
         sendDownloadModel = SendDownloadModel.fromJson(data);
         emit(CollectionLoaded());
@@ -194,7 +183,6 @@ class CollectionBlocBloc
     try {
       Map<String, dynamic> data =
           await BaseApi.getRequest("getDownloadsByUser/${event.id}");
-      log("RESPONSE :: $data");
       if (data["message"] == "downloads fetched") {
         getDownloadModel = GetDownloadModel.fromJson(data);
         emit(CollectionLoaded());
@@ -215,7 +203,6 @@ class CollectionBlocBloc
       Map<String, dynamic> data = await BaseApi.postRequest(
           "removeDownload/${event.id}",
           data: {'userId': event.userId});
-      log("RESPONSE :: $data");
       if (data["message"] == "downloaded wallpaper removed") {
         emit(CollectionLoaded());
       } else {
@@ -236,7 +223,6 @@ class CollectionBlocBloc
         "subject": event.subject,
         "message": event.message
       });
-      log("RESPONSE :: $data");
       if (data["data"] != null) {
         emit(CollectionLoaded());
       } else {
@@ -256,7 +242,6 @@ class CollectionBlocBloc
         "email": event.email,
         "deviceId": event.deviceId,
       });
-      log("RESPONSE :: $data");
       if (data["data"] != null) {
         emit(CollectionLoaded());
       } else {
@@ -275,7 +260,6 @@ class CollectionBlocBloc
           await BaseApi.postRequest("enableNotification", data: {
         "email": event.email,
       });
-      log("RESPONSE :: $data");
       if (data["data"] != null) {
         emit(CollectionLoaded());
       } else {

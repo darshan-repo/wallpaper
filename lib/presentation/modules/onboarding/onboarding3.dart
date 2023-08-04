@@ -32,9 +32,9 @@ class OnBoarding3Screen extends StatelessWidget {
             materialButton(
               onPressed: () async {
                 final SharedPreferences prefs =
-                    await SharedPreferences.getInstance();
+                await SharedPreferences.getInstance();
                 await prefs.setBool("user", true);
-                Get.to(const BottomNavigationBarScreen());
+                Get.offAll(const BottomNavigationBarScreen());
               },
               buttonText: 'Get Started',
             ),

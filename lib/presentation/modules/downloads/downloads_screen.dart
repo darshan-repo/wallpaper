@@ -1,6 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' show get;
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:walper/libs.dart';
 
@@ -161,7 +165,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                           ),
                                         ),
                                         builder: (context) => Container(
-                                          height: 400,
+                                          height: 0.5.sh,
                                           decoration: const BoxDecoration(
                                             borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(20),
@@ -183,52 +187,20 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                               verticalSpace(0.05.sh),
                                               GestureDetector(
                                                 onTap: () {
-                                                  BlocProvider.of<
-                                                              CollectionBlocBloc>(
-                                                          context)
-                                                      .add(
-                                                    SendLikedWallpaper(
-                                                      id: BlocProvider.of<
-                                                                      CollectionBlocBloc>(
-                                                                  context)
-                                                              .getDownloadModel!
-                                                              .downloadData![
-                                                                  index]
-                                                              .id ??
-                                                          "",
-                                                      userId: UserPreferences
-                                                          .getUserId(),
-                                                      name: BlocProvider.of<
-                                                                      CollectionBlocBloc>(
-                                                                  context)
-                                                              .getDownloadModel!
-                                                              .downloadData![
-                                                                  index]
-                                                              .name ??
-                                                          "",
-                                                      category: BlocProvider.of<
-                                                                      CollectionBlocBloc>(
-                                                                  context)
-                                                              .getDownloadModel!
-                                                              .downloadData![
-                                                                  index]
-                                                              .category ??
-                                                          "",
-                                                      wallpaper: BlocProvider
-                                                                  .of<CollectionBlocBloc>(
-                                                                      context)
-                                                              .getDownloadModel!
-                                                              .downloadData![
-                                                                  index]
-                                                              .wallpaper ??
-                                                          "",
-                                                    ),
+                                                  Navigator.pop(context);
+
+                                                  Get.to(
+                                                    () => SetWallpaperScreen(
+                                                        imgURL: BaseApi.imgUrl +
+                                                            image,
+                                                        uploaded:
+                                                            '${BlocProvider.of<CollectionBlocBloc>(context).getDownloadModel!.downloadData![index].createdAt!.day.toString()}/${BlocProvider.of<CollectionBlocBloc>(context).getDownloadModel!.downloadData![index].createdAt!.month.toString()}/${BlocProvider.of<CollectionBlocBloc>(context).getDownloadModel!.downloadData![index].createdAt!.year.toString()}'),
                                                   );
                                                 },
                                                 child: bottomContent(
-                                                  assetName: ImageAssetManager
-                                                      .favorite,
-                                                  title: 'Save to my favorite',
+                                                  assetName:
+                                                      ImageAssetManager.mobile,
+                                                  title: 'Set wallpaper',
                                                 ),
                                               ),
                                               verticalSpace(0.04.sh),
@@ -249,27 +221,46 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                                       backgroundColor:
                                                           ColorManager
                                                               .secondaryColor,
-                                                      icon: Container(
-                                                        margin: margin(
-                                                            marginType:
-                                                                MarginType
-                                                                    .horizontal,
-                                                            marginValue:
-                                                                0.15.sw),
-                                                        height: 0.15.sh,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(25),
-                                                          image:
-                                                              DecorationImage(
-                                                            image: NetworkImage(
-                                                                BaseApi.imgUrl +
-                                                                    image),
-                                                            fit: BoxFit.fill,
+                                                      icon: CachedNetworkImage(
+                                                        imageUrl:
+                                                            BaseApi.imgUrl +
+                                                                image,
+                                                        imageBuilder: (context,
+                                                                imageProvider) =>
+                                                            Container(
+                                                          margin: margin(
+                                                              marginType:
+                                                                  MarginType
+                                                                      .horizontal,
+                                                              marginValue:
+                                                                  0.15.sw),
+                                                          height: 0.15.sh,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        25),
+                                                            image:
+                                                                DecorationImage(
+                                                              image:
+                                                                  imageProvider,
+                                                              fit: BoxFit.cover,
+                                                            ),
                                                           ),
                                                         ),
+                                                        placeholder:
+                                                            (context, url) =>
+                                                                const Center(
+                                                          child: SpinKitCircle(
+                                                              color:
+                                                                  ColorManager
+                                                                      .white),
+                                                        ),
+                                                        errorWidget: (context,
+                                                                url, error) =>
+                                                            const Icon(
+                                                                Icons.error),
                                                       ),
                                                       title: Text(
                                                         'Remove item?',
@@ -360,12 +351,19 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                               verticalSpace(0.04.sh),
                                               GestureDetector(
                                                 onTap: () async {
-                                                  await Share.share(BlocProvider
-                                                          .of<CollectionBlocBloc>(
-                                                              context)
-                                                      .getDownloadModel!
-                                                      .downloadData![index]
-                                                      .wallpaper!);
+                                                  Navigator.pop(context);
+                                                  final response = await get(
+                                                      Uri.parse(BaseApi.imgUrl +
+                                                          image));
+                                                  final directory =
+                                                      await getTemporaryDirectory();
+                                                  File file = await File(
+                                                          '${directory.path}/Image.png')
+                                                      .writeAsBytes(
+                                                          response.bodyBytes);
+                                                  await Share.shareXFiles(
+                                                      [XFile(file.path)]);
+                                                  setState(() {});
                                                 },
                                                 child: bottomContent(
                                                   assetName:
@@ -374,10 +372,17 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                                 ),
                                               ),
                                               verticalSpace(0.04.sh),
-                                              bottomContent(
-                                                assetName: ImageAssetManager
-                                                    .reportAnIssue,
-                                                title: 'Report this',
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Navigator.pop(context);
+                                                  Get.to(() =>
+                                                      const ReportAnIssueScreen());
+                                                },
+                                                child: bottomContent(
+                                                  assetName: ImageAssetManager
+                                                      .reportAnIssue,
+                                                  title: 'Report this',
+                                                ),
                                               ),
                                               verticalSpace(0.02.sh),
                                               const Divider(

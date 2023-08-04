@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:walper/libs.dart';
 
 class UserPreferences {
@@ -14,14 +12,11 @@ class UserPreferences {
   static late SharedPreferences _prefs;
 
   reset() {
-    print("==============>> shared prefs cleared <<===============");
     _prefs.clear();
   }
 
   init() async {
     _prefs = await SharedPreferences.getInstance();
-    print(
-        "===================>> shared preference instance created <<===================");
   }
 
   static getUserId() {
@@ -34,12 +29,10 @@ class UserPreferences {
 
   static setUserId(String id) {
     _prefs.setString("userId", id);
-    print("=======>> userId set <<=======");
   }
 
   static setDeviceToken(String setDeviceToken) {
     _prefs.setString("setDeviceToken", setDeviceToken);
-    print("=======>> setDeviceToken set <<=======");
   }
 
   static setUserEntered(String id) {
@@ -52,7 +45,6 @@ class UserPreferences {
 
   static setUserEmail(String userEmail) {
     _prefs.setString("userEmail", userEmail);
-    print("=======>> userEmail set <<=======");
   }
 
   static getUserEmail() {

@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
-import 'package:walper/logic/notification_bloc/notification_bloc.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});

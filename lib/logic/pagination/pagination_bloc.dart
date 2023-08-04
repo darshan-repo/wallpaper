@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/base_api/base_api.dart';
@@ -43,7 +41,6 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
             await BaseApi.getRequest("allWallpapers?page=$page&limit=$limit");
         if (data["message"] != null) {
           allWallpaperModel = AllWallpaperModel.fromJson(data);
-          log('-------------> Exclusive Wallpaper ${allWallpaper?.length}');
         }
         if (allWallpaperModel?.wallpapers != null) {
           if (allWallpaperModel?.wallpapers?.isEmpty ?? false) {
@@ -52,7 +49,6 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
             allWallpaper ??= [];
             allWallpaper!.addAll(allWallpaperModel!.wallpapers!.toList());
             page++;
-            log('=======>> Page : $page');
             emit(UserListRefreshState());
           }
         } else {
@@ -84,7 +80,6 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
             await BaseApi.getRequest("recent?page=$page&limit=$limit");
         if (data["message"] != null) {
           allWallpaperModel = AllWallpaperModel.fromJson(data);
-          log('-------------> Recent Wallpaper ${allWallpaper?.length}');
         }
         if (allWallpaperModel?.wallpapers != null) {
           if (allWallpaperModel?.wallpapers?.isEmpty ?? false) {
@@ -93,7 +88,6 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
             allWallpaper ??= [];
             allWallpaper!.addAll(allWallpaperModel!.wallpapers!.toList());
             page++;
-            log('=======>> Page : $page');
             emit(UserListRefreshState());
           }
         } else {
@@ -126,7 +120,6 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
             await BaseApi.getRequest("getAllLikesData?page=$page&limit=$limit");
         if (data["message"] != null) {
           allWallpaperModel = AllWallpaperModel.fromJson(data);
-          log('-------------> Trending Wallpaper ${allWallpaper?.length}');
         }
         if (allWallpaperModel?.wallpapers != null) {
           if (allWallpaperModel?.wallpapers?.isEmpty ?? false) {
@@ -135,7 +128,6 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
             allWallpaper ??= [];
             allWallpaper!.addAll(allWallpaperModel!.wallpapers!.toList());
             page++;
-            log('=======>> Page : $page');
             emit(UserListRefreshState());
           }
         } else {
@@ -157,7 +149,22 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
     emit(UserListRefreshState());
     try {
       allWallpaper = [];
-      add(GetExclusivePaginationDataEvent());
+      if (event.events == 'Exclusive') {
+        isNewPageLoading = false;
+        isPageLoading = true;
+        page = 1;
+        add(GetExclusivePaginationDataEvent());
+      } else if (event.events == "Trending") {
+        isNewPageLoading = false;
+        isPageLoading = true;
+        page = 1;
+        add(GetTrendingPaginationDataEvent());
+      } else {
+        isNewPageLoading = false;
+        isPageLoading = true;
+        page = 1;
+        add(GetRecentPaginationDataEvent());
+      }
     } catch (error, stack) {
       debugPrint(error.toString());
       debugPrint(stack.toString());

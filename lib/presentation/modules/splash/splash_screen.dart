@@ -14,13 +14,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   initState() {
     BlocProvider.of<CollectionBlocBloc>(context).add(GetHomeFeatured());
-    // BlocProvider.of<PaginationBloc>(context).add(GetPaginationDataEvent());
     Timer(
       const Duration(seconds: 3),
       () async {
         SharedPreferences pref = await SharedPreferences.getInstance();
         if (pref.getBool("user") == true) {
-          Get.to(const BottomNavigationBarScreen());
+          Get.off(() => const BottomNavigationBarScreen());
         } else {
           Get.to(() => const OnBoarding1Screen());
         }

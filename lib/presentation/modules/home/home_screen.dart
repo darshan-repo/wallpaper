@@ -11,7 +11,8 @@ class HomeScreenInit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PaginationBloc>(
-      create: (context) => PaginationBloc()..add(PaginationInitialEvent()),
+      create: (context) =>
+          PaginationBloc()..add(PaginationInitialEvent(events: "Exclusive")),
       child: const HomeScreen(),
     );
   }
@@ -39,93 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   PaginationBloc? paginationBloc;
 
-  void dropdowndata() {
-    BlocProvider.of<PaginationBloc>(context).page = 1;
-    BlocProvider.of<PaginationBloc>(context).allWallpaper = [];
-
-    paginationBloc = BlocProvider.of<PaginationBloc>(context);
-    try {
-      if (selectedValue == "Exclusive") {
-        try {
-          paginationBloc!.add(GetExclusivePaginationDataEvent());
-          scrollController = ScrollController();
-          scrollController?.addListener(() async {
-            if (scrollController!.offset >=
-                    scrollController!.position.maxScrollExtent &&
-                !scrollController!.position.outOfRange) {
-              paginationBloc!.add(GetExclusivePaginationDataEvent());
-            }
-          });
-        } catch (e, s) {
-          debugPrint("ERROR :: $e");
-          debugPrint("STACK :: $s");
-        }
-        setState(() {});
-      } else if (selectedValue == "Trending") {
-        try {
-          paginationBloc!.add(GetTrendingPaginationDataEvent());
-          scrollController = ScrollController();
-          scrollController?.addListener(() async {
-            if (scrollController!.offset >=
-                    scrollController!.position.maxScrollExtent &&
-                !scrollController!.position.outOfRange) {
-              paginationBloc!.add(GetTrendingPaginationDataEvent());
-            }
-          });
-        } catch (e, s) {
-          debugPrint("ERROR :: $e");
-          debugPrint("STACK :: $s");
-        }
-        setState(() {});
-      } else {
-        try {
-          paginationBloc!.add(GetRecentPaginationDataEvent());
-          scrollController = ScrollController();
-          scrollController?.addListener(() async {
-            if (scrollController!.offset >=
-                    scrollController!.position.maxScrollExtent &&
-                !scrollController!.position.outOfRange) {
-              paginationBloc!.add(GetRecentPaginationDataEvent());
-            }
-          });
-        } catch (e, s) {
-          debugPrint("ERROR :: $e");
-          debugPrint("STACK :: $s");
-        }
-        setState(() {});
-      }
-    } catch (e, s) {
-      debugPrint("ERROR :: $e");
-      debugPrint("STACK :: $s");
-    }
-    if (userId.isNotEmpty) {
-      if (BlocProvider.of<CollectionBlocBloc>(context)
-              .getLikedModel
-              ?.likesData !=
-          null) {
-        for (int i = 0;
-            i <
-                BlocProvider.of<CollectionBlocBloc>(context)
-                    .getLikedModel!
-                    .likesData!
-                    .length;
-            i++) {
-          setState(() {
-            likedWallpaper.add(BlocProvider.of<CollectionBlocBloc>(context)
-                    .getLikedModel
-                    ?.likesData?[i]
-                    .wallpaperId ??
-                "");
-          });
-        }
-      }
-      setState(() {});
-    }
-  }
-
   @override
   void initState() {
-    // BlocProvider.of<CollectionBlocBloc>(context).add(GetHomeFeatured());
     featuredImages();
     BlocProvider.of<PaginationBloc>(context)
         .add(GetExclusivePaginationDataEvent());
@@ -178,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
         quality: 60,
         name: DateTime.now().toString(),
       );
+      successSnackbar("Wallpaper successfully downloaded!");
     } else {
       log("Failed to load image : ${response.statusCode}");
     }
@@ -186,6 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late final String image1, image2, image3, image4;
 
   featuredImages() {
+    BlocProvider.of<CollectionBlocBloc>(context).add(GetHomeFeatured());
     setState(() {
       image1 = BlocProvider.of<CollectionBlocBloc>(context)
               .getFeaturedWallpaperModel
@@ -338,7 +256,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           onChanged: (value) {
                             setState(() {
                               selectedValue = value as String;
-                              dropdowndata();
+                              BlocProvider.of<PaginationBloc>(context).add(
+                                  PaginationInitialEvent(
+                                      events: selectedValue));
+                              // dropdowndata();
                             });
                           },
                         ),
@@ -450,8 +371,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: SizedBox(
                                 height: (index % 4 + 1) * 100,
                                 child: CachedNetworkImage(
-                                  // cacheKey: BaseApi.imgUrl + image.toString(),
-
                                   imageUrl: BaseApi.imgUrl + image.toString(),
                                   memCacheWidth: 10,
                                   memCacheHeight: 10,
@@ -625,20 +544,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         BlocProvider.of<
                                                                     PaginationBloc>(
                                                                 context)
-                                                            .allWallpaper![
+                                                            .allWallpaper?[
                                                                 index]
                                                             .id)
-                                                    ? SVGIconManager.liked
-                                                    : SVGIconManager.favorite,
+                                                    ? SVGIconManager.favorite
+                                                    : SVGIconManager.liked,
                                                 color: !likedWallpaper.contains(
                                                         BlocProvider.of<
                                                                     PaginationBloc>(
                                                                 context)
-                                                            .allWallpaper![
+                                                            .allWallpaper?[
                                                                 index]
                                                             .id)
-                                                    ? ColorManager.red
-                                                    : ColorManager.white,
+                                                    ? ColorManager.white
+                                                    : ColorManager.red,
                                               ),
                                             ),
                                           ],
@@ -882,8 +801,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                       index]
                                                                   .id ??
                                                               "")
-                                                      ? SVGIconManager.liked
-                                                      : SVGIconManager.favorite,
+                                                      ? SVGIconManager.favorite
+                                                      : SVGIconManager.liked,
                                                   color: !likedWallpaper.contains(
                                                           BlocProvider.of<PaginationBloc>(
                                                                       context)
@@ -891,8 +810,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                       index]
                                                                   .id ??
                                                               "")
-                                                      ? ColorManager.red
-                                                      : ColorManager.white,
+                                                      ? ColorManager.white
+                                                      : ColorManager.red,
                                                 ),
                                               ),
                                             ],

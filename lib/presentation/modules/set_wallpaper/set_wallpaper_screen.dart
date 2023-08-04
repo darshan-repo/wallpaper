@@ -14,7 +14,6 @@ class SetWallpaperScreen extends StatefulWidget {
 
 class _SetWallpaperScreenState extends State<SetWallpaperScreen> {
   bool isSelect = false;
-  bool isLiked = false;
 
   @override
   void initState() {
@@ -41,7 +40,8 @@ class _SetWallpaperScreenState extends State<SetWallpaperScreen> {
     showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (context) => const AlertDialog(
+      builder: (context) =>
+      const AlertDialog(
         backgroundColor: ColorManager.transparentColor,
         title: Center(
           child: CircularProgressIndicator(
@@ -113,6 +113,7 @@ class _SetWallpaperScreenState extends State<SetWallpaperScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final String userId = UserPreferences.getUserId();
     return Scaffold(
       backgroundColor: ColorManager.primaryColor,
       body: Stack(
@@ -122,16 +123,17 @@ class _SetWallpaperScreenState extends State<SetWallpaperScreen> {
             width: double.infinity,
             child: CachedNetworkImage(
               imageUrl: widget.imgURL,
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.cover,
+              imageBuilder: (context, imageProvider) =>
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                ),
-              ),
               placeholder: (context, url) =>
-                  const Center(child: SpinKitCircle(color: ColorManager.white)),
+              const Center(child: SpinKitCircle(color: ColorManager.white)),
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
@@ -166,21 +168,21 @@ class _SetWallpaperScreenState extends State<SetWallpaperScreen> {
                   const Spacer(),
                   isSelect
                       ? Container(
-                          height: 0.05.sh,
-                          padding: padding(
-                            paddingType: PaddingType.horizontal,
-                            paddingValue: 0.02.sw,
-                          ),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: ColorManager.secondaryColor.withOpacity(0.8),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            'Uploaded: ${widget.uploaded}',
-                            style: myTheme.textTheme.labelMedium,
-                          ),
-                        )
+                    height: 0.05.sh,
+                    padding: padding(
+                      paddingType: PaddingType.horizontal,
+                      paddingValue: 0.02.sw,
+                    ),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: ColorManager.secondaryColor.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      'Uploaded: ${widget.uploaded}',
+                      style: myTheme.textTheme.labelMedium,
+                    ),
+                  )
                       : const SizedBox(),
                   horizontalSpace(0.01.sw),
                   Container(
@@ -218,104 +220,116 @@ class _SetWallpaperScreenState extends State<SetWallpaperScreen> {
               ),
               child: materialButton(
                 onPressed: () {
-                  showModalBottomSheet(
-                    elevation: 0,
-                    backgroundColor: ColorManager.secondaryColor,
-                    context: context,
-                    isDismissible: false,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                    ),
-                    builder: (context) => Container(
-                      height: 0.4.sh,
-                      decoration: const BoxDecoration(
+                  if (userId.isEmpty) {
+                    Get.to(() => const LoginScreen());
+                  }
+                  else {
+                    showModalBottomSheet(
+                      elevation: 0,
+                      backgroundColor: ColorManager.secondaryColor,
+                      context: context,
+                      isDismissible: false,
+                      shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(20),
                           topRight: Radius.circular(20),
                         ),
                       ),
-                      padding: padding(
-                          paddingType: PaddingType.all, paddingValue: 0.02.sh),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Align(
-                            alignment: Alignment.topCenter,
-                            child: SizedBox(
-                              width: 50,
-                              child: Divider(
-                                thickness: 5,
-                                color: ColorManager.white,
+                      builder: (context) =>
+                          Container(
+                            height: 0.4.sh,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
                               ),
                             ),
-                          ),
-                          verticalSpace(0.05.sh),
-                          GestureDetector(
-                            onTap: () async {
-                              await setLockScreenWallpaper(context,
-                                  url: widget.imgURL);
-                              Navigator.pop(context);
-                              showAltDialog(
-                                context,
-                                message:
-                                    'Wallpaper Is Set As Lock Screen Successfully.',
-                              );
-                            },
-                            child: Text(
-                              'Set as Lock Screen',
-                              textAlign: TextAlign.justify,
-                              style: myTheme.textTheme.labelMedium,
+                            padding: padding(
+                                paddingType: PaddingType.all,
+                                paddingValue: 0.02.sh),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Align(
+                                  alignment: Alignment.topCenter,
+                                  child: SizedBox(
+                                    width: 50,
+                                    child: Divider(
+                                      thickness: 5,
+                                      color: ColorManager.white,
+                                    ),
+                                  ),
+                                ),
+                                verticalSpace(0.05.sh),
+                                GestureDetector(
+                                  onTap: () async {
+                                    await setLockScreenWallpaper(context,
+                                        url: widget.imgURL);
+                                    Navigator.pop(context);
+                                    showAltDialog(
+                                      context,
+                                      message:
+                                      'Wallpaper Is Set As Lock Screen Successfully.',
+                                    );
+                                  },
+                                  child: Text(
+                                    'Set as Lock Screen',
+                                    textAlign: TextAlign.justify,
+                                    style: myTheme.textTheme.labelMedium,
+                                  ),
+                                ),
+                                verticalSpace(0.05.sh),
+                                GestureDetector(
+                                  onTap: () async {
+                                    await setHomeScreenWallpaper(context,
+                                        url: widget.imgURL);
+                                    Navigator.pop(context);
+                                    showAltDialog(
+                                      context,
+                                      message:
+                                      'Wallpaper Is Set As Home Screen Successfully.',
+                                    );
+                                  },
+                                  child: Text(
+                                    'Set as Home Screen',
+                                    textAlign: TextAlign.justify,
+                                    style: myTheme.textTheme.labelMedium,
+                                  ),
+                                ),
+                                verticalSpace(0.05.sh),
+                                GestureDetector(
+                                  onTap: () async {
+                                    await setBothScreenWallpaper(context,
+                                        url: widget.imgURL);
+                                    Navigator.pop(context);
+                                    showAltDialog(
+                                      context,
+                                      message:
+                                      'Wallpaper Is Set As Both Screen Successfully.',
+                                    );
+                                  },
+                                  child: Text(
+                                    'Set as Both',
+                                    textAlign: TextAlign.justify,
+                                    style: myTheme.textTheme.labelMedium,
+                                  ),
+                                ),
+                                verticalSpace(0.05.sh),
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.to(() => const ReportAnIssueScreen());
+                                  },
+                                  child: Text(
+                                    'Report this photo',
+                                    textAlign: TextAlign.justify,
+                                    style: myTheme.textTheme.labelMedium,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          verticalSpace(0.05.sh),
-                          GestureDetector(
-                            onTap: () async {
-                              await setHomeScreenWallpaper(context,
-                                  url: widget.imgURL);
-                              Navigator.pop(context);
-                              showAltDialog(
-                                context,
-                                message:
-                                    'Wallpaper Is Set As Home Screen Successfully.',
-                              );
-                            },
-                            child: Text(
-                              'Set as Home Screen',
-                              textAlign: TextAlign.justify,
-                              style: myTheme.textTheme.labelMedium,
-                            ),
-                          ),
-                          verticalSpace(0.05.sh),
-                          GestureDetector(
-                            onTap: () async {
-                              await setBothScreenWallpaper(context,
-                                  url: widget.imgURL);
-                              Navigator.pop(context);
-                              showAltDialog(
-                                context,
-                                message:
-                                    'Wallpaper Is Set As Both Screen Successfully.',
-                              );
-                            },
-                            child: Text(
-                              'Set as Both',
-                              textAlign: TextAlign.justify,
-                              style: myTheme.textTheme.labelMedium,
-                            ),
-                          ),
-                          verticalSpace(0.05.sh),
-                          Text(
-                            'Report this photo',
-                            textAlign: TextAlign.justify,
-                            style: myTheme.textTheme.labelMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+                    );
+                  }
                 },
                 buttonText: 'Apply',
               ),
@@ -326,47 +340,3 @@ class _SetWallpaperScreenState extends State<SetWallpaperScreen> {
     );
   }
 }
-
-// Align(
-//   alignment: Alignment.bottomRight,
-//   child: Padding(
-//     padding: padding(
-//       paddingType: PaddingType.LTRB,
-//       left: 0.02.sw,
-//       right: 0.03.sw,
-//       bottom: 0.18.sh,
-//     ),
-//     child: Column(
-//       mainAxisAlignment: MainAxisAlignment.end,
-//       children: [
-//         GestureDetector(
-//           onTap: () {
-//             setState(() {
-//               isLiked = !isLiked;
-//             });
-//           },
-//           child: isLiked
-//               ? Icon(
-//                   Icons.favorite_rounded,
-//                   size: 0.04.sh,
-//                   color: ColorManager.red,
-//                 )
-//               : Icon(
-//                   Icons.favorite_border_rounded,
-//                   size: 0.04.sh,
-//                   color: ColorManager.white,
-//                 ),
-//         ),
-//         verticalSpace(0.03.sh),
-//         GestureDetector(
-//           onTap: () {},
-//           child: Icon(
-//             Icons.file_download_outlined,
-//             size: 0.04.sh,
-//             color: ColorManager.white,
-//           ),
-//         ),
-//       ],
-//     ),
-//   ),
-// ),

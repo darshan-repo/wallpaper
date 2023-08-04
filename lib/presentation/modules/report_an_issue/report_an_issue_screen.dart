@@ -54,7 +54,7 @@ class _ReportAnIssueScreenState extends State<ReportAnIssueScreen> {
                       'You have something to report? Great, we love feedback!',
                       style: myTheme.textTheme.labelMedium,
                     ),
-                    verticalSpace(0.1.sh),
+                    verticalSpace(0.05.sh),
                     textFormField(
                       controller: txtEmailIdController,
                       hintText: 'Email',

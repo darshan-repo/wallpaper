@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 @immutable
 abstract class PaginationEvent {}
 
-class PaginationInitialEvent extends PaginationEvent {}
+class PaginationInitialEvent extends PaginationEvent {
+  final String events;
+
+  PaginationInitialEvent({required this.events});
+}
 
 class GetRecentPaginationDataEvent extends PaginationEvent {}
 

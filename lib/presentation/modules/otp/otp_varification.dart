@@ -4,11 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 
 class OTPVarificationScreen extends StatefulWidget {
-  const OTPVarificationScreen(
-      {Key? key, this.isForgot = true, this.email, this.passWord})
-      : super(key: key);
-  final bool isForgot;
-  final String? email;
+  const OTPVarificationScreen({
+    Key? key,
+    this.isForgot = true,
+    this.email,
+    this.passWord,
+    this.isGoogle = true,
+    this.username,
+  }) : super(key: key);
+  final bool isForgot, isGoogle;
+  final String? email, username;
   final String? passWord;
 
   @override
@@ -40,13 +45,29 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
     });
   }
 
-  void resendCode() {
-    BlocProvider.of<AuthBlocBloc>(context).add(
-      ResendOtp(
-        email: widget.email ?? '',
-        password: widget.passWord ?? '',
-      ),
-    );
+  Future<void> resendCode({bool isTrue = false}) async {
+    if (isTrue) {
+      print('google');
+      final fcmToken = await FirebaseMessaging.instance.getToken(
+          vapidKey:
+              "BMddJ7CcjA7Or2PPl-TwHRW_hWheRqnyxdzRvkRH3u7uxEjIqJvDCmDuWJpV5B-GGCvJfdqpmvC-yUS5qVXF1WE");
+      BlocProvider.of<AuthBlocBloc>(context).add(
+        LoginWithGoogleResendOtp(
+          email: widget.email ?? "",
+          username: widget.username ?? "",
+          deviceId: fcmToken!,
+        ),
+      );
+    } else {
+      print('resend');
+
+      BlocProvider.of<AuthBlocBloc>(context).add(
+        ResendOtp(
+          email: widget.email ?? '',
+          password: widget.passWord ?? '',
+        ),
+      );
+    }
     setState(() {
       secondsRemaining = 30;
       enableResend = false;
@@ -136,7 +157,7 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                       children: [
                         materialButton(
                           onPressed: () {
-                            enableResend ? resendCode() : null;
+                            enableResend ? resendCode(isTrue: true) : null;
                           },
                           minWidth: 0.43.sw,
                           buttonColor: ColorManager.transparentColor,
@@ -154,17 +175,31 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                                 ),
                               );
                             } else {
-                              final fcmToken = await FirebaseMessaging.instance
-                                  .getToken(
-                                      vapidKey:
-                                          "BMddJ7CcjA7Or2PPl-TwHRW_hWheRqnyxdzRvkRH3u7uxEjIqJvDCmDuWJpV5B-GGCvJfdqpmvC-yUS5qVXF1WE");
-                              BlocProvider.of<AuthBlocBloc>(context).add(
-                                VerifyOtp(
-                                  email: widget.email ?? "",
-                                  otp: int.parse(txtEnterCodeController.text),
-                                  fcmToken: fcmToken!,
-                                ),
-                              );
+                              if (widget.isGoogle) {
+                                final fcmToken =
+                                    await FirebaseMessaging.instance.getToken(
+                                        vapidKey:
+                                            "BMddJ7CcjA7Or2PPl-TwHRW_hWheRqnyxdzRvkRH3u7uxEjIqJvDCmDuWJpV5B-GGCvJfdqpmvC-yUS5qVXF1WE");
+                                BlocProvider.of<AuthBlocBloc>(context).add(
+                                  LoginWithGoogleOtpSend(
+                                    email: widget.email ?? "",
+                                    otp: int.parse(txtEnterCodeController.text),
+                                    deviceId: fcmToken!,
+                                  ),
+                                );
+                              } else {
+                                final fcmToken =
+                                    await FirebaseMessaging.instance.getToken(
+                                        vapidKey:
+                                            "BMddJ7CcjA7Or2PPl-TwHRW_hWheRqnyxdzRvkRH3u7uxEjIqJvDCmDuWJpV5B-GGCvJfdqpmvC-yUS5qVXF1WE");
+                                BlocProvider.of<AuthBlocBloc>(context).add(
+                                  VerifyOtp(
+                                    email: widget.email ?? "",
+                                    otp: int.parse(txtEnterCodeController.text),
+                                    fcmToken: fcmToken!,
+                                  ),
+                                );
+                              }
                             }
                           },
                           minWidth: 0.43.sw,
