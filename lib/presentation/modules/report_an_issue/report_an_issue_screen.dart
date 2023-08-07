@@ -13,15 +13,10 @@ class _ReportAnIssueScreenState extends State<ReportAnIssueScreen> {
   TextEditingController txtEmailIdController = TextEditingController();
   TextEditingController txtSubjectController = TextEditingController();
   TextEditingController txtMesssageController = TextEditingController();
-  String pattern =
-      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-      r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-      r"{0,253}[a-zA-Z0-9])?)*$";
 
   @override
   Widget build(BuildContext context) {
-    RegExp regex = RegExp(pattern);
-
+    RegExp regex = RegExp(AppString.pattern);
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
@@ -46,23 +41,23 @@ class _ReportAnIssueScreenState extends State<ReportAnIssueScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Report An Issue',
+                      AppString.reportAnIssues,
                       style: myTheme.textTheme.titleLarge,
                     ),
                     verticalSpace(0.01.sh),
                     Text(
-                      'You have something to report? Great, we love feedback!',
+                      AppString.reportAnIssuesDesc,
                       style: myTheme.textTheme.labelMedium,
                     ),
                     verticalSpace(0.05.sh),
                     textFormField(
                       controller: txtEmailIdController,
-                      hintText: 'Email',
+                      hintText: AppString.email,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Email cannot be empty";
+                          return AppString.emailCannotBeEmpty;
                         } else if (!regex.hasMatch(value)) {
-                          return "Enter a valid email";
+                          return AppString.enterAValidEmail;
                         }
                         return null;
                       },
@@ -70,10 +65,10 @@ class _ReportAnIssueScreenState extends State<ReportAnIssueScreen> {
                     verticalSpace(0.02.sh),
                     textFormField(
                       controller: txtSubjectController,
-                      hintText: 'Subject',
+                      hintText: AppString.subject,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Subject cannot be empty";
+                          return AppString.subjectCannotBeEmpty;
                         }
                         return null;
                       },
@@ -81,11 +76,11 @@ class _ReportAnIssueScreenState extends State<ReportAnIssueScreen> {
                     verticalSpace(0.02.sh),
                     textFormField(
                       controller: txtMesssageController,
-                      hintText: 'Message',
+                      hintText: AppString.message,
                       maxLines: 10,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Message cannot be empty";
+                          return AppString.messsageCannotBeEmpty;
                         }
                         return null;
                       },
@@ -150,13 +145,14 @@ class _ReportAnIssueScreenState extends State<ReportAnIssueScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    'Thank You For Sharing Your Feedback!',
+                                    AppString.thankYouForSharingYourFeedback,
                                     textAlign: TextAlign.center,
                                     style: myTheme.textTheme.titleMedium,
                                   ),
                                   verticalSpace(0.02.sh),
                                   Text(
-                                    'We\'ve received your concerns, and we\'re working to resolve them.',
+                                    AppString
+                                        .weveReceivedYourConcernsAndWereWorkingToResolveThem,
                                     textAlign: TextAlign.center,
                                     style: myTheme.textTheme.headlineSmall,
                                   ),
@@ -171,7 +167,7 @@ class _ReportAnIssueScreenState extends State<ReportAnIssueScreen> {
                                   },
                                   buttonColor:
                                       const Color.fromRGBO(160, 152, 250, 1),
-                                  buttonText: 'Back to home',
+                                  buttonText: AppString.backToHome,
                                 ),
                               ],
                             ),
@@ -182,7 +178,7 @@ class _ReportAnIssueScreenState extends State<ReportAnIssueScreen> {
                         }
                       },
                       buttonColor: const Color(0xFFA098FA),
-                      buttonText: 'Submit',
+                      buttonText: AppString.submit,
                     ),
                   ],
                 ),

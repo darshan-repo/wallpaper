@@ -1,14 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 import 'package:walper/models/get_home_featured_wallpaper.dart';
-import 'package:walper/models/search_wallpaper_model.dart';
-
 part 'collection_bloc_event.dart';
-
 part 'collection_bloc_state.dart';
 
 class CollectionBlocBloc
@@ -117,7 +113,7 @@ class CollectionBlocBloc
       GetLikedWallpaper event, Emitter<CollectionBlocState> emit) async {
     try {
       Map<String, dynamic> data = await BaseApi.getRequest(
-          "getLikesByUser/${UserPreferences.getUserId()}");
+          "getLikesByUser/${UserPreferences().getUserId()}");
       if (data["message"] == "likes fetched") {
         getLikedModel = GetLikeModel.fromJson(data);
         emit(CollectionLoaded());
@@ -218,16 +214,12 @@ class CollectionBlocBloc
       ReportAndIssue event, Emitter<CollectionBlocState> emit) async {
     emit(CollectionLoading());
     try {
-      Map<String, dynamic> data = await BaseApi.postRequest("report", data: {
+      await BaseApi.postRequest("report", data: {
         "email": event.email,
         "subject": event.subject,
         "message": event.message
       });
-      if (data["data"] != null) {
-        emit(CollectionLoaded());
-      } else {
-        emit(CollectionLoaded());
-      }
+      emit(CollectionLoaded());
     } catch (e) {
       log(e.toString());
       emit(CollectionError());
@@ -242,11 +234,8 @@ class CollectionBlocBloc
         "email": event.email,
         "deviceId": event.deviceId,
       });
-      if (data["data"] != null) {
-        emit(CollectionLoaded());
-      } else {
-        emit(CollectionLoaded());
-      }
+      log(data.toString());
+      emit(CollectionLoaded());
     } catch (e) {
       log(e.toString());
       emit(CollectionError());
@@ -257,14 +246,11 @@ class CollectionBlocBloc
       DisableNotification event, Emitter<CollectionBlocState> emit) async {
     try {
       Map<String, dynamic> data =
-          await BaseApi.postRequest("enableNotification", data: {
+          await BaseApi.postRequest("disableNotification", data: {
         "email": event.email,
       });
-      if (data["data"] != null) {
-        emit(CollectionLoaded());
-      } else {
-        emit(CollectionLoaded());
-      }
+      log(data.toString());
+      emit(CollectionLoaded());
     } catch (e) {
       log(e.toString());
       emit(CollectionError());

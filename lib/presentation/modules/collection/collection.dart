@@ -23,7 +23,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Collections',
+            AppString.collections,
             style: myTheme.textTheme.titleLarge,
           ),
           verticalSpace(0.02.sh),
@@ -34,9 +34,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(height: 0.3.sh),
-                    const Center(
-                      child: SpinKitCircle(color: ColorManager.white),
-                    ),
+                    const CustomLoader(),
                   ],
                 );
               } else if (state is CollectionLoaded) {
@@ -78,59 +76,71 @@ class _CollectionScreenState extends State<CollectionScreen> {
                               ),
                             );
                           },
-                          child: SizedBox(
-                            height: 0.19.sh,
-                            child: CachedNetworkImage(
-                              imageUrl: BaseApi.imgUrl + image,
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                margin: margin(
-                                    marginType: MarginType.bottom,
-                                    marginValue: 0.01.sh),
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                child: Container(
-                                  padding: padding(
-                                      paddingType: PaddingType.left,
-                                      paddingValue: 0.08.sw),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                          child: Padding(
+                            padding: padding(
+                              paddingType: PaddingType.bottom,
+                              paddingValue: 0.02.sh,
+                            ),
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: 0.19.sh,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(25),
+                                child: CachedNetworkImageBuilder(
+                                  url: BaseApi.imgUrl + image,
+                                  builder: (image) => Stack(
                                     children: [
-                                      Text(
-                                        BlocProvider.of<CollectionBlocBloc>(
-                                                    context)
-                                                .getWallpaperModel
-                                                ?.categories![index]
-                                                .name ??
-                                            "",
-                                        style: myTheme.textTheme.titleLarge,
+                                      Container(
+                                        color: ColorManager.secondaryColor,
+                                        width: double.infinity,
+                                        height: 0.19.sh,
+                                        child: Image.file(
+                                          image,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                      verticalSpace(0.02.sh),
-                                      Text(
-                                        '${BlocProvider.of<CollectionBlocBloc>(context).getWallpaperModel?.categories![index].categoryDatas!.length} wallpapers',
-                                        style: myTheme.textTheme.labelMedium,
+                                      Container(
+                                        width: double.infinity,
+                                        height: 0.19.sh,
+                                        padding: padding(
+                                            paddingType: PaddingType.left,
+                                            paddingValue: 0.08.sw),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withOpacity(0.2),
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              BlocProvider.of<CollectionBlocBloc>(
+                                                          context)
+                                                      .getWallpaperModel
+                                                      ?.categories![index]
+                                                      .name ??
+                                                  "",
+                                              style:
+                                                  myTheme.textTheme.titleLarge,
+                                            ),
+                                            verticalSpace(0.01.sh),
+                                            Text(
+                                              '${BlocProvider.of<CollectionBlocBloc>(context).getWallpaperModel?.categories![index].categoryDatas!.length} wallpapers',
+                                              style:
+                                                  myTheme.textTheme.labelMedium,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
+                                  placeHolder: const CustomLoader(),
+                                  errorWidget: const Icon(Icons.error),
                                 ),
                               ),
-                              placeholder: (context, url) => const Center(
-                                child: SpinKitCircle(color: ColorManager.white),
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
                             ),
                           ),
                         );

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:walper/libs.dart';
 
 @immutable
 abstract class PaginationEvent {}

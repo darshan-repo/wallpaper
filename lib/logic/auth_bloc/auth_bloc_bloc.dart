@@ -50,9 +50,14 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         "password": event.passWord,
         "deviceId": event.fcmToken
       });
+
       if (data["message"] != null) {
-        UserPreferences.setUserId(data["user"]["id"]);
-        UserPreferences.setUserEmail(data["user"]["email"]);
+        UserPreferences().setUserId(data["user"]["id"]);
+        UserPreferences().setUserEmail(data["user"]["email"]);
+        UserPreferences().setDeviceToken(event.fcmToken);
+        UserPreferences()
+            .setNotificationStatus(data["user"]["notification_enable"] ?? true);
+
         if (data["user"]["isverified"] == true) {
           Get.offAll(() => const BottomNavigationBarScreen());
         } else {
@@ -60,6 +65,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
             isForgot: false,
             email: event.email,
             passWord: event.passWord,
+            isGoogle: false,
           ));
         }
         emit(AuthBlocLoaded());
@@ -79,8 +85,11 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         "Otp": event.otp,
         "deviceId": event.fcmToken
       });
+
       if (data["message"] == "user login successfully") {
-        UserPreferences.setUserId(data["user"]["id"]);
+        UserPreferences().setUserId(data["user"]["id"]);
+        UserPreferences().setUserEmail(data["user"]["email"]);
+        UserPreferences().setDeviceToken(event.fcmToken);
         Get.off(const BottomNavigationBarScreen());
         emit(AuthBlocLoaded());
       } else {
@@ -254,24 +263,21 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
           await BaseApi.postRequest("socialVerification", data: {
         "email": event.email,
         "username": event.username,
-        "deviceId": event.deviceId
+        "deviceId": event.fcmToken
       });
       if (data["message"] != null) {
         if (data["user"]["isverified"] == true) {
-          UserPreferences.setUserId(data["user"]["id"]);
-          UserPreferences.setUserEmail(data["user"]["email"]);
-          print(
-              '==============User Id : =======>>${UserPreferences.getUserId()}');
-          print(
-              '==============Email Id : =======>>${UserPreferences.getUserEmail()}');
+          UserPreferences().setUserId(data["user"]["id"]);
+          UserPreferences().setUserEmail(data["user"]["email"]);
+          UserPreferences().setDeviceToken(event.fcmToken);
           Get.offAll(() => const BottomNavigationBarScreen());
         } else {
           Get.to(() => OTPVarificationScreen(
-                isGoogle: false,
-                isForgot: false,
-                email: event.email,
-                username: event.username,
-              ));
+              isGoogle: true,
+              isForgot: false,
+              email: event.email,
+              username: event.username,
+              fcmToken: event.fcmToken));
         }
         emit(AuthBlocLoaded());
       } else {
@@ -291,15 +297,15 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
           data: {
             "email": event.email,
             "Otp": event.otp,
-            "deviceId": event.deviceId
+            "deviceId": event.fcmToken
           });
       if (data["message"] != null) {
-        UserPreferences.setUserId(data["user"]["id"]);
-        UserPreferences.setUserEmail(data["user"]["email"]);
-        print(
-            '==============User Id : =======>>${UserPreferences.getUserId()}');
-        print(
-            '==============Email Id : =======>>${UserPreferences.getUserEmail()}');
+        UserPreferences().setUserId(data["user"]["id"]);
+        UserPreferences().setUserEmail(data["user"]["email"]);
+        UserPreferences()
+            .setNotificationStatus(data["user"]["notification_enable"] ?? true);
+        UserPreferences().setDeviceToken(event.fcmToken);
+        log('=====================>> ${UserPreferences().getDeviceToken()}');
         Get.offAll(const BottomNavigationBarScreen());
         emit(AuthBlocLoaded());
       } else {
@@ -318,8 +324,9 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
           await BaseApi.postRequest("socialVerification", data: {
         "email": event.email,
         "username": event.username,
-        "deviceId": event.deviceId
+        "deviceId": event.fcmToken
       });
+
       if (data["message"] != null) {
         successSnackbar('OTP Resend Successfully.');
       }

@@ -13,14 +13,10 @@ class _EmailVarificationScreenState extends State<EmailVarificationScreen> {
   GlobalKey<FormState> forgotPassKey = GlobalKey<FormState>();
   TextEditingController txtEmailIdController = TextEditingController();
   bool isShow = true;
-  String pattern =
-      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-      r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-      r"{0,253}[a-zA-Z0-9])?)*$";
 
   @override
   Widget build(BuildContext context) {
-    RegExp regex = RegExp(pattern);
+    RegExp regex = RegExp(AppString.pattern);
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -34,9 +30,7 @@ class _EmailVarificationScreenState extends State<EmailVarificationScreen> {
         body: BlocBuilder<AuthBlocBloc, AuthBlocState>(
           builder: (context, state) {
             if (state is AuthBlocLoading) {
-              return const Center(
-                child: SpinKitCircle(color: ColorManager.white),
-              );
+              return const CustomLoader();
             }
             return Padding(
               padding:
@@ -84,9 +78,9 @@ class _EmailVarificationScreenState extends State<EmailVarificationScreen> {
                             },
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return "Email cannot be empty";
+                                return AppString.emailCannotBeEmpty;
                               } else if (!regex.hasMatch(value)) {
-                                return "Enter a valid email";
+                                return AppString.enterAValidEmail;
                               }
                               return null;
                             }),
@@ -104,14 +98,14 @@ class _EmailVarificationScreenState extends State<EmailVarificationScreen> {
                             }
                           },
                           buttonColor: const Color.fromRGBO(160, 152, 250, 1),
-                          buttonText: 'Send Code',
+                          buttonText: AppString.sendCode,
                         ),
                         verticalSpace(0.06.sh),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Remember Password?  ',
+                              AppString.rememberPassword,
                               style: myTheme.textTheme.labelMedium,
                             ),
                             GestureDetector(
@@ -119,7 +113,7 @@ class _EmailVarificationScreenState extends State<EmailVarificationScreen> {
                                 Get.to(const LoginScreen());
                               },
                               child: Text(
-                                'Login',
+                                AppString.login,
                                 style: myTheme.textTheme.displaySmall,
                               ),
                             ),

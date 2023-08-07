@@ -14,12 +14,6 @@ Widget enterCode({
         return value == controller.text ? null : '';
       },
       hapticFeedbackType: HapticFeedbackType.lightImpact,
-      onCompleted: (pin) {
-        debugPrint('onCompleted: $pin');
-      },
-      onChanged: (value) {
-        debugPrint('onChanged: $value');
-      },
       onTap: onTap,
       keyboardType: TextInputType.number,
       focusedPinTheme: PinTheme(

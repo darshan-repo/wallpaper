@@ -2,7 +2,7 @@ import 'package:walper/libs.dart';
 
 errorSnackbar(String description) {
   Get.snackbar(
-    "Oops! something went wrong",
+    AppString.oopsSomethingWentWrong,
     description,
     shouldIconPulse: true,
     colorText: Colors.white,
@@ -16,7 +16,7 @@ errorSnackbar(String description) {
 
 successSnackbar(String description) {
   Get.snackbar(
-    "Successful!",
+    AppString.successful,
     description,
     shouldIconPulse: true,
     colorText: Colors.white,
@@ -30,7 +30,7 @@ successSnackbar(String description) {
 
 warningSnackbar(String description) {
   Get.snackbar(
-    "Warning!",
+    AppString.warning,
     description,
     shouldIconPulse: true,
     colorText: Colors.white,

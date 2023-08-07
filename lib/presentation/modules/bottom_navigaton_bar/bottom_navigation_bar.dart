@@ -2,7 +2,6 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/common/google_auth.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
   const BottomNavigationBarScreen({Key? key}) : super(key: key);
@@ -13,14 +12,12 @@ class BottomNavigationBarScreen extends StatefulWidget {
 }
 
 class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
-  String userID = UserPreferences.getUserId();
+  String userID = UserPreferences().getUserId();
 
   @override
   void initState() {
     if (userID.isNotEmpty) {
-      BlocProvider.of<CollectionBlocBloc>(context).add(
-        GetLikedWallpaper(),
-      );
+      BlocProvider.of<CollectionBlocBloc>(context).add(GetLikedWallpaper());
     }
     super.initState();
   }
@@ -59,7 +56,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String userID = UserPreferences.getUserId();
+    String userID = UserPreferences().getUserId();
     return AdvancedDrawer(
       backdrop: Container(
         width: double.infinity,
@@ -116,12 +113,13 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                   SVGIconManager.home,
                   color: ColorManager.white,
                 ),
-                title: const Text('Home'),
+                title: const Text(AppString.home),
               ),
               ListTile(
                 onTap: () {
                   if (userID.isEmpty) {
-                    warningSnackbar('User not found. please login to continue');
+                    warningSnackbar(
+                        AppString.userNotFoundPleaseLoginToContinue);
                   } else {
                     Get.offAll(const FavoriteScreen());
                   }
@@ -131,15 +129,16 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                   SVGIconManager.favorite,
                   color: ColorManager.white,
                 ),
-                title: const Text('Favorites'),
+                title: const Text(AppString.favorites),
               ),
               ListTile(
                 onTap: () {
                   if (userID.isEmpty) {
-                    warningSnackbar('User not found. please login to continue');
+                    warningSnackbar(
+                        AppString.userNotFoundPleaseLoginToContinue);
                   } else {
                     BlocProvider.of<CollectionBlocBloc>(context).add(
-                      GetDownloadWallpaper(id: UserPreferences.getUserId()),
+                      GetDownloadWallpaper(id: UserPreferences().getUserId()),
                     );
                     Get.offAll(const DownloadScreen());
                   }
@@ -149,7 +148,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                   SVGIconManager.download,
                   color: ColorManager.white,
                 ),
-                title: const Text('Downloads'),
+                title: const Text(AppString.downloads),
               ),
               ListTile(
                 onTap: () {
@@ -160,7 +159,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                   SVGIconManager.privacypolicy,
                   color: ColorManager.white,
                 ),
-                title: const Text('Privacy Policy'),
+                title: const Text(AppString.privacyPolicy),
               ),
               ListTile(
                 onTap: () {
@@ -173,45 +172,43 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                   height: 0.035.sh,
                   width: 0.035.sh,
                 ),
-                title: const Text('Repost an issue'),
+                title: const Text(AppString.reportAnIssue),
               ),
               verticalSpace(0.2.sh),
               ListTile(
                 onTap: () {
-                  setState(() {
-                    if (userID.isNotEmpty) {
-                      UserPreferences().reset();
+                  if (userID.isNotEmpty) {
+                    setState(() {
                       Authentication.signOut(context: context);
                       BlocProvider.of<AuthBlocBloc>(context).add(
                         Logout(
-                          email: UserPreferences.getUserEmail(),
+                          email: UserPreferences().getUserEmail(),
                         ),
                       );
-                    } else {
-                      Get.offAll(() => const LoginScreen());
-                    }
-                  });
+                      UserPreferences().reset();
+                    });
+                  } else {
+                    Get.offAll(() => const LoginScreen());
+                  }
+                  setState(() {});
                 },
                 splashColor: ColorManager.transparentColor,
-                leading: userID.isNotEmpty
-                    ? SvgPicture.asset(
-                        SVGIconManager.logout,
-                        color: ColorManager.white,
-                      )
-                    : SvgPicture.asset(
-                        SVGIconManager.login,
-                        color: ColorManager.white,
-                      ),
+                leading: SvgPicture.asset(
+                  userID.isNotEmpty
+                      ? SVGIconManager.logout
+                      : SVGIconManager.login,
+                  color: ColorManager.white,
+                ),
                 title: userID.isNotEmpty
-                    ? const Text('Logout')
-                    : const Text('Log In'),
+                    ? const Text(AppString.logout)
+                    : const Text(AppString.logedin),
               ),
               const Spacer(),
               Padding(
                 padding: padding(
                     paddingType: PaddingType.bottom, paddingValue: 0.025.sh),
                 child: const Text(
-                  'Terms of Service | Privacy Policy',
+                  AppString.termsofServicePrivacyPolicy,
                   style: TextStyle(color: ColorManager.white),
                 ),
               ),
@@ -270,7 +267,6 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
           splashColor: ColorManager.transparentColor,
           duration: Duration.zero,
           currentIndex: activeIndex,
-          // dotIndicatorColor: Colors.white,
           unselectedItemColor: Colors.grey[300],
           splashBorderRadius: 50,
           onTap: (int index) {

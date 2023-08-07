@@ -1,11 +1,9 @@
-import 'dart:developer';
-
 import 'package:http/http.dart' as http;
 import 'package:walper/libs.dart';
 
 class BaseApi {
-  static String baseUrl = "http://192.168.1.8:2200/api/";
-  static String imgUrl = "http://192.168.1.8:2200/profile/";
+  static String baseUrl = "http://192.168.1.6:2200/api/";
+  static String imgUrl = "http://192.168.1.6:2200/profile/";
 
   static Future getRequest(String path) async {
     final response = await http.get(
@@ -19,7 +17,6 @@ class BaseApi {
   }
 
   static Future postRequest(String path, {Map? data}) async {
-    log(json.encode(data));
     var headers = {'Content-Type': 'application/json'};
     http.Response response = await http.post(
       Uri.parse("$baseUrl$path"),
@@ -30,7 +27,6 @@ class BaseApi {
     if (response.statusCode == 200 || response.statusCode == 201) {
       return responseBody;
     } else {
-      log(response.reasonPhrase!);
       return responseBody;
     }
   }

@@ -14,14 +14,15 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   initState() {
     BlocProvider.of<CollectionBlocBloc>(context).add(GetHomeFeatured());
+    BlocProvider.of<CollectionBlocBloc>(context).add(GetLikedWallpaper());
     Timer(
       const Duration(seconds: 3),
       () async {
         SharedPreferences pref = await SharedPreferences.getInstance();
         if (pref.getBool("user") == true) {
-          Get.off(() => const BottomNavigationBarScreen());
+          Get.offAll(() => const BottomNavigationBarScreen());
         } else {
-          Get.to(() => const OnBoarding1Screen());
+          Get.offAll(() => const OnBoarding1Screen());
         }
       },
     );

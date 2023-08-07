@@ -33,7 +33,7 @@ class OnBoarding1Screen extends StatelessWidget {
               onPressed: () {
                 Get.to(const OnBoarding2Screen());
               },
-              buttonText: 'Get Started',
+              buttonText: AppString.getStarted,
             ),
             verticalSpace(0.03.sh),
           ],

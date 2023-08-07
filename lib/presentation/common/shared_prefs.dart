@@ -19,35 +19,35 @@ class UserPreferences {
     _prefs = await SharedPreferences.getInstance();
   }
 
-  static getUserId() {
-    return _prefs.getString("userId") ?? "";
+  setDeviceToken(String setDeviceToken) {
+    _prefs.setString("deviceToken", setDeviceToken);
   }
 
-  static getDeviceToken() {
-    return _prefs.getString("setDeviceToken") ?? "";
+  getDeviceToken() {
+    return _prefs.getString("deviceToken") ?? "";
   }
 
-  static setUserId(String id) {
+  setUserId(String id) {
     _prefs.setString("userId", id);
   }
 
-  static setDeviceToken(String setDeviceToken) {
-    _prefs.setString("setDeviceToken", setDeviceToken);
+  getUserId() {
+    return _prefs.getString("userId") ?? "";
   }
 
-  static setUserEntered(String id) {
-    _prefs.setBool(id, true);
-  }
-
-  static getUserEnter() {
-    return _prefs.getBool('id');
-  }
-
-  static setUserEmail(String userEmail) {
+  setUserEmail(String userEmail) {
     _prefs.setString("userEmail", userEmail);
   }
 
-  static getUserEmail() {
+  getUserEmail() {
     return _prefs.getString("userEmail") ?? "";
+  }
+
+  void setNotificationStatus(bool status) {
+    _prefs.setBool("notificationStatus", status);
+  }
+
+  static getNotificationStatus() {
+    return _prefs.getBool("notificationStatus") ?? "";
   }
 }

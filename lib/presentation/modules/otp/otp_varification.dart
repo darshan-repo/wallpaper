@@ -4,16 +4,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 
 class OTPVarificationScreen extends StatefulWidget {
-  const OTPVarificationScreen({
-    Key? key,
-    this.isForgot = true,
-    this.email,
-    this.passWord,
-    this.isGoogle = true,
-    this.username,
-  }) : super(key: key);
+  const OTPVarificationScreen(
+      {Key? key,
+      this.isForgot = true,
+      this.email,
+      this.passWord,
+      this.isGoogle = true,
+      this.username,
+      this.fcmToken})
+      : super(key: key);
   final bool isForgot, isGoogle;
-  final String? email, username;
+  final String? email, username, fcmToken;
   final String? passWord;
 
   @override
@@ -47,7 +48,6 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
 
   Future<void> resendCode({bool isTrue = false}) async {
     if (isTrue) {
-      print('google');
       final fcmToken = await FirebaseMessaging.instance.getToken(
           vapidKey:
               "BMddJ7CcjA7Or2PPl-TwHRW_hWheRqnyxdzRvkRH3u7uxEjIqJvDCmDuWJpV5B-GGCvJfdqpmvC-yUS5qVXF1WE");
@@ -55,12 +55,10 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
         LoginWithGoogleResendOtp(
           email: widget.email ?? "",
           username: widget.username ?? "",
-          deviceId: fcmToken!,
+          fcmToken: fcmToken!,
         ),
       );
     } else {
-      print('resend');
-
       BlocProvider.of<AuthBlocBloc>(context).add(
         ResendOtp(
           email: widget.email ?? '',
@@ -184,7 +182,7 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                                   LoginWithGoogleOtpSend(
                                     email: widget.email ?? "",
                                     otp: int.parse(txtEnterCodeController.text),
-                                    deviceId: fcmToken!,
+                                    fcmToken: fcmToken!,
                                   ),
                                 );
                               } else {

@@ -1,12 +1,7 @@
 import 'dart:developer';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:walper/base_api/base_api.dart';
-import 'package:walper/models/notification_model.dart';
-
+import 'package:walper/libs.dart';
 part 'notification_event.dart';
-
 part 'notification_state.dart';
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {

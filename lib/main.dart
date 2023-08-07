@@ -1,18 +1,11 @@
-import 'dart:developer';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/common/notification_services.dart';
 
 Future<void> myBackgroundHandler(RemoteMessage message) async {
-  // FirebaseMessaging.onMessageOpenedApp.listen((event) {
-  //   Get.to(CustomerAndNotification(
-  //     initselected: 0,
-  //   ));
-  // });
   return MyAppState()._showNotification(message);
 }
+
+bool isEnabledNotification = true;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -109,8 +102,7 @@ class MyAppState extends State<MyApp> {
     notificationServices.firebaseInit(context);
 
     notificationServices.getDeviceToken().then((value) {
-      log("DEVICE TOKEN :::: $value");
-      UserPreferences.setDeviceToken(value);
+      UserPreferences().setDeviceToken(value);
     });
   }
 

@@ -52,26 +52,31 @@ Widget conatiner(
   Widget? child,
 }) {
   return SizedBox(
-    height: height.sh,
     width: width.sw,
-    child: CachedNetworkImage(
-      repeat: ImageRepeat.repeat,
-      imageUrl: assetName,
-      imageBuilder: (context, imageProvider) => Container(
-        height: height.sh,
-        width: width.sw,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          image: DecorationImage(
-            image: imageProvider,
-            fit: BoxFit.cover,
-          ),
+    height: height.sh,
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(15),
+      child: CachedNetworkImageBuilder(
+        url: assetName,
+        builder: (image) => Stack(
+          children: [
+            Container(
+              color: ColorManager.secondaryColor,
+              width: width.sw,
+              height: height.sh,
+              child: Image.file(
+                image,
+                fit: BoxFit.cover,
+              ),
+            ),
+            SizedBox(
+              child: child,
+            )
+          ],
         ),
-        child: child,
+        placeHolder: const CustomLoader(),
+        errorWidget: const Icon(Icons.error),
       ),
-      placeholder: (context, url) =>
-          const Center(child: SpinKitCircle(color: ColorManager.white)),
-      errorWidget: (context, url, error) => const Icon(Icons.error),
     ),
   );
 }

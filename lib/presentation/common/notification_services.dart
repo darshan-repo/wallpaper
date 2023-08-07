@@ -1,8 +1,3 @@
-// ignore_for_file: avoid_print
-
-
-//import 'message.dart';
-
 import 'dart:io';
 import 'dart:math';
 
@@ -10,14 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:walper/libs.dart';
 
 class NotificationServices {
-  //initialising firebase message plugin
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  //initialising firebase message plugin
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  // function to request notifications permissions
   void requestNotificationPermission() async {
     NotificationSettings settings = await messaging.requestPermission(
         alert: true,
@@ -29,18 +21,13 @@ class NotificationServices {
         sound: true);
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('user granted permission');
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
-      print('user granted provisional permission');
     } else {
       openAppSettings();
-      // AppSettings.openAppSettings(type: AppSettingsType.notification);
-      print('user denied permission');
     }
   }
 
-  //function to initialise flutter local notification plugin to show notifications for android when app is active
   void initLocalNotifications(
       BuildContext context, RemoteMessage message) async {
     var androidInitializationSettings =
@@ -51,25 +38,14 @@ class NotificationServices {
         android: androidInitializationSettings, iOS: iosInitializationSettings);
 
     await _flutterLocalNotificationsPlugin.initialize(initializationSetting,
-        onDidReceiveNotificationResponse: (payload) {
-      // handle interaction when app is active for android
-      //handleMessage(context, message);
-    });
+        onDidReceiveNotificationResponse: (payload) {});
   }
 
   void firebaseInit(BuildContext context) {
     FirebaseMessaging.onMessage.listen((message) {
-      if (kDebugMode) {
-        print(message.notification!.title.toString());
-        print(message.notification!.body.toString());
-        print(message.data.toString());
-        print(message.data['type']);
-        print(message.data['id']);
-      }
+      if (kDebugMode) {}
 
-      //show notifications when app is active
       if (Platform.isAndroid) {
-        //calling this function to handle internation
         initLocalNotifications(context, message);
         showNotification(message);
       } else {
@@ -78,7 +54,6 @@ class NotificationServices {
     });
   }
 
-  // function to show visible notification when app is active
   Future<void> showNotification(RemoteMessage message) async {
     AndroidNotificationChannel channel = AndroidNotificationChannel(
         Random.secure().nextInt(100000).toString(),
@@ -109,7 +84,6 @@ class NotificationServices {
     });
   }
 
-  //function to get device token on which we will send the notifications
   Future<String> getDeviceToken() async {
     String? token = await messaging.getToken();
     return token!;
@@ -123,32 +97,4 @@ class NotificationServices {
       }
     });
   }
-
-//handle tap on notification when app is in background or terminated
-// Future<void> setupInteractMessage(BuildContext context) async {
-//   // when app is terminated
-//   RemoteMessage? initialMessage = await FirebaseMessaging.instance
-//       .getInitialMessage();
-//
-//   if (initialMessage != null) {
-//     handleMessage(context, initialMessage);
-//   }
-//
-//
-//   //when app ins background
-//   FirebaseMessaging.onMessageOpenedApp.listen((event) {
-//     handleMessage(context, event);
-//   });
-// }
-//
-//
-// void handleMessage(BuildContext context, RemoteMessage message) {
-//   if (message.data['type'] == 'msj') {
-//     Navigator.push(context,
-//         MaterialPageRoute(builder: (context) =>
-//             MessageScreen(
-//               id: message.data['id'],
-//             )));
-//   }
-// }
 }

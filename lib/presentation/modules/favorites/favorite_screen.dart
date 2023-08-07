@@ -1,4 +1,5 @@
 // ignore_for_file: deprecated_member_use
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 
@@ -40,10 +41,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           leadingOnTap: () {
             Get.off(const BottomNavigationBarScreen());
           },
-          // actionIcon: Icons.filter_alt_outlined,
-          // actionOnTap: () {
-          //   Get.to(const FilterScreen());
-          // },
         ),
         body: Padding(
           padding: padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),
@@ -51,12 +48,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Favorites',
+                AppString.favorites,
                 style: myTheme.textTheme.titleLarge,
               ),
               verticalSpace(0.01.sh),
               Text(
-                'You\'ve marked all of these as a favorite!',
+                AppString.favoritesDesc,
                 style: myTheme.textTheme.labelMedium,
               ),
               verticalSpace(0.01.sh),
@@ -71,7 +68,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                             width: 0.5.sw,
                           ),
                           Text(
-                            'Oops ! No favorites to display',
+                            AppString.oopsNoFavoritesToDisplay,
                             style: TextStyle(
                               fontSize: FontSize.s18,
                               fontFamily: FontFamily.roboto,
@@ -111,93 +108,60 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           itemBuilder: (context, index) {
                             final image =
                                 favouriteList[index].wallpaper?.split("/").last;
-                            return CachedNetworkImage(
+                            return cachedNetworkImage(
                               imageUrl: BaseApi.imgUrl + image!,
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: imageProvider,
-                                  ),
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.black.withOpacity(0.05),
-                                  ),
-                                  alignment: Alignment.bottomRight,
-                                  child: Padding(
-                                    padding: padding(
-                                        paddingType: PaddingType.LTRB,
-                                        right: 0.01.sw,
-                                        bottom: 0.01.sh),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            downloadAndSaveImageToGallery(
-                                                imageUrl:
-                                                    BaseApi.imgUrl + image);
-                                            BlocProvider.of<CollectionBlocBloc>(
-                                                    context)
-                                                .add(
-                                              SendDownloadWallpaper(
-                                                id: favouriteList[index].id ??
-                                                    "",
-                                                userId:
-                                                    UserPreferences.getUserId(),
-                                                name:
-                                                    favouriteList[index].name ??
-                                                        "",
-                                                category: favouriteList[index]
-                                                        .category ??
-                                                    "",
-                                                wallpaper: favouriteList[index]
-                                                        .wallpaper ??
-                                                    "",
-                                              ),
-                                            );
-                                          },
-                                          child: Icon(
-                                            Icons.file_download_outlined,
-                                            size: 0.035.sh,
-                                            color: ColorManager.white,
-                                          ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      downloadAndSaveImageToGallery(
+                                          imageUrl: BaseApi.imgUrl + image);
+                                      BlocProvider.of<CollectionBlocBloc>(
+                                              context)
+                                          .add(
+                                        SendDownloadWallpaper(
+                                          id: favouriteList[index].id ?? "",
+                                          userId: UserPreferences().getUserId(),
+                                          name: favouriteList[index].name ?? "",
+                                          category:
+                                              favouriteList[index].category ??
+                                                  "",
+                                          wallpaper:
+                                              favouriteList[index].wallpaper ??
+                                                  "",
                                         ),
-                                        verticalSpace(0.02.sh),
-                                        GestureDetector(
-                                          onTap: () {
-                                            BlocProvider.of<CollectionBlocBloc>(
-                                                    context)
-                                                .add(
-                                              SendDissLikeWallpaper(
-                                                id: favouriteList[index]
-                                                        .wallpaperId ??
-                                                    "",
-                                                userId:
-                                                    UserPreferences.getUserId(),
-                                              ),
-                                            );
-                                            favouriteList.removeAt(index);
-                                            setState(() {});
-                                          },
-                                          child: SvgPicture.asset(
-                                              SVGIconManager.liked,
-                                              color: ColorManager.red),
-                                        ),
-                                      ],
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.file_download_outlined,
+                                      size: 0.035.sh,
+                                      color: ColorManager.white,
                                     ),
                                   ),
-                                ),
+                                  verticalSpace(0.02.sh),
+                                  GestureDetector(
+                                    onTap: () {
+                                      BlocProvider.of<CollectionBlocBloc>(
+                                              context)
+                                          .add(
+                                        SendDissLikeWallpaper(
+                                          id: favouriteList[index]
+                                                  .wallpaperId ??
+                                              "",
+                                          userId: UserPreferences().getUserId(),
+                                        ),
+                                      );
+                                      favouriteList.removeAt(index);
+                                      setState(() {});
+                                    },
+                                    child: SvgPicture.asset(
+                                      SVGIconManager.liked,
+                                      color: ColorManager.red,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              placeholder: (context, url) => const Center(
-                                child: SpinKitCircle(color: ColorManager.white),
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
                             );
                           },
                         ),

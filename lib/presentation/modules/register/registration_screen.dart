@@ -16,14 +16,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  String pattern =
-      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-      r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-      r"{0,253}[a-zA-Z0-9])?)*$";
 
   @override
   Widget build(BuildContext context) {
-    RegExp regex = RegExp(pattern);
+    RegExp regex = RegExp(AppString.pattern);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -32,9 +28,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         body: BlocBuilder<AuthBlocBloc, AuthBlocState>(
           builder: (context, state) {
             if (state is AuthBlocLoading) {
-              return const Center(
-                child: SpinKitCircle(color: ColorManager.white),
-              );
+              return const CustomLoader();
             }
             return Padding(
               padding:
@@ -66,7 +60,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return "User name cannot be empty";
+                                return AppString.userNameCannotBeEmpty;
                               }
                               return null;
                             }),
@@ -77,9 +71,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return "Email cannot be empty";
+                                return AppString.emailCannotBeEmpty;
                               } else if (!regex.hasMatch(value)) {
-                                return "Enter a valid email";
+                                return AppString.enterAValidEmail;
                               }
                               return null;
                             }),
@@ -99,7 +93,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             },
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return "Password cannot be empty";
+                                return AppString.passwordCannotBeEmpty;
                               }
                               return null;
                             }),
@@ -120,9 +114,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             },
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return "Confirm password cannot be empty";
+                                return AppString.confirmPasswordCannotBeEmpty;
                               } else if (passwordController.text != value) {
-                                return "Password are not match";
+                                return AppString.passwordAreNotMatch;
                               }
                               return null;
                             }),

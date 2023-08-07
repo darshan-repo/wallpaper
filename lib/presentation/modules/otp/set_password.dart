@@ -32,9 +32,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
         body: BlocBuilder<AuthBlocBloc, AuthBlocState>(
           builder: (context, state) {
             if (state is AuthBlocLoading) {
-              return const Center(
-                child: SpinKitCircle(color: ColorManager.white),
-              );
+              return const CustomLoader();
             }
             return Padding(
               padding:
@@ -84,7 +82,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                             },
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return "Password cannot be empty";
+                                return AppString.passwordCannotBeEmpty;
                               }
                               return null;
                             }),
@@ -105,9 +103,9 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                             },
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return "Confirm password cannot be empty";
+                                return AppString.confirmPasswordCannotBeEmpty;
                               } else if (txtPasswordController.text != value) {
-                                return "Password are not match";
+                                return AppString.passwordAreNotMatch;
                               }
                               return null;
                             }),

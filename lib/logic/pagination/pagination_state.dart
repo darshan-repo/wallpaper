@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:walper/libs.dart';
 
 @immutable
 abstract class PaginationState {}

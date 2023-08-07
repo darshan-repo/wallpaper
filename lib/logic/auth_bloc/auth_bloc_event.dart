@@ -79,32 +79,32 @@ class Logout extends AuthBlocEvent {
 }
 
 class LoginWithGoogle extends AuthBlocEvent {
-  final String email, username, deviceId;
+  final String email, username, fcmToken;
 
   LoginWithGoogle({
     required this.email,
     required this.username,
-    required this.deviceId,
+    required this.fcmToken,
   });
 }
 
 class LoginWithGoogleOtpSend extends AuthBlocEvent {
-  final String email, deviceId;
+  final String email, fcmToken;
   final int otp;
 
   LoginWithGoogleOtpSend({
     required this.email,
     required this.otp,
-    required this.deviceId,
+    required this.fcmToken,
   });
 }
 
 class LoginWithGoogleResendOtp extends AuthBlocEvent {
-  final String email, username, deviceId;
+  final String email, username, fcmToken;
 
   LoginWithGoogleResendOtp({
     required this.email,
     required this.username,
-    required this.deviceId,
+    required this.fcmToken,
   });
 }

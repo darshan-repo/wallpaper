@@ -12,7 +12,7 @@ downloadAndSaveImageToGallery({required String imageUrl}) async {
       quality: 60,
       name: DateTime.now().toString(),
     );
-    successSnackbar('Wallpaper successfully downloaded!');
+    successSnackbar(AppString.wallpaperSuccessfullyDownloaded);
   } else {
     log("Failed to load image: ${response.statusCode}");
   }

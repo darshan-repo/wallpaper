@@ -1,11 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:io';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' show get;
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:walper/libs.dart';
 
 class DownloadScreen extends StatefulWidget {
@@ -17,7 +14,7 @@ class DownloadScreen extends StatefulWidget {
 
 class _DownloadScreenState extends State<DownloadScreen> {
   List<String> likedWallpaper = [];
-  final String userId = UserPreferences.getUserId();
+  final String userId = UserPreferences().getUserId();
 
   @override
   void initState() {
@@ -64,12 +61,12 @@ class _DownloadScreenState extends State<DownloadScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Downloads',
+                AppString.downloads,
                 style: myTheme.textTheme.titleLarge,
               ),
               verticalSpace(0.01.sh),
               Text(
-                'You\'ve marked all of these as a favorite!',
+                AppString.downloadDesc,
                 style: myTheme.textTheme.labelMedium,
               ),
               verticalSpace(0.01.sh),
@@ -79,9 +76,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                     return Column(
                       children: [
                         verticalSpace(0.3.sh),
-                        const Center(
-                          child: SpinKitCircle(color: ColorManager.white),
-                        ),
+                        const CustomLoader(),
                       ],
                     );
                   } else if (state is CollectionLoaded) {
@@ -99,7 +94,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                   scale: 0.003.sh,
                                 ),
                                 Text(
-                                  'Oops ! No downloads to display',
+                                  AppString.oopsNoDownloadsToDisplay,
                                   style: TextStyle(
                                     fontSize: FontSize.s18,
                                     fontFamily: FontFamily.roboto,
@@ -142,14 +137,12 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                         .downloadData!
                                         .length,
                                 itemBuilder: (context, index) {
-                                  final image =
+                                  final data =
                                       BlocProvider.of<CollectionBlocBloc>(
                                               context)
                                           .getDownloadModel!
-                                          .downloadData![index]
-                                          .wallpaper
-                                          ?.split("/")
-                                          .last;
+                                          .downloadData![index];
+                                  final image = data.wallpaper?.split("/").last;
                                   return InkWell(
                                     onTap: () {
                                       showModalBottomSheet(
@@ -180,7 +173,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                'Downloads',
+                                                AppString.downloads,
                                                 style: myTheme
                                                     .textTheme.titleLarge,
                                               ),
@@ -194,13 +187,13 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                                         imgURL: BaseApi.imgUrl +
                                                             image,
                                                         uploaded:
-                                                            '${BlocProvider.of<CollectionBlocBloc>(context).getDownloadModel!.downloadData![index].createdAt!.day.toString()}/${BlocProvider.of<CollectionBlocBloc>(context).getDownloadModel!.downloadData![index].createdAt!.month.toString()}/${BlocProvider.of<CollectionBlocBloc>(context).getDownloadModel!.downloadData![index].createdAt!.year.toString()}'),
+                                                            '${data.createdAt!.day.toString()}/${data.createdAt!.month.toString()}/${data.createdAt!.year.toString()}'),
                                                   );
                                                 },
                                                 child: bottomContent(
                                                   assetName:
                                                       ImageAssetManager.mobile,
-                                                  title: 'Set wallpaper',
+                                                  title: AppString.setWallpaper,
                                                 ),
                                               ),
                                               verticalSpace(0.04.sh),
@@ -221,56 +214,48 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                                       backgroundColor:
                                                           ColorManager
                                                               .secondaryColor,
-                                                      icon: CachedNetworkImage(
-                                                        imageUrl:
-                                                            BaseApi.imgUrl +
-                                                                image,
-                                                        imageBuilder: (context,
-                                                                imageProvider) =>
-                                                            Container(
-                                                          margin: margin(
-                                                              marginType:
-                                                                  MarginType
+                                                      icon:
+                                                          CachedNetworkImageBuilder(
+                                                        url: BaseApi.imgUrl +
+                                                            image,
+                                                        builder: (image) =>
+                                                            Padding(
+                                                          padding: padding(
+                                                              paddingType:
+                                                                  PaddingType
                                                                       .horizontal,
-                                                              marginValue:
+                                                              paddingValue:
                                                                   0.15.sw),
-                                                          height: 0.15.sh,
-                                                          decoration:
-                                                              BoxDecoration(
+                                                          child: ClipRRect(
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        25),
-                                                            image:
-                                                                DecorationImage(
-                                                              image:
-                                                                  imageProvider,
-                                                              fit: BoxFit.cover,
+                                                                        15),
+                                                            child: SizedBox(
+                                                              height: 0.15.sh,
+                                                              child: Image.file(
+                                                                image,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
-                                                        placeholder:
-                                                            (context, url) =>
-                                                                const Center(
-                                                          child: SpinKitCircle(
-                                                              color:
-                                                                  ColorManager
-                                                                      .white),
-                                                        ),
-                                                        errorWidget: (context,
-                                                                url, error) =>
-                                                            const Icon(
-                                                                Icons.error),
+                                                        placeHolder:
+                                                            const CustomLoader(),
+                                                        errorWidget: const Icon(
+                                                            Icons.error),
                                                       ),
                                                       title: Text(
-                                                        'Remove item?',
+                                                        AppString.removeItem,
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: myTheme.textTheme
                                                             .titleMedium,
                                                       ),
                                                       content: Text(
-                                                        'Are you sure want to remove this item?',
+                                                        AppString
+                                                            .areYouSureWantToRemoveThisItem,
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: myTheme.textTheme
@@ -287,19 +272,9 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                                                     context)
                                                                 .add(
                                                               DeleteDownloadWallpaper(
-                                                                id: BlocProvider.of<
-                                                                            CollectionBlocBloc>(
-                                                                        context)
-                                                                    .getDownloadModel!
-                                                                    .downloadData![
-                                                                        index]
+                                                                id: data
                                                                     .wallpaperId!,
-                                                                userId: BlocProvider.of<
-                                                                            CollectionBlocBloc>(
-                                                                        context)
-                                                                    .getDownloadModel!
-                                                                    .downloadData![
-                                                                        index]
+                                                                userId: data
                                                                     .userId!,
                                                               ),
                                                             );
@@ -310,7 +285,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                                                     context)
                                                                 .add(
                                                               GetDownloadWallpaper(
-                                                                id: UserPreferences
+                                                                id: UserPreferences()
                                                                     .getUserId(),
                                                               ),
                                                             );
@@ -318,7 +293,8 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                                           buttonColor:
                                                               const Color(
                                                                   0xFFA098FA),
-                                                          buttonText: 'Sure',
+                                                          buttonText:
+                                                              AppString.sure,
                                                         ),
                                                         verticalSpace(0.03.sh),
                                                         GestureDetector(
@@ -330,7 +306,8 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                                             alignment: Alignment
                                                                 .center,
                                                             child: Text(
-                                                              'No, thanks',
+                                                              AppString
+                                                                  .noThanks,
                                                               style: myTheme
                                                                   .textTheme
                                                                   .displaySmall,
@@ -345,7 +322,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                                 child: bottomContent(
                                                   assetName:
                                                       ImageAssetManager.delete,
-                                                  title: 'Delete',
+                                                  title: AppString.delete,
                                                 ),
                                               ),
                                               verticalSpace(0.04.sh),
@@ -368,7 +345,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                                 child: bottomContent(
                                                   assetName:
                                                       ImageAssetManager.share,
-                                                  title: 'Share',
+                                                  title: AppString.share,
                                                 ),
                                               ),
                                               verticalSpace(0.04.sh),
@@ -381,7 +358,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                                 child: bottomContent(
                                                   assetName: ImageAssetManager
                                                       .reportAnIssue,
-                                                  title: 'Report this',
+                                                  title: AppString.reportThis,
                                                 ),
                                               ),
                                               verticalSpace(0.02.sh),
@@ -396,157 +373,58 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                                 buttonColor:
                                                     const Color.fromRGBO(
                                                         255, 128, 147, 1),
-                                                buttonText: 'Cancle',
+                                                buttonText: AppString.cancle,
                                               )
                                             ],
                                           ),
                                         ),
                                       );
                                     },
-                                    child: CachedNetworkImage(
+                                    child: cachedNetworkImage(
                                       imageUrl: BaseApi.imgUrl + image!,
-                                      imageBuilder: (context, imageProvider) =>
-                                          Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: ColorManager.secondaryColor,
-                                          image: DecorationImage(
-                                            fit: BoxFit.fill,
-                                            image: imageProvider,
-                                          ),
-                                        ),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            color:
-                                                Colors.black.withOpacity(0.05),
-                                          ),
-                                          alignment: Alignment.bottomRight,
-                                          child: Padding(
-                                            padding: padding(
-                                                paddingType: PaddingType.LTRB,
-                                                right: 0.01.sw,
-                                                bottom: 0.01.sh),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                if (!likedWallpaper.contains(
-                                                    BlocProvider.of<CollectionBlocBloc>(
-                                                                context)
-                                                            .getDownloadModel!
-                                                            .downloadData![
-                                                                index]
-                                                            .id ??
-                                                        "")) {
-                                                  likedWallpaper.add(BlocProvider
-                                                              .of<CollectionBlocBloc>(
-                                                                  context)
-                                                          .getDownloadModel!
-                                                          .downloadData![index]
-                                                          .id ??
-                                                      "");
-                                                  BlocProvider.of<
-                                                              CollectionBlocBloc>(
-                                                          context)
-                                                      .add(
-                                                    SendLikedWallpaper(
-                                                      id: BlocProvider.of<
-                                                                      CollectionBlocBloc>(
-                                                                  context)
-                                                              .getDownloadModel!
-                                                              .downloadData![
-                                                                  index]
-                                                              .id ??
-                                                          "",
-                                                      userId: UserPreferences
-                                                          .getUserId(),
-                                                      name: BlocProvider.of<
-                                                                      CollectionBlocBloc>(
-                                                                  context)
-                                                              .getDownloadModel!
-                                                              .downloadData![
-                                                                  index]
-                                                              .name ??
-                                                          "",
-                                                      category: BlocProvider.of<
-                                                                      CollectionBlocBloc>(
-                                                                  context)
-                                                              .getDownloadModel!
-                                                              .downloadData![
-                                                                  index]
-                                                              .category ??
-                                                          "",
-                                                      wallpaper: BlocProvider
-                                                                  .of<CollectionBlocBloc>(
-                                                                      context)
-                                                              .getDownloadModel!
-                                                              .downloadData![
-                                                                  index]
-                                                              .wallpaper ??
-                                                          "",
-                                                    ),
-                                                  );
-                                                  setState(() {});
-                                                } else {
-                                                  likedWallpaper.remove(BlocProvider
-                                                              .of<CollectionBlocBloc>(
-                                                                  context)
-                                                          .getDownloadModel!
-                                                          .downloadData![index]
-                                                          .id ??
-                                                      "");
-                                                  BlocProvider.of<
-                                                              CollectionBlocBloc>(
-                                                          context)
-                                                      .add(
-                                                    SendDissLikeWallpaper(
-                                                      id: BlocProvider.of<
-                                                                      CollectionBlocBloc>(
-                                                                  context)
-                                                              .getDownloadModel!
-                                                              .downloadData![
-                                                                  index]
-                                                              .id ??
-                                                          "",
-                                                      userId: UserPreferences
-                                                          .getUserId(),
-                                                    ),
-                                                  );
-                                                  setState(() {});
-                                                }
-                                              },
-                                              child: SvgPicture.asset(
-                                                likedWallpaper.contains(BlocProvider
-                                                            .of<CollectionBlocBloc>(
-                                                                context)
-                                                        .getDownloadModel!
-                                                        .downloadData![index]
-                                                        .id)
-                                                    ? SVGIconManager.liked
-                                                    : SVGIconManager.favorite,
-                                                color: likedWallpaper.contains(
-                                                        BlocProvider.of<
-                                                                    CollectionBlocBloc>(
-                                                                context)
-                                                            .getDownloadModel!
-                                                            .downloadData![
-                                                                index]
-                                                            .id)
-                                                    ? ColorManager.red
-                                                    : ColorManager.white,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          if (!likedWallpaper
+                                              .contains(data.id ?? "")) {
+                                            likedWallpaper.add(data.id ?? "");
+                                            BlocProvider.of<CollectionBlocBloc>(
+                                                    context)
+                                                .add(
+                                              SendLikedWallpaper(
+                                                id: data.id ?? "",
+                                                userId: UserPreferences()
+                                                    .getUserId(),
+                                                name: data.name ?? "",
+                                                category: data.category ?? "",
+                                                wallpaper: data.wallpaper ?? "",
                                               ),
-                                            ),
-                                          ),
+                                            );
+                                            setState(() {});
+                                          } else {
+                                            likedWallpaper
+                                                .remove(data.id ?? "");
+                                            BlocProvider.of<CollectionBlocBloc>(
+                                                    context)
+                                                .add(
+                                              SendDissLikeWallpaper(
+                                                id: data.id ?? "",
+                                                userId: UserPreferences()
+                                                    .getUserId(),
+                                              ),
+                                            );
+                                            setState(() {});
+                                          }
+                                        },
+                                        child: SvgPicture.asset(
+                                          likedWallpaper.contains(data.id)
+                                              ? SVGIconManager.liked
+                                              : SVGIconManager.favorite,
+                                          color:
+                                              likedWallpaper.contains(data.id)
+                                                  ? ColorManager.red
+                                                  : ColorManager.white,
                                         ),
                                       ),
-                                      placeholder: (context, url) =>
-                                          const Center(
-                                        child: SpinKitCircle(
-                                            color: ColorManager.white),
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
                                     ),
                                   );
                                 },

@@ -19,7 +19,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final String userId = UserPreferences.getUserId();
+    final String userId = UserPreferences().getUserId();
 
     return Scaffold(
       appBar: AppBar(
@@ -32,12 +32,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Notifications',
+              AppString.notifications,
               style: myTheme.textTheme.titleLarge,
             ),
             verticalSpace(0.01.sh),
             Text(
-              'Get the notification you need, when you need it.',
+              AppString.notificationsDesc,
               style: myTheme.textTheme.labelSmall,
             ),
           ],
@@ -80,7 +80,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     width: 0.8.sw,
                   ),
                   Text(
-                    'Oops ! No notifications right now.',
+                    AppString.oopsNoNotificationsRightNow,
                     style: TextStyle(
                       fontSize: FontSize.s18,
                       fontFamily: FontFamily.roboto,
@@ -104,8 +104,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           : BlocBuilder<NotificationBloc, NotificationState>(
               builder: (context, state) {
                 if (state is NotificationLoading) {
-                  return const Center(
-                      child: SpinKitCircle(color: ColorManager.white));
+                  return const CustomLoader();
                 } else if (state is NotificationLoaded) {
                   return Padding(
                     padding: padding(
@@ -124,7 +123,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   width: 0.8.sw,
                                 ),
                                 Text(
-                                  'Oops ! No notifications right now.',
+                                  AppString.oopsNoNotificationsRightNow,
                                   style: TextStyle(
                                     fontSize: FontSize.s18,
                                     fontFamily: FontFamily.roboto,
@@ -173,7 +172,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         SizedBox(
                                           width: 0.72.sw,
@@ -193,28 +191,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     SizedBox(
                                       height: 0.08.sh,
                                       width: 0.18.sw,
-                                      child: CachedNetworkImage(
-                                        imageUrl: BaseApi.imgUrl + image,
-                                        imageBuilder:
-                                            (context, imageProvider) =>
-                                                Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: CachedNetworkImageBuilder(
+                                          url: BaseApi.imgUrl + image,
+                                          builder: (image) => Container(
                                             color: ColorManager.secondaryColor,
-                                            image: DecorationImage(
-                                              image: imageProvider,
-                                              fit: BoxFit.fill,
+                                            width: double.infinity,
+                                            height: 0.19.sh,
+                                            child: Image.file(
+                                              image,
+                                              fit: BoxFit.cover,
                                             ),
                                           ),
+                                          placeHolder: const CustomLoader(),
+                                          errorWidget: const Icon(Icons.error),
                                         ),
-                                        placeholder: (context, url) =>
-                                            const Center(
-                                          child: SpinKitCircle(
-                                              color: ColorManager.white),
-                                        ),
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
                                       ),
                                     ),
                                   ],

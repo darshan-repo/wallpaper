@@ -1,5 +1,6 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, prefer_typing_uninitialized_variables
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 
@@ -11,38 +12,22 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  ValueNotifier<bool> enableNotificationController = ValueNotifier<bool>(true);
-  bool isOn = true;
-  bool isEnabledNotification = false;
+  bool? isNotify;
 
-  @override
-  void dispose() {
-    enableNotificationController.dispose();
-    super.dispose();
-  }
+  var isNotificationTrue;
 
   @override
   void initState() {
-    enableNotificationController.addListener(() {
+    if (UserPreferences.getNotificationStatus().toString().isNotEmpty) {
       setState(() {
-        if (enableNotificationController.value) {
-          BlocProvider.of<CollectionBlocBloc>(context).add(
-            EnabledNotification(
-              email: UserPreferences.getUserEmail(),
-              deviceId: UserPreferences.getDeviceToken(),
-            ),
-          );
-          isEnabledNotification = true;
-        } else {
-          BlocProvider.of<CollectionBlocBloc>(context).add(
-            DisableNotification(
-              email: UserPreferences.getUserEmail(),
-            ),
-          );
-          isEnabledNotification = false;
-        }
+        isNotificationTrue = UserPreferences.getNotificationStatus();
+        isNotify = isNotificationTrue;
       });
-    });
+    } else {
+      setState(() {
+        isNotify = true;
+      });
+    }
     super.initState();
   }
 
@@ -54,25 +39,50 @@ class _SettingScreenState extends State<SettingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Settings',
+            AppString.settings,
             style: myTheme.textTheme.titleLarge,
           ),
           verticalSpace(0.02.sh),
-          ListTile(
-            leading: SvgPicture.asset(
-              SVGIconManager.settingNotification,
-              color: ColorManager.white,
-            ),
-            title: Text(
-              'Enable Notification',
-              style: myTheme.textTheme.displayMedium,
-            ),
-            trailing: AdvancedSwitch(
-              width: 56,
-              height: 32,
-              controller: enableNotificationController,
-              borderRadius: BorderRadius.circular(18),
-            ),
+          BlocBuilder<CollectionBlocBloc, CollectionBlocState>(
+            builder: (context, state) {
+              return ListTile(
+                leading: SvgPicture.asset(
+                  SVGIconManager.settingNotification,
+                  color: ColorManager.white,
+                ),
+                title: Text(
+                  AppString.enableNotification,
+                  style: myTheme.textTheme.displayMedium,
+                ),
+                trailing: CupertinoSwitch(
+                  value: isNotify!,
+                  onChanged: (value) {
+                    setState(
+                      () {
+                        isNotify = value;
+                        UserPreferences().setNotificationStatus(value);
+                      },
+                    );
+                    if (value) {
+                      BlocProvider.of<CollectionBlocBloc>(context).add(
+                        EnabledNotification(
+                          email: UserPreferences().getUserEmail(),
+                          deviceId: UserPreferences().getDeviceToken(),
+                        ),
+                      );
+                    } else {
+                      BlocProvider.of<CollectionBlocBloc>(context).add(
+                        DisableNotification(
+                          email: UserPreferences().getUserEmail(),
+                        ),
+                      );
+                    }
+                  },
+                  thumbColor: Colors.white,
+                  activeColor: Colors.green,
+                ),
+              );
+            },
           ),
         ],
       ),

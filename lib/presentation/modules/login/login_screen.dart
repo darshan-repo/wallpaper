@@ -1,12 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:walper/libs.dart';
-import 'package:walper/presentation/common/google_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -20,14 +15,10 @@ class _LoginScreenState extends State<LoginScreen> {
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
   TextEditingController txtEmailIdController = TextEditingController();
   TextEditingController txtPasswordController = TextEditingController();
-  String pattern =
-      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-      r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-      r"{0,253}[a-zA-Z0-9])?)*$";
 
   @override
   Widget build(BuildContext context) {
-    RegExp regex = RegExp(pattern);
+    RegExp regex = RegExp(AppString.pattern);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -38,9 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
         body: BlocBuilder<AuthBlocBloc, AuthBlocState>(
           builder: (context, state) {
             if (state is AuthBlocLoading) {
-              return const Center(
-                child: SpinKitCircle(color: ColorManager.white),
-              );
+              return const CustomLoader();
             }
             return Padding(
               padding:
@@ -72,9 +61,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return "Email cannot be empty";
+                                return AppString.emailCannotBeEmpty;
                               } else if (!regex.hasMatch(value)) {
-                                return "Enter a valid email";
+                                return AppString.enterAValidEmail;
                               }
                               return null;
                             }),
@@ -94,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return "Password cannot be empty";
+                                return AppString.passwordCannotBeEmpty;
                               }
                               return null;
                             }),
@@ -152,9 +141,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 context: context);
                             BlocProvider.of<AuthBlocBloc>(context).add(
                               LoginWithGoogle(
-                                email: user!.email ?? "",
-                                username: user.displayName.toString(),
-                                deviceId: fcmToken!,
+                                email: user?.email ?? "",
+                                username: user?.displayName ??
+                                    user!.email!.split("@").first,
+                                fcmToken: fcmToken!,
                               ),
                             );
                           },

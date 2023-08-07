@@ -70,7 +70,7 @@ showAltDialog(
             );
           },
           buttonColor: const Color.fromRGBO(160, 152, 250, 1),
-          buttonText: 'Back to home',
+          buttonText: AppString.backToHome,
         ),
       ],
     ),
