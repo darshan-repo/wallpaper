@@ -48,14 +48,13 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
 
   Future<void> resendCode({bool isTrue = false}) async {
     if (isTrue) {
-      final fcmToken = await FirebaseMessaging.instance.getToken(
-          vapidKey:
-              "BMddJ7CcjA7Or2PPl-TwHRW_hWheRqnyxdzRvkRH3u7uxEjIqJvDCmDuWJpV5B-GGCvJfdqpmvC-yUS5qVXF1WE");
+      final fcmToken = await FirebaseMessaging.instance
+          .getToken(vapidKey: AppString.vapidKey);
       BlocProvider.of<AuthBlocBloc>(context).add(
         LoginWithGoogleResendOtp(
           email: widget.email ?? "",
           username: widget.username ?? "",
-          fcmToken: fcmToken!,
+          fcmToken: fcmToken ?? "",
         ),
       );
     } else {
@@ -174,27 +173,25 @@ class _OTPVarificationScreenState extends State<OTPVarificationScreen> {
                               );
                             } else {
                               if (widget.isGoogle) {
-                                final fcmToken =
-                                    await FirebaseMessaging.instance.getToken(
-                                        vapidKey:
-                                            "BMddJ7CcjA7Or2PPl-TwHRW_hWheRqnyxdzRvkRH3u7uxEjIqJvDCmDuWJpV5B-GGCvJfdqpmvC-yUS5qVXF1WE");
+                                final fcmToken = await FirebaseMessaging
+                                    .instance
+                                    .getToken(vapidKey: AppString.vapidKey);
                                 BlocProvider.of<AuthBlocBloc>(context).add(
                                   LoginWithGoogleOtpSend(
                                     email: widget.email ?? "",
                                     otp: int.parse(txtEnterCodeController.text),
-                                    fcmToken: fcmToken!,
+                                    fcmToken: fcmToken ?? "",
                                   ),
                                 );
                               } else {
-                                final fcmToken =
-                                    await FirebaseMessaging.instance.getToken(
-                                        vapidKey:
-                                            "BMddJ7CcjA7Or2PPl-TwHRW_hWheRqnyxdzRvkRH3u7uxEjIqJvDCmDuWJpV5B-GGCvJfdqpmvC-yUS5qVXF1WE");
+                                final fcmToken = await FirebaseMessaging
+                                    .instance
+                                    .getToken(vapidKey: AppString.vapidKey);
                                 BlocProvider.of<AuthBlocBloc>(context).add(
                                   VerifyOtp(
                                     email: widget.email ?? "",
                                     otp: int.parse(txtEnterCodeController.text),
-                                    fcmToken: fcmToken!,
+                                    fcmToken: fcmToken ?? "",
                                   ),
                                 );
                               }

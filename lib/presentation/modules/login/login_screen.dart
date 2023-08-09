@@ -104,9 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         materialButton(
                           onPressed: () async {
                             final fcmToken = await FirebaseMessaging.instance
-                                .getToken(
-                                    vapidKey:
-                                        "BMddJ7CcjA7Or2PPl-TwHRW_hWheRqnyxdzRvkRH3u7uxEjIqJvDCmDuWJpV5B-GGCvJfdqpmvC-yUS5qVXF1WE");
+                                .getToken(vapidKey: AppString.vapidKey);
                             final FormState? form = loginFormKey.currentState;
                             if (form!.validate()) {
                               BlocProvider.of<AuthBlocBloc>(context).add(
@@ -114,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   email: txtEmailIdController.text,
                                   context: context,
                                   passWord: txtPasswordController.text,
-                                  fcmToken: fcmToken!,
+                                  fcmToken: fcmToken ?? "",
                                 ),
                               );
                             }
@@ -134,9 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         materialButton(
                           onPressed: () async {
                             final fcmToken = await FirebaseMessaging.instance
-                                .getToken(
-                                    vapidKey:
-                                        "BMddJ7CcjA7Or2PPl-TwHRW_hWheRqnyxdzRvkRH3u7uxEjIqJvDCmDuWJpV5B-GGCvJfdqpmvC-yUS5qVXF1WE");
+                                .getToken(vapidKey: AppString.vapidKey);
                             User? user = await Authentication.signInWithGoogle(
                                 context: context);
                             BlocProvider.of<AuthBlocBloc>(context).add(
@@ -144,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 email: user?.email ?? "",
                                 username: user?.displayName ??
                                     user!.email!.split("@").first,
-                                fcmToken: fcmToken!,
+                                fcmToken: fcmToken ?? "",
                               ),
                             );
                           },

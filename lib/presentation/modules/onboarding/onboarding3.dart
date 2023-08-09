@@ -33,7 +33,10 @@ class OnBoarding3Screen extends StatelessWidget {
               onPressed: () async {
                 final SharedPreferences prefs =
                     await SharedPreferences.getInstance();
-                await prefs.setBool("user", true);
+                await prefs.setBool(
+                  "userID",
+                  true,
+                );
                 Get.offAll(const BottomNavigationBarScreen());
               },
               buttonText: AppString.getStarted,

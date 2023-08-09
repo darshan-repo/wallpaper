@@ -18,8 +18,8 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(
       const Duration(seconds: 3),
       () async {
-        SharedPreferences pref = await SharedPreferences.getInstance();
-        if (pref.getBool("user") == true) {
+        final SharedPreferences pref = await SharedPreferences.getInstance();
+        if (pref.getBool('userID') == true) {
           Get.offAll(() => const BottomNavigationBarScreen());
         } else {
           Get.offAll(() => const OnBoarding1Screen());

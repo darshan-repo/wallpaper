@@ -1,4 +1,8 @@
 class AppString {
+  //*
+  static const String vapidKey =
+      'BPvxo_SgbcKDbcPEzv-hunjd4UcJM9mwHg2_0BiCnPTcM0WsJqorZhBdpqStK-6JVO66aobLRa0u76IVBiFfqsE';
+
 //* Email Pattern
   static const String pattern =
       r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"

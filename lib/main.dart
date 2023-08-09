@@ -103,6 +103,7 @@ class MyAppState extends State<MyApp> {
 
     notificationServices.getDeviceToken().then((value) {
       UserPreferences().setDeviceToken(value);
+      print('===========>> ${UserPreferences().getDeviceToken()}');
     });
   }
 

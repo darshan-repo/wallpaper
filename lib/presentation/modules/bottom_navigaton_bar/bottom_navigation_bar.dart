@@ -163,7 +163,12 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
               ),
               ListTile(
                 onTap: () {
-                  Get.offAll(const ReportAnIssueScreen());
+                  if (userID.isEmpty) {
+                    warningSnackbar(
+                        AppString.userNotFoundPleaseLoginToContinue);
+                  } else {
+                    Get.offAll(const ReportAnIssueScreen());
+                  }
                 },
                 splashColor: ColorManager.transparentColor,
                 leading: Image.asset(

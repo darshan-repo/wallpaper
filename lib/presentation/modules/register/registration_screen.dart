@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walper/libs.dart';
 
@@ -148,7 +150,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                         verticalSpace(0.025.sh),
                         materialButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final fcmToken = await FirebaseMessaging.instance
+                                .getToken(vapidKey: AppString.vapidKey);
+                            User? user = await Authentication.signInWithGoogle(
+                                context: context);
+                            BlocProvider.of<AuthBlocBloc>(context).add(
+                              LoginWithGoogle(
+                                email: user?.email ?? "",
+                                username: user?.displayName ??
+                                    user!.email!.split("@").first,
+                                fcmToken: fcmToken ?? "",
+                              ),
+                            );
+                          },
                           buttonColor: ColorManager.primaryColor,
                           assetName: ImageAssetManager.google,
                           buttonText: AppString.signInWithGoogle,

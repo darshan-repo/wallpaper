@@ -2,8 +2,8 @@ import 'package:http/http.dart' as http;
 import 'package:walper/libs.dart';
 
 class BaseApi {
-  static String baseUrl = "http://192.168.1.6:2200/api/";
-  static String imgUrl = "http://192.168.1.6:2200/profile/";
+  static String baseUrl = "http://192.168.1.11:2200/api/";
+  static String imgUrl = "http://192.168.1.11:2200/profile/";
 
   static Future getRequest(String path) async {
     final response = await http.get(

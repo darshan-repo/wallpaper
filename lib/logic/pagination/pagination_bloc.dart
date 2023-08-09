@@ -17,7 +17,7 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
   bool isPageLoading = true;
   bool isNewPageLoading = false;
   int page = 1;
-  int limit = 4;
+  int limit = 10;
   AllWallpaperModel? allWallpaperModel;
 
   Future<void> _getExclusivePaginationDataEvent(

@@ -16,7 +16,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
           },
         ),
         body: Padding(
-          padding: padding(paddingType: PaddingType.all, paddingValue: 0.01.sh),
+          padding: padding(paddingType: PaddingType.all, paddingValue: 0.02.sh),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

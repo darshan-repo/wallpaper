@@ -8,7 +8,7 @@ String getFeaturedWallpaperModelToJson(GetFeaturedWallpaperModel data) =>
 
 class GetFeaturedWallpaperModel {
   String? message;
-  List<Category>? categories;
+  List<HomeCategory>? categories;
 
   GetFeaturedWallpaperModel({
     this.message,
@@ -20,8 +20,8 @@ class GetFeaturedWallpaperModel {
         message: json["message"],
         categories: json["categories"] == null
             ? []
-            : List<Category>.from(
-                json["categories"]!.map((x) => Category.fromJson(x))),
+            : List<HomeCategory>.from(
+                json["categories"]!.map((x) => HomeCategory.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -32,14 +32,14 @@ class GetFeaturedWallpaperModel {
       };
 }
 
-class Category {
+class HomeCategory {
   String? id;
   String? name;
   String? background;
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  Category({
+  HomeCategory({
     this.id,
     this.name,
     this.background,
@@ -47,7 +47,7 @@ class Category {
     this.updatedAt,
   });
 
-  factory Category.fromJson(Map<String, dynamic> json) => Category(
+  factory HomeCategory.fromJson(Map<String, dynamic> json) => HomeCategory(
         id: json["id"],
         name: json["name"],
         background: json["background"],

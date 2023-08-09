@@ -32,7 +32,6 @@ Widget dropDownButton({
         iconEnabledColor: ColorManager.white,
         iconDisabledColor: ColorManager.white,
       ),
-      style: const TextStyle(fontSize: 10, color: Colors.red),
       dropdownStyleData: DropdownStyleData(
         elevation: 0,
         decoration: BoxDecoration(
@@ -58,22 +57,24 @@ Widget conatiner(
       borderRadius: BorderRadius.circular(15),
       child: CachedNetworkImageBuilder(
         url: assetName,
-        builder: (image) => Stack(
-          children: [
-            Container(
-              color: ColorManager.secondaryColor,
-              width: width.sw,
-              height: height.sh,
-              child: Image.file(
-                image,
-                fit: BoxFit.cover,
+        builder: (image) {
+          return Stack(
+            children: [
+              Container(
+                color: ColorManager.secondaryColor,
+                width: width.sw,
+                height: height.sh,
+                child: Image.file(
+                  image,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            SizedBox(
-              child: child,
-            )
-          ],
-        ),
+              SizedBox(
+                child: child,
+              )
+            ],
+          );
+        },
         placeHolder: const CustomLoader(),
         errorWidget: const Icon(Icons.error),
       ),
