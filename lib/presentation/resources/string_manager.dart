@@ -1,7 +1,7 @@
 class AppString {
-  //*
+  //* VapidKey
   static const String vapidKey =
-      'BPvxo_SgbcKDbcPEzv-hunjd4UcJM9mwHg2_0BiCnPTcM0WsJqorZhBdpqStK-6JVO66aobLRa0u76IVBiFfqsE';
+      'BOq29ivcye2z8X9dNOTBZexYPsc1rIEW7lIe3SlVvm0vK9lQxOKy30yTe_Exy2ssCe_TiX754KS4gCKVg6pI6u49';
 
 //* Email Pattern
   static const String pattern =
@@ -10,7 +10,6 @@ class AppString {
       r"{0,253}[a-zA-Z0-9])?)*$";
 
   //* On Boarding Screen
-
   static const String onBoarding1Title = 'Only wallpaper app !\nYou\'ll need.';
   static const String onBoarding1Desc =
       'walper makes finding and using stylish wallpaper\neasier than ever. It really is the only wallpaper app you\nneed.';

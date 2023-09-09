@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "585792039428",
+    "project_id": "crafty-raceway-373911",
+    "storage_bucket": "crafty-raceway-373911.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:585792039428:android:2fa417ae209ba492ff6351",
+        "android_client_info": {
+          "package_name": "com.walperapps.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "585792039428-uiueus9g7qnlfqmu7jn81v6ou8gqqu4i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.walperapps.app",
+            "certificate_hash": "0664f7964c3cdc83f3fcc45b21aad88fe6efdc85"
+          }
+        },
+        {
+          "client_id": "585792039428-ctg9tital2ek1rbm9uv469sfpse1eise.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD61eLFWV2MPtuaGLVe4XpPApMzs0JUeW8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "585792039428-ctg9tital2ek1rbm9uv469sfpse1eise.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
